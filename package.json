@@ -1,35 +1,47 @@
 {
   "name": "strapi-plugin-menus",
   "version": "0.0.0",
-  "description": "Customize the structure of menus and menu items in Strapi.",
+  "description": "A plugin for Strapi CMS to customize the structure of menus and menu items.",
+  "license": "MIT",
   "strapi": {
-    "name": "Menus",
-    "description": "Customize the structure of menus and menu items in Strapi.",
+    "displayName": "Menus",
+    "name": "menus",
+    "description": "A plugin for Strapi CMS to customize the structure of menus and menu items.",
     "kind": "plugin"
   },
+  "peerDependencies": {
+    "@strapi/design-system": "^0.0.1-alpha.76",
+    "@strapi/helper-plugin": "^4.1.0",
+    "@strapi/strapi": "^4.1.0"
+  },
+  "dependencies": {
+    "prop-types": "^15.8.1",
+    "react": "^17.0.2",
+    "react-flip-move": "^3.0.4",
+    "react-intl": "^5.24.6",
+    "react-redux": "^7.2.6",
+    "react-router-dom": "^6.2.1"
+  },
+  "engines": {
+    "node": ">=12.x. <=16.x.x",
+    "npm": ">=6.0.0"
+  },
   "author": {
-    "name": "Matt Milburn"
+    "name": "Matt Milburn",
+    "url": "https://github.com/mattmilburn"
   },
   "maintainers": [
     {
-      "name": "Matt Milburn"
+      "name": "Matt Milburn",
+      "url": "https://github.com/mattmilburn"
     }
   ],
-  "homepage": "https://github.com/mattmilburn/strapi-plugin-menus#readme",
-  "bugs": {
-    "url": "https://github.com/mattmilburn/strapi-plugin-menus/issues"
-  },
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mattmilburn/strapi-plugin-menus.git"
-  },
-  "engines": {
-    "node": ">=12.x. <=16.x.x",
-    "npm": ">=6.0.0"
   },
   "keywords": [
     "strapi",
