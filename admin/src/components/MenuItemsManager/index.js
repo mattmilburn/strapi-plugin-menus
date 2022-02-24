@@ -26,7 +26,7 @@ const MenuItemsManager = ( { fields } ) => {
     setActiveMenuItem,
   } = useMenuManager();
   const [ activeLevel, setActiveLevel ] = useState( null );
-  const { maxWidth } = useSelector( state => state[ `${pluginId}_config` ].config );
+  const { maxDepth } = useSelector( state => state[ `${pluginId}_config` ].config );
 
   const addItemLabel = formatMessage( {
     id: getTrad( 'ui.add.menuItem' ),
