@@ -26,7 +26,7 @@ const MenuItemsManager = ( { fields } ) => {
     setActiveMenuItem,
   } = useMenuManager();
   const [ activeLevel, setActiveLevel ] = useState( null );
-  const pluginConfig = useSelector( state => state[ `${pluginId}_config` ].config );
+  const { maxWidth } = useSelector( state => state[ `${pluginId}_config` ].config );
 
   const addItemLabel = formatMessage( {
     id: getTrad( 'ui.add.menuItem' ),
@@ -35,7 +35,7 @@ const MenuItemsManager = ( { fields } ) => {
 
   const renderItems = ( _items, level = 0 ) => {
     const parentId = _items[0]?.parent?.id;
-    const maxDepthReached = level + 1 >= pluginConfig.maxDepth;
+    const maxDepthReached = ! maxDepth ? false : level + 1 >= maxDepth;
 
     const action = (
       <AddButton
