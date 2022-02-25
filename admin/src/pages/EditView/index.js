@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useIntl } from 'react-intl';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { Formik } from 'formik';
-import { pick } from 'lodash';
+import { pick, uniqueId } from 'lodash';
 import { Form, useNotification, useOverlayBlocker } from '@strapi/helper-plugin';
 import { Box, Button, Link, Stack, useNotifyAT } from '@strapi/design-system';
 import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
@@ -71,7 +71,7 @@ const EditView = () => {
     if ( isCloning ) {
       const menuData = pick( body, [ 'title', 'slug' ], {} );
       const menuItemsData = body.items.map( item => ( {
-        id: 'create',
+        id: uniqueId( 'create' ),
         ...sanitizeEntity( item ),
       } ) );
 
