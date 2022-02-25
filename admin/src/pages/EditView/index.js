@@ -112,7 +112,7 @@ const EditView = () => {
     },
   } );
 
-  const handleSubmit = async ( body, { setErrors } ) => {
+  const onSubmit = async ( body, { setErrors } ) => {
     lockApp();
 
     try {
@@ -140,15 +140,15 @@ const EditView = () => {
       title={ headerTitle }
     >
       <Formik
-        onSubmit={ handleSubmit }
+        onSubmit={ onSubmit }
         initialValues={ data?.menu }
         validateOnChange={ false }
         validationSchema={ formSchema }
         enableReinitialize
       >
-        { ( { dirty, isSubmitting } ) => {
+        { ( { dirty, handleSubmit, isSubmitting } ) => {
           return (
-            <Form>
+            <Form onSubmit={ handleSubmit }>
               <HeaderLayout
                 title={ headerTitle }
                 navigationAction={
