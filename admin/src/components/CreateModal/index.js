@@ -68,7 +68,7 @@ const CreateModal = ( {
     },
   } );
 
-  const handleSubmit = async ( body, { setErrors } ) => {
+  const onSubmit = async ( body, { setErrors } ) => {
     lockApp();
 
     try {
@@ -88,8 +88,6 @@ const CreateModal = ( {
     }
   };
 
-  const isLoading = submitMutation.isLoading;
-
   return (
     <ModalLayout onClose={ onClose } labelledBy="title">
       <ModalHeader>
@@ -98,7 +96,7 @@ const CreateModal = ( {
         </Breadcrumbs>
       </ModalHeader>
       <Formik
-        onSubmit={ handleSubmit }
+        onSubmit={ onSubmit }
         initialValues={ initialValues  }
         validateOnChange={ false }
         validationSchema={ schema }
