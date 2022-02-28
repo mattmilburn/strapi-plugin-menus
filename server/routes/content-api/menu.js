@@ -8,7 +8,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/:id',
+    path: '/:slug',
     handler: 'menu.findOne',
   },
 ];

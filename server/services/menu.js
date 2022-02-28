@@ -39,9 +39,11 @@ module.exports = ( { strapi } ) => ( {
     return menus;
   },
 
-  async getMenu( id ) {
+  async getMenu( value, field = 'id' ) {
     const menu = await strapi.query( 'plugin::menus.menu' ).findOne( {
-      where: { id },
+      where: {
+        [ field ]: value,
+      },
       populate: {
         items: {
           populate: true,

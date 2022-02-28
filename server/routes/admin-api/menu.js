@@ -20,7 +20,7 @@ module.exports = [
   {
     method: 'GET',
     path: '/:id',
-    handler: 'menu.findOne',
+    handler: 'menu.findById',
     config: {
       policies: [ 'admin::isAuthenticatedAdmin' ],
     },
