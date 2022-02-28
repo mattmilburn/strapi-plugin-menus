@@ -20,6 +20,7 @@
   "dependencies": {
     "lodash": "^4.17.21",
     "prop-types": "^15.8.1",
+    "qs": "^6.10.3",
     "react": "^17.0.2",
     "react-flip-move": "^3.0.4",
     "react-intl": "^5.24.6",
