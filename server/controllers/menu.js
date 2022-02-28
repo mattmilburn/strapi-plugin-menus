@@ -18,9 +18,20 @@ module.exports = {
     ctx.send( { menus } );
   },
 
-  async findOne( ctx ) {
+  async findById( ctx ) {
     const { id } = ctx.request.params;
     const menu = await getService( 'menu' ).getMenu( id );
+
+    if ( ! menu ) {
+      return ctx.notFound();
+    }
+
+    ctx.send( { menu } );
+  },
+
+  async findOne( ctx ) {
+    const { slug } = ctx.request.params;
+    const menu = await getService( 'menu' ).getMenu( slug, 'slug' );
 
     if ( ! menu ) {
       return ctx.notFound();
