@@ -9,17 +9,25 @@
 
 ## Get Started
 
+* [Features](#features)
 * [Installation](#installation)
 * [Configuration](#configuration)
+* [User Guide](#user-guide)
 * [API Usage](#api-usage)
 * [Roadmap](#roadmap)
 
-## Installation
+## :sparkles: Features
+* Consumable menu data which can be used to render navigation and other menus in a frontend app.
+* Easily manage menus with either a flat or nested structure.
+* Customize the `title`, `url`, and link `target` of menu items.
+* *More advanced features are currently in development.*
+
+## :gem: Installation
 ```bash
 yarn add strapi-plugin-menus@latest
 ```
 
-## Configuration
+## :wrench: Configuration
 | property | type (default) | description |
 | - | - | - |
 | maxDepth | number (`null`) | Limits how deep menu items can be nested. |
@@ -44,7 +52,10 @@ module.exports = {
 };
 ```
 
-## API Usage
+## :blue_book: User Guide
+TBD
+
+## :zap: API Usage
 | endpoint | description |
 | - | - |
 | `/api/menus` | Return all menus. |
@@ -52,7 +63,6 @@ module.exports = {
 | `?nested` | Query string param that will serialize menu items into a nested format, otherwise they are returned as a flat list. |
 
 #### Example
-
 Fetch a menu with the slug "main" with the `nested` param included.
 
 ```js
@@ -173,5 +183,9 @@ await fetch( '/api/menus/main?nested' );
 }
 ```
 
-## Roadmap
-TBD
+## :construction: Roadmap
+* Role-based access controls (RBAC)
+* Extend schema for `Menu` and `MenuItem`
+* Injection zones for custom fields
+* Populate `url` by selecting from list of relations.
+* And of course, more!
