@@ -51,9 +51,32 @@ module.exports = {
 ```
 
 ## :blue_book: User Guide
-TBD
+
+### Create
+On the menus plugin home page, use the "Create Menu" button to open a modal form. You will need to provide a `title` and a unique `slug` value for the new menu.
+
+### Clone
+Choosing to clone an existing menu will take you to the edit view as usual, but this time it will be pre-populated with another menu's data. Once the cloned menu is saved, a brand new menu and menu items are created.
+
+### Delete
+Deleting a menu will also delete all of it's menu items.
+
+<div align="center">
+  <img style="width: 960px; height: auto;" src="public/screenshot-index-view.png" alt="Screenshot for index view of Strapi menus plugin" />
+</div>
+
+### Edit
+When clicking on a menu item in the left column, it will reveal action buttons to move the item, delete it, or give it a submenu.
+
+The right column will reveal the edit UI for that item, where the `title` is the only required field.
+
+<div align="center">
+  <img style="width: 960px; height: auto;" src="public/screenshot-edit-view.png" alt="Screenshot for edit view of Strapi menus plugin" />
+</div>
 
 ## :zap: API Usage
+**Don't forget** to enable the public `find` and `findOne` methods for `Menus` in the Users and Permissions settings.
+
 | endpoint | description |
 | - | - |
 | `/api/menus` | Return all menus. |
