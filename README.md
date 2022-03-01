@@ -45,16 +45,18 @@ module.exports = {
 ```
 
 ## API Usage
-Find all menus at `/api/menus`.
-
-Individual menus can be found at `/api/menus/:slug` by adding the `slug` param, which is more intuitive than finding by `id` in this case.
+| endpoint | description |
+| - | - |
+| `/api/menus` | Return all menus. |
+| `/api/menus/:slug` | Return one menu based on the `slug` param, which is more intuitive than the `id` in this case. |
+| `?nested` | Query string param that will serialize menu items into a nested format, otherwise they are returned as a flat list. |
 
 #### Example
 
-Fetch a menu with the slug "main".
+Fetch a menu with the slug "main" with the `nested` param included.
 
 ```js
-await fetch( '/api/menus/main' );
+await fetch( '/api/menus/main?nested' );
 ```
 
 #### Response
@@ -62,59 +64,109 @@ await fetch( '/api/menus/main' );
 ```json
 {
   "menu": {
-    "id": 1,
-    "title": "Main Menu",
+    "id": 55,
+    "title": "Main",
     "slug": "main",
-    "createdAt": "2022-02-24T23:31:16.668Z",
-    "updatedAt": "2022-02-24T23:31:16.678Z",
+    "createdAt": "2022-03-01T01:51:19.115Z",
+    "updatedAt": "2022-03-01T01:55:16.153Z",
     "items": [
       {
-        "id": 1,
+        "id": 199,
         "title": "Home",
         "url": "/",
-        "order": 1,
+        "order": 0,
+        "createdAt": "2022-03-01T01:51:29.237Z",
+        "updatedAt": "2022-03-01T01:55:16.134Z",
         "target": null,
         "parent": null,
-        "createdAt": "2022-02-24T23:31:16.668Z",
-        "updatedAt": "2022-02-24T23:31:16.668Z",
-        "createdBy": null,
-        "updatedBy": null
+        "children": []
       },
       {
-        "id": 2,
+        "id": 201,
         "title": "About",
         "url": "/about",
-        "order": 2,
+        "order": 1,
+        "createdAt": "2022-03-01T01:54:10.198Z",
+        "updatedAt": "2022-03-01T01:55:16.134Z",
         "target": null,
         "parent": null,
-        "createdAt": "2022-02-24T23:31:16.668Z",
-        "updatedAt": "2022-02-24T23:31:16.668Z",
-        "createdBy": null,
-        "updatedBy": null
+        "children": []
       },
       {
-        "id": 4,
+        "id": 200,
+        "title": "Products",
+        "url": "/products",
+        "order": 2,
+        "createdAt": "2022-03-01T01:54:10.198Z",
+        "updatedAt": "2022-03-01T01:55:16.134Z",
+        "target": null,
+        "parent": null,
+        "children": [
+          {
+            "id": 204,
+            "title": "Games",
+            "url": "/products/games",
+            "order": 0,
+            "createdAt": "2022-03-01T01:54:10.206Z",
+            "updatedAt": "2022-03-01T01:55:16.134Z",
+            "target": null,
+            "parent": {
+              "id": 200
+            },
+            "children": []
+          },
+          {
+            "id": 205,
+            "title": "Toys",
+            "url": "/products/toys",
+            "order": 1,
+            "createdAt": "2022-03-01T01:54:10.206Z",
+            "updatedAt": "2022-03-01T01:55:16.134Z",
+            "target": null,
+            "parent": {
+              "id": 200
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": 206,
         "title": "Contact",
-        "url": "mailto:email@example.com",
-        "order": 4,
-        "target": "_blank",
+        "url": "",
+        "order": 3,
+        "createdAt": "2022-03-01T01:55:16.134Z",
+        "updatedAt": "2022-03-01T01:55:16.134Z",
+        "target": null,
         "parent": null,
-        "createdAt": "2022-02-24T23:31:16.668Z",
-        "updatedAt": "2022-02-24T23:31:16.668Z",
-        "createdBy": null,
-        "updatedBy": null
-      },
-      {
-        "id": 5,
-        "title": "Github",
-        "url": "https://github.com",
-        "order": 5,
-        "target": "_blank",
-        "parent": null,
-        "createdAt": "2022-02-24T23:31:16.668Z",
-        "updatedAt": "2022-02-24T23:31:16.668Z",
-        "createdBy": null,
-        "updatedBy": null
+        "children": [
+          {
+            "id": 207,
+            "title": "Email",
+            "url": "mailto:email@example.com",
+            "order": 0,
+            "createdAt": "2022-03-01T01:55:16.144Z",
+            "updatedAt": "2022-03-01T01:55:16.144Z",
+            "target": "_blank",
+            "parent": {
+              "id": 206
+            },
+            "children": []
+          },
+          {
+            "id": 208,
+            "title": "Github",
+            "url": "https://github.com",
+            "order": 1,
+            "createdAt": "2022-03-01T01:55:16.144Z",
+            "updatedAt": "2022-03-01T01:55:16.144Z",
+            "target": "_blank",
+            "parent": {
+              "id": 206
+            },
+            "children": []
+          }
+        ]
       }
     ]
   }
