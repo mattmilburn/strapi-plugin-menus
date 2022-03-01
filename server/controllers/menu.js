@@ -13,14 +13,15 @@ module.exports = {
   },
 
   async find( ctx ) {
-    const menus = await getService( 'menu' ).getMenus();
+    const populate = ctx.request.query.populate && ctx.request.query.populate !== 'false';
+    const menus = await getService( 'menu' ).getMenus( populate );
 
     ctx.send( { menus } );
   },
 
-  async findById( ctx ) {
-    const { id } = ctx.request.params;
-    const menu = await getService( 'menu' ).getMenu( id );
+  async findOne( ctx ) {
+    const { slug } = ctx.request.params;
+    const menu = await getService( 'menu' ).getMenu( slug, 'slug' );
 
     if ( ! menu ) {
       return ctx.notFound();
@@ -29,9 +30,9 @@ module.exports = {
     ctx.send( { menu } );
   },
 
-  async findOne( ctx ) {
-    const { slug } = ctx.request.params;
-    const menu = await getService( 'menu' ).getMenu( slug, 'slug' );
+  async findOneById( ctx ) {
+    const { id } = ctx.request.params;
+    const menu = await getService( 'menu' ).getMenu( id );
 
     if ( ! menu ) {
       return ctx.notFound();

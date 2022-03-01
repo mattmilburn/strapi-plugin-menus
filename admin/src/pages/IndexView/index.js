@@ -25,7 +25,7 @@ const IndexView = () => {
 
   const [ activeModal, setActiveModal ] = useState( false );
 
-  const { status, data } = useQuery( QUERY_KEY, () => api.get(), {
+  const { status, data } = useQuery( QUERY_KEY, () => api.get( null, { populate: false } ), {
     onSuccess: () => {
       notifyStatus(
         formatMessage( {

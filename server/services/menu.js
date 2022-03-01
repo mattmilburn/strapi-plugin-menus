@@ -29,12 +29,22 @@ module.exports = ( { strapi } ) => ( {
     return ! menu;
   },
 
-  async getMenus() {
-    const menus = await strapi.query( 'plugin::menus.menu' ).findMany( {
+  async getMenus( populate = true ) {
+    const params = {
       orderBy: {
         title: 'ASC',
       },
-    } );
+    };
+
+    if ( populate ) {
+      params.populate = {
+        items: {
+          populate: true,
+        },
+      };
+    }
+
+    const menus = await strapi.query( 'plugin::menus.menu' ).findMany( params );
 
     return menus;
   },
