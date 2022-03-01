@@ -39,7 +39,11 @@ module.exports = ( { strapi } ) => ( {
     if ( populate ) {
       params.populate = {
         items: {
-          populate: true,
+          populate: {
+            parent: {
+              select: [ 'id' ],
+            },
+          },
         },
       };
     }
@@ -56,7 +60,11 @@ module.exports = ( { strapi } ) => ( {
       },
       populate: {
         items: {
-          populate: true,
+          populate: {
+            parent: {
+              select: [ 'id' ],
+            },
+          },
         },
       },
     } );
