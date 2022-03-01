@@ -1,11 +1,19 @@
+import qs from 'qs';
+
 import { pluginId } from './';
 
-const getRequestUrl = endpoint => {
+const getRequestUrl = ( endpoint, params ) => {
+  let url = `/${pluginId}`;
+
   if ( endpoint ) {
-    return `/${pluginId}/${endpoint}`;
+    url = `${url}/${endpoint}`;
   }
 
-  return `/${pluginId}`;
+  if ( params ) {
+    url = `${url}?${qs.stringify( params )}`;
+  }
+
+  return url;
 }
 
 export default getRequestUrl;

@@ -1,8 +1,8 @@
 import { axiosInstance, getRequestUrl } from './';
 
 const api = {
-  get: async id => {
-    const { data } = await axiosInstance.get( getRequestUrl( id ) );
+  get: async ( id, params ) => {
+    const { data } = await axiosInstance.get( getRequestUrl( id, params ) );
 
     return data;
   },
