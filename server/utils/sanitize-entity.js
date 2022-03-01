@@ -1,3 +1,5 @@
+'use strict';
+
 const { isNil, omit, omitBy } = require( 'lodash' );
 
 const sanitizeEntity = entity => {

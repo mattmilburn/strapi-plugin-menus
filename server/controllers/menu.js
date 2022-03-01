@@ -1,9 +1,9 @@
 'use strict';
 
-const { isEmpty } = require( 'lodash' );
+const { get, isEmpty } = require( 'lodash' );
 const { ValidationError } = require( '@strapi/utils' ).errors;
 
-const { getService } = require( '../utils' );
+const { getService, serializeNestedMenu } = require( '../utils' );
 
 module.exports = {
   async config( ctx ) {
@@ -13,18 +13,32 @@ module.exports = {
   },
 
   async find( ctx ) {
-    const populate = ctx.request.query.populate && ctx.request.query.populate !== 'false';
-    const menus = await getService( 'menu' ).getMenus( populate );
+    const nested = get( ctx.request.query, 'nested' ) !== 'false';
+    const populate = get( ctx.request.query, 'populate' ) !== 'false';
+
+    let menus = await getService( 'menu' ).getMenus( populate );
+
+    // Maybe serialize menus into a nested format, otherwise leave them flat.
+    if ( nested ) {
+      menus = menus.map( menu => serializeNestedMenu( menu ) );
+    }
 
     ctx.send( { menus } );
   },
 
   async findOne( ctx ) {
     const { slug } = ctx.request.params;
-    const menu = await getService( 'menu' ).getMenu( slug, 'slug' );
+    const nested = get( ctx.request.query, 'nested' ) !== 'false';
+
+    let menu = await getService( 'menu' ).getMenu( slug, 'slug' );
 
     if ( ! menu ) {
       return ctx.notFound();
+    }
+
+    // Maybe serialize menus into a nested format, otherwise leave them flat.
+    if ( nested ) {
+      menu = serializeNestedMenu( menu );
     }
 
     ctx.send( { menu } );
