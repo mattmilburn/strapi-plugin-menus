@@ -24,8 +24,12 @@ const IndexView = () => {
   const queryClient = useQueryClient();
 
   const [ activeModal, setActiveModal ] = useState( false );
+  const fetchParams = {
+    nested: false,
+    populate: false,
+  };
 
-  const { status, data } = useQuery( QUERY_KEY, () => api.get( null, { populate: false } ), {
+  const { status, data } = useQuery( QUERY_KEY, () => api.get( null, fetchParams ), {
     onSuccess: () => {
       notifyStatus(
         formatMessage( {
