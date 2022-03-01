@@ -1,10 +1,8 @@
 <div align="center">
   <img style="width: 160px; height: auto;" src="public/logo.png" alt="Logo for Strapi menus plugin" />
-</div>
-
-<div align="center">
   <h1>Strapi Menus</h1>
   <p>A plugin for Strapi CMS to customize the structure of menus and menu items.</p>
+  <img style="width: 960px; height: auto;" src="public/screenshot.png" alt="Screenshot for Strapi menus plugin" />
 </div>
 
 ## Get Started
