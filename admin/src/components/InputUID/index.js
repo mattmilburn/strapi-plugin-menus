@@ -33,6 +33,7 @@ const InputUID = ({
   onChange,
   value,
   placeholder,
+  required,
 }) => {
   // const { modifiedData, initialData, layout } = useCMEditViewDataManager(); // CUSTOM MOD [1].
   const { initialValues: initialData, values: modifiedData } = useFormikContext(); // CUSTOM MOD [1].
@@ -246,6 +247,7 @@ const InputUID = ({
       onChange={handleChange}
       placeholder={formattedPlaceholder}
       value={value || ''}
+      required={required}
     />
   );
 };
@@ -277,6 +279,7 @@ InputUID.propTypes = {
     defaultMessage: PropTypes.string.isRequired,
     values: PropTypes.object,
   }),
+  required: PropTypes.bool,
 };
 
 InputUID.defaultProps = {
@@ -286,6 +289,7 @@ InputUID.defaultProps = {
   labelAction: undefined,
   placeholder: undefined,
   value: '',
+  required: false,
 };
 
 export default InputUID;
