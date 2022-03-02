@@ -208,5 +208,6 @@ await fetch( '/api/menus/main?nested' );
 * Role-based access controls (RBAC)
 * Extend schema for `Menu` and `MenuItem`
 * Injection zones for custom fields
-* Populate `url` by selecting from list of relations.
+* Populate `url` by selecting from list of relations
+* More translations
 * And of course, more!
