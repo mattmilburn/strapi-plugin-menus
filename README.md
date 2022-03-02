@@ -14,18 +14,18 @@
 * [API Usage](#api-usage)
 * [Roadmap](#roadmap)
 
-## :sparkles: Features
+## <a id="features" />✨ Features
 * Consumable menu data which can be used to render navigation and other menus in a frontend app.
 * Easily manage menus with either a flat or nested structure.
 * Customize the `title`, `url`, and link `target` of menu items.
 * *More advanced features are currently in development.*
 
-## :gem: Installation
+## <a id="installation" />💎 Installation
 ```bash
 yarn add strapi-plugin-menus@latest
 ```
 
-## :wrench: Configuration
+## <a id="configuration" />🔧 Configuration
 | property | type (default) | description |
 | - | - | - |
 | maxDepth | number (`null`) | Limits how deep menu items can be nested. |
@@ -50,7 +50,7 @@ module.exports = {
 };
 ```
 
-## :blue_book: User Guide
+## <a id="user-guide" />📘 User Guide
 
 ### Create
 On the menus plugin home page, use the "Create Menu" button to open a modal form. You will need to provide a `title` and a unique `slug` value for the new menu.
@@ -74,7 +74,7 @@ The right column will reveal the edit UI for that item, where the `title` is the
   <img style="width: 960px; height: auto;" src="public/screenshot-edit-view.png" alt="Screenshot for edit view of Strapi menus plugin" />
 </div>
 
-## :zap: API Usage
+## <a id="api-usage" />⚡ API Usage
 **Don't forget** to enable the public `find` and `findOne` methods for `Menus` in the Users and Permissions settings.
 
 | endpoint | description |
@@ -204,7 +204,7 @@ await fetch( '/api/menus/main?nested' );
 }
 ```
 
-## :construction: Roadmap
+## <a id="roadmap" />🚧 Roadmap
 * Role-based access controls (RBAC)
 * Extend schema for `Menu` and `MenuItem`
 * Injection zones for custom fields
