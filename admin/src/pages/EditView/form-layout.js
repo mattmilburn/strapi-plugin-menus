@@ -1,16 +1,17 @@
-import { getTrad } from '../../utils';
+import { getTrad } from "../../utils";
 
-const targetOptions = [ '_blank', '_parent', '_self', '_top' ];
+const targetOptions = ["_blank", "_parent", "_self", "_top"];
+const roleOptions = ["1", "2"];
 
 const menu = [
   {
     input: {
       intlLabel: {
-        id: getTrad( 'form.label.title' ),
-        defaultMessage: 'Title',
+        id: getTrad("form.label.title"),
+        defaultMessage: "Title",
       },
-      name: 'title',
-      type: 'text',
+      name: "title",
+      type: "text",
       required: true,
     },
     grid: {
@@ -23,14 +24,14 @@ const menu = [
   {
     input: {
       intlLabel: {
-        id: getTrad( 'form.label.slug' ),
-        defaultMessage: 'Slug',
+        id: getTrad("form.label.slug"),
+        defaultMessage: "Slug",
       },
-      name: 'slug',
-      type: 'uid',
-      contentTypeUID: 'plugin::menus.menu',
+      name: "slug",
+      type: "uid",
+      contentTypeUID: "plugin::menus.menu",
       attribute: {
-        targetField: 'title',
+        targetField: "title",
       },
       required: true,
     },
@@ -47,14 +48,14 @@ const menuItem = [
   {
     input: {
       intlLabel: {
-        id: getTrad( 'form.label.title' ),
-        defaultMessage: 'Title',
+        id: getTrad("form.label.title"),
+        defaultMessage: "Title",
       },
-      name: 'items[{index}].title',
-      type: 'text',
+      name: "items[{index}].title",
+      type: "text",
       placeholder: {
-        id: getTrad( 'form.placeholder.untitled' ),
-        defaultMessage: 'Untitled',
+        id: getTrad("form.placeholder.untitled"),
+        defaultMessage: "Untitled",
       },
       required: true,
     },
@@ -67,11 +68,11 @@ const menuItem = [
   {
     input: {
       intlLabel: {
-        id: getTrad( 'form.label.url' ),
-        defaultMessage: 'URL',
+        id: getTrad("form.label.url"),
+        defaultMessage: "URL",
       },
-      name: 'items[{index}].url',
-      type: 'text',
+      name: "items[{index}].url",
+      type: "text",
     },
     grid: {
       size: {
@@ -82,12 +83,12 @@ const menuItem = [
   {
     input: {
       intlLabel: {
-        id: getTrad( 'form.label.target' ),
-        defaultMessage: 'Target',
+        id: getTrad("form.label.target"),
+        defaultMessage: "Target",
       },
-      name: 'items[{index}].target',
-      type: 'select',
-      options: targetOptions.map( option => ( {
+      name: "items[{index}].target",
+      type: "select",
+      options: targetOptions.map((option) => ({
         key: option,
         value: option,
         metadatas: {
@@ -96,7 +97,22 @@ const menuItem = [
             defaultMessage: option,
           },
         },
-      } ) ),
+      })),
+    },
+    grid: {
+      size: {
+        col: 6,
+      },
+    },
+  },
+  {
+    input: {
+      intlLabel: {
+        id: getTrad("form.label.roles"),
+        defaultMessage: "Roles",
+      },
+      name: "items[{index}].roles",
+      type: "roles",
     },
     grid: {
       size: {

@@ -37,5 +37,6 @@
   "form.label.option._top": "_top",
   "form.label.slug": "Slug",
   "form.label.title": "Title",
+  "form.label.roles": "Roles",
   "form.placeholder.untitled": "Untitled"
 }

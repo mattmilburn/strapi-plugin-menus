@@ -1,115 +1,126 @@
-'use strict';
+"use strict";
 
-const { get, isEmpty } = require( 'lodash' );
-const { ValidationError } = require( '@strapi/utils' ).errors;
+const { get, isEmpty } = require("lodash");
+const { ValidationError } = require("@strapi/utils").errors;
 
-const { getService, serializeNestedMenu } = require( '../utils' );
+const { getService, serializeNestedMenu } = require("../utils");
 
 module.exports = {
-  async config( ctx ) {
-    const config = await getService( 'menu' ).getConfig();
+  async config(ctx) {
+    const config = await getService("menu").getConfig();
 
-    ctx.send( { config } );
+    ctx.send({ config });
   },
 
-  async find( ctx ) {
-    const nested = get( ctx.request.query, 'nested' ) !== 'false';
-    const populate = get( ctx.request.query, 'populate' ) !== 'false';
+  async find(ctx) {
+    const nested = get(ctx.request.query, "nested") !== "false";
+    const populate = get(ctx.request.query, "populate") !== "false";
 
-    let menus = await getService( 'menu' ).getMenus( populate );
+    let menus = await getService("menu").getMenus(populate);
 
     // Maybe serialize menus into a nested format, otherwise leave them flat.
-    if ( nested ) {
-      menus = menus.map( menu => serializeNestedMenu( menu ) );
+    if (nested) {
+      menus = menus.map((menu) => serializeNestedMenu(menu));
     }
 
-    ctx.send( { menus } );
+    ctx.send({ menus });
   },
 
-  async findOne( ctx ) {
+  async findOne(ctx) {
+    const publicRole = await strapi
+      .query("plugin::users-permissions.role")
+      .findOne({ where: { type: "public" } });
+    let role = publicRole.id;
+    if (ctx.state.user) {
+      role = ctx.state.user.role.id;
+    }
+
     const { slug } = ctx.request.params;
-    const nested = get( ctx.request.query, 'nested' ) !== 'false';
+    const nested = get(ctx.request.query, "nested") !== "false";
+    let menu = await getService("menu").getMenu(slug, "slug");
 
-    let menu = await getService( 'menu' ).getMenu( slug, 'slug' );
-
-    if ( ! menu ) {
+    if (!menu) {
       return ctx.notFound();
     }
 
     // Maybe serialize menus into a nested format, otherwise leave them flat.
-    if ( nested ) {
-      menu = serializeNestedMenu( menu );
+    if (nested) {
+      menu = serializeNestedMenu(menu, role);
     }
 
-    ctx.send( { menu } );
+    ctx.send({ menu });
   },
 
-  async findOneById( ctx ) {
+  async findOneById(ctx) {
     const { id } = ctx.request.params;
-    const menu = await getService( 'menu' ).getMenu( id );
+    const menu = await getService("menu").getMenu(id);
 
-    if ( ! menu ) {
+    if (!menu) {
       return ctx.notFound();
     }
 
-    ctx.send( { menu } );
+    ctx.send({ menu });
   },
 
-  async create( ctx ) {
-    if ( isEmpty( ctx.request.body ) ) {
-      throw new ValidationError( 'Request body cannot be empty' );
+  async create(ctx) {
+    if (isEmpty(ctx.request.body)) {
+      throw new ValidationError("Request body cannot be empty");
     }
 
     const slug = ctx.request.body.slug;
-    const isAvailable = await getService( 'menu' ).checkAvailability( slug );
+    const isAvailable = await getService("menu").checkAvailability(slug);
 
     // Validate slug availability.
-    if ( ! isAvailable ) {
+    if (!isAvailable) {
       const errorMessage = `The slug ${slug} is already taken`;
-      return ctx.badRequest( errorMessage, { slug: errorMessage } );
+      return ctx.badRequest(errorMessage, { slug: errorMessage });
     }
 
-    const menu = await getService( 'menu' ).createMenu( ctx.request.body );
+    const menu = await getService("menu").createMenu(ctx.request.body);
 
-    ctx.send( { menu } );
+    ctx.send({ menu });
   },
 
-  async update( ctx ) {
-    if ( isEmpty( ctx.request.body ) ) {
-      throw new ValidationError( 'Request body cannot be empty' );
+  async update(ctx) {
+    if (isEmpty(ctx.request.body)) {
+      throw new ValidationError("Request body cannot be empty");
     }
 
     const id = ctx.params.id;
-    const menuToUpdate = await getService( 'menu' ).getMenu( id );
+    const menuToUpdate = await getService("menu").getMenu(id);
 
-    if ( ! menuToUpdate ) {
+    if (!menuToUpdate) {
       return ctx.notFound();
     }
 
     const slug = ctx.request.body.slug;
-    const isAvailable = await getService( 'menu' ).checkAvailability( slug, id );
+    const isAvailable = await getService("menu").checkAvailability(slug, id);
 
     // Validate slug availability.
-    if ( ! isAvailable ) {
+    if (!isAvailable) {
       const errorMessage = `The slug ${slug} is already taken`;
-      return ctx.badRequest( errorMessage, { slug: errorMessage } );
+      return ctx.badRequest(errorMessage, { slug: errorMessage });
     }
 
-    const menu = await getService( 'menu' ).updateMenu( id, ctx.request.body, menuToUpdate );
+    const menu = await getService("menu").updateMenu(
+      id,
+      ctx.request.body,
+      menuToUpdate
+    );
 
-    ctx.send( { menu } );
+    ctx.send({ menu });
   },
 
-  async delete( ctx ) {
+  async delete(ctx) {
     const id = ctx.params.id;
-    const menuToDelete = await getService( 'menu' ).getMenu( id );
+    const menuToDelete = await getService("menu").getMenu(id);
 
-    if ( ! menuToDelete ) {
+    if (!menuToDelete) {
       return ctx.notFound();
     }
 
-    await getService( 'menu' ).deleteMenu( id );
+    await getService("menu").deleteMenu(id);
 
-    ctx.send( { ok: true } );
+    ctx.send({ ok: true });
   },
 };
