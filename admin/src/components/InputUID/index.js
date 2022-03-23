@@ -39,13 +39,13 @@ const InputUID = ({
   const { initialValues: initialData, values: modifiedData } = useFormikContext(); // CUSTOM MOD [1].
   const [isLoading, setIsLoading] = useState(false);
   const [availability, setAvailability] = useState(null);
-  const debouncedValue = useDebounce(value, 600); // CUSTOM MOD [5].
+  const debouncedValue = useDebounce(value, 300);
   const generateUid = useRef();
   const initialValue = initialData[name];
   const { formatMessage } = useIntl();
   const createdAtName = 'createdAt'; // get(layout, ['options', 'timestamps', 0]); // CUSTOM MOD [4].
   const isCreation = !initialData[createdAtName];
-  const debouncedTargetFieldValue = useDebounce(modifiedData[attribute.targetField], 600); // CUSTOM MOD [5].
+  const debouncedTargetFieldValue = useDebounce(modifiedData[attribute.targetField], 300);
   const [isCustomized, setIsCustomized] = useState(false);
   const [regenerateLabel, setRegenerateLabel] = useState(null);
 
@@ -126,8 +126,7 @@ const InputUID = ({
     if (
       debouncedValue &&
       debouncedValue.trim().match(UID_REGEX) &&
-      debouncedValue !== initialValue &&
-      !value
+      debouncedValue !== initialValue
     ) {
       checkAvailability();
     }
