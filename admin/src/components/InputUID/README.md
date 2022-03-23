@@ -20,7 +20,5 @@ The very first thing to do is find the `InputUID` component in Strapi and make a
 
 4. The `createdAtName` var will be explicitly defined as `createdAt` instead of deriving from `layout` data.
 
-5. The debounce methods now use a value of `600` instead of `300`.
-
 ### Please Note
 Look for `CUSTOM MOD [n]` comments to identify exactly what lines were changed. The number in the comment corresponds to the numbered list above.
