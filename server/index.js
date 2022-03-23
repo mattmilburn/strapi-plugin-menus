@@ -13,8 +13,8 @@ module.exports = {
   config,
   contentTypes,
   controllers,
+  middlewares: {},
+  policies: {},
   routes,
   services,
-  policies: {},
-  middlewares: {},
 };
