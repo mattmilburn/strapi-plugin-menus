@@ -62,7 +62,12 @@ module.exports = ( { strapi } ) => ( {
           } ) );
 
         if ( nextItems.length ) {
-          return createLoop( nextItems );
+          const nextCreatedItems = createLoop( nextItems );
+
+          return [
+            createdItem,
+            ...nextCreatedItems,
+          ];
         }
 
         return createdItem;
