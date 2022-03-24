@@ -1,7 +1,6 @@
 'use strict';
 
 const { flattenDeep } = require( 'lodash' );
-const { NotFoundError } = require( '@strapi/utils' ).errors;
 
 const { sanitizeEntity } = require( '../utils' );
 
