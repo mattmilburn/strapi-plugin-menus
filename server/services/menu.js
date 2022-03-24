@@ -1,132 +1,141 @@
-'use strict';
+"use strict";
 
-const { get, pick } = require( 'lodash' );
+const { get, pick } = require("lodash");
 
-const config = require( '../config' );
-const { getService, pluginId, sanitizeEntity } = require( '../utils' );
+const config = require("../config");
+const { getService, pluginId, sanitizeEntity } = require("../utils");
 
-module.exports = ( { strapi } ) => ( {
+module.exports = ({ strapi }) => ({
   async getConfig() {
-    const data = await strapi.config.get( `plugin.${pluginId}`, config.default );
+    const data = await strapi.config.get(`plugin.${pluginId}`, config.default);
 
     return data;
   },
 
-  async checkAvailability( slug, id ) {
+  async checkAvailability(slug, id) {
     const params = {
       where: { slug },
     };
 
     // Optionally exclude by the ID so we don't check the menu against itself.
-    if ( id ) {
+    if (id) {
       params.filters = {
         $not: { id },
       };
     }
 
-    const menu = await strapi.query( 'plugin::menus.menu' ).findOne( params );
+    const menu = await strapi.query("plugin::menus.menu").findOne(params);
 
-    return ! menu;
+    return !menu;
   },
 
-  async getMenus( populate = true ) {
+  async getMenus(populate = true) {
     const params = {
       orderBy: {
-        title: 'ASC',
+        title: "ASC",
       },
     };
 
-    if ( populate ) {
+    if (populate) {
       params.populate = {
         items: {
           populate: {
             parent: {
-              select: [ 'id' ],
+              select: ["id"],
             },
           },
         },
       };
     }
 
-    const menus = await strapi.query( 'plugin::menus.menu' ).findMany( params );
+    const menus = await strapi.query("plugin::menus.menu").findMany(params);
 
     return menus;
   },
 
-  async getMenu( value, field = 'id' ) {
-    const menu = await strapi.query( 'plugin::menus.menu' ).findOne( {
+  async getMenu(value, field = "id") {
+    const menu = await strapi.query("plugin::menus.menu").findOne({
       where: {
-        [ field ]: value,
+        [field]: value,
       },
       populate: {
         items: {
           populate: {
             parent: {
-              select: [ 'id' ],
+              select: ["id"],
             },
+            roles: {},
           },
         },
       },
-    } );
+    });
 
     return menu;
   },
 
-  async createMenu( data ) {
-    const menuData = pick( data, [ 'title', 'slug' ], {} );
-    const menuItemsData = get( data, 'items', [] );
+  async createMenu(data) {
+    const menuData = pick(data, ["title", "slug"], {});
+    const menuItemsData = get(data, "items", []);
 
     // Create new menu.
-    const menu = await strapi.query( 'plugin::menus.menu' ).create( { data: menuData } );
+    const menu = await strapi
+      .query("plugin::menus.menu")
+      .create({ data: menuData });
 
     // Maybe create menu items (should only happen when cloning).
-    if ( menuItemsData ) {
-      await getService( 'menu-item' ).bulkCreateOrUpdateMenuItems( menuItemsData, menu.id );
+    if (menuItemsData) {
+      await getService("menu-item").bulkCreateOrUpdateMenuItems(
+        menuItemsData,
+        menu.id
+      );
     }
 
     return menu;
   },
 
-  async updateMenu( id, data, prevData ) {
-    const menuData = pick( data, [ 'title', 'slug' ], {} );
-    const menuItemsData = get( data, 'items', [] );
-    const prevItemsData = get( prevData, 'items', [] );
+  async updateMenu(id, data, prevData) {
+    const menuData = pick(data, ["title", "slug"], {});
+    const menuItemsData = get(data, "items", []);
+    const prevItemsData = get(prevData, "items", []);
 
     // Compare new `items` to existing `items` to determine which can be deleted.
-    const itemsToDelete = prevItemsData.filter( item => {
-      return ! menuItemsData.find( _item => _item.id === item.id );
-    } );
+    const itemsToDelete = prevItemsData.filter((item) => {
+      return !menuItemsData.find((_item) => _item.id === item.id);
+    });
 
     // First, delete menu items that were removed from the menu.
-    if ( itemsToDelete.length ) {
-      await getService( 'menu-item' ).bulkDeleteMenuItems( itemsToDelete );
+    if (itemsToDelete.length) {
+      await getService("menu-item").bulkDeleteMenuItems(itemsToDelete);
     }
 
     // Next, create or update menu items before updating the menu.
-    await getService( 'menu-item' ).bulkCreateOrUpdateMenuItems( menuItemsData, id );
+    await getService("menu-item").bulkCreateOrUpdateMenuItems(
+      menuItemsData,
+      id
+    );
 
     // Finally, update the menu.
-    const menu = await strapi.query( 'plugin::menus.menu' ).update( {
+    const menu = await strapi.query("plugin::menus.menu").update({
       where: { id },
       data: menuData,
-    } );
+    });
 
     return menu;
   },
 
-  async deleteMenu( id ) {
+  async deleteMenu(id) {
     // First, delete menu items belonging to the menu that will be deleted.
-    const itemsToDelete = await getService( 'menu-item' ).getMenuItems( id );
+    const itemsToDelete = await getService("menu-item").getMenuItems(id);
 
-    if ( itemsToDelete.length ) {
-      await getService( 'menu-item' ).bulkDeleteMenuItems( itemsToDelete );
+    if (itemsToDelete.length) {
+      await getService("menu-item").bulkDeleteMenuItems(itemsToDelete);
     }
 
     // Finally, delete the menu.
-    const menu = await strapi.query( 'plugin::menus.menu' ).delete( {
+    const menu = await strapi.query("plugin::menus.menu").delete({
       where: { id },
-    } );
+    });
 
     return menu;
   },
-} );
+});
