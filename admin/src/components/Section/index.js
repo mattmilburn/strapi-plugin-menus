@@ -7,7 +7,7 @@ import { getBoxProps } from '../../utils';
 const Section = ( { boxProps, children, stackSize, title } ) => {
   return (
     <Box { ...getBoxProps( boxProps ) }>
-      <Stack size={ stackSize }>
+      <Stack spacing={ stackSize }>
         { !! title && (
           <Typography variant="delta" as="h2">
             { title }
