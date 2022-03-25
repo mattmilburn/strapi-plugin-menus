@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useIntl } from 'react-intl';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { Formik } from 'formik';
 import { pick, uniqueId } from 'lodash';
 import { Form, useNotification, useOverlayBlocker } from '@strapi/helper-plugin';
@@ -102,7 +102,7 @@ const EditView = () => {
       toggleNotification( {
         type: 'warning',
         message: {
-          id: 'ui.error',
+          id: getTrad( 'ui.error' ),
           defaultMessage: 'An error occured',
         },
       } );
@@ -154,7 +154,7 @@ const EditView = () => {
                 navigationAction={
                   <Link startIcon={ <ArrowLeft /> } to={ `/plugins/${pluginId}` }>
                     { formatMessage( {
-                      id: 'ui.goBack',
+                      id: getTrad( 'ui.goBack' ),
                       defaultMessage: 'Go back',
                     } ) }
                   </Link>
