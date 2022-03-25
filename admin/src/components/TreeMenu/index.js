@@ -8,7 +8,7 @@ import { Wrapper } from './styled';
 const TreeMenu = ( { action, activeLevel, children, level } ) => {
   return (
     <Wrapper level={ level } activeLevel={ activeLevel }>
-      <Stack size={ 4 }>
+      <Stack spacing={ 4 }>
         <FlipMove typeName={ null }>
           { children }
           { action && (

@@ -55,7 +55,7 @@ const EditMenuItem = ( { data, fields } ) => {
         <TabPanel>
           <Box padding={ 6 } background="neutral0" borderRadius="0 0 4px 4px">
 
-            <Stack size={ 6 }>
+            <Stack spacing={ 6 }>
               <FormLayout fields={ indexedFields } />
             </Stack>
 

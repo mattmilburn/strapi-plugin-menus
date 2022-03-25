@@ -105,7 +105,7 @@ const CreateModal = ( {
           return (
             <Form onSubmit={ handleSubmit }>
               <ModalBody>
-                <Stack size={ 6 }>
+                <Stack spacing={ 6 }>
                   <FormLayout fields={ fields } />
                 </Stack>
               </ModalBody>

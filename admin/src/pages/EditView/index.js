@@ -176,7 +176,7 @@ const EditView = () => {
               />
               <ContentLayout>
                 <Box paddingBottom={ 10 }>
-                  <Stack size={ 8 }>
+                  <Stack spacing={ 8 }>
                     <Section>
                       <FormLayout fields={ formLayout.menu } />
                     </Section>
