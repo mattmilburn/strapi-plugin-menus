@@ -40,13 +40,13 @@ const EditMenuItem = ( { data, fields } ) => {
       <Tabs>
         <Tab variant="simple" hasError={ hasSettingsError }>
           { formatMessage( {
-            id: 'edit.tabs.title.link',
+            id: getTrad( 'edit.tabs.title.link' ),
             defaultMessage: 'Link',
           } ) }
         </Tab>
         <Tab variant="simple">
           { formatMessage( {
-            id: 'edit.tabs.title.advanced',
+            id: getTrad( 'edit.tabs.title.advanced' ),
             defaultMessage: 'Advanced',
           } ) }
         </Tab>

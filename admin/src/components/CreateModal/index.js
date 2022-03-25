@@ -58,7 +58,7 @@ const CreateModal = ( {
       toggleNotification( {
         type: 'warning',
         message: {
-          id: 'ui.error',
+          id: getTrad( 'ui.error' ),
           defaultMessage: 'An error occured',
         },
       } );
@@ -113,7 +113,7 @@ const CreateModal = ( {
                 startActions={
                   <Button type="button" variant="tertiary" onClick={ onClose }>
                     { formatMessage( {
-                      id: 'ui.cancel',
+                      id: getTrad( 'ui.cancel' ),
                       defaultMessage: 'Cancel',
                     } ) }
                   </Button>
@@ -121,7 +121,7 @@ const CreateModal = ( {
                 endActions={
                   <Button type="submit" loading={ isSubmitting }>
                     { formatMessage( {
-                      id: 'ui.create.menu',
+                      id: getTrad( 'ui.create.menu' ),
                       defaultMessage: 'Create menu',
                     } ) }
                   </Button>
