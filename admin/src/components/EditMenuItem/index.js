@@ -5,28 +5,23 @@ import { useFormikContext } from 'formik';
 import { Box, Stack } from '@strapi/design-system';
 import { Tab, Tabs, TabPanel, TabPanels } from '@strapi/design-system/Tabs';
 
-import { getTrad, menuItemProps } from '../../utils';
+import { getTrad, menuItemProps, serializeFields } from '../../utils';
 import { FormLayout, Section } from '../';
 
 import { StyledTabGroup } from './styled';
 
-const EditMenuItem = ( { data, fields } ) => {
+const EditMenuItem = ( { data, fields, customLayouts } ) => {
   const { formatMessage } = useIntl();
   const { errors, values } = useFormikContext();
   const fieldIndex = values.items.findIndex( item => item.id === data.id );
-  const hasSettingsError = !! ( errors?.items && errors.items[ fieldIndex ] );
+  const hasError = !! ( errors?.items && errors.items[ fieldIndex ] );
 
   if ( ! fieldIndex && fieldIndex !== 0 ) {
     return null;
   }
 
-  const indexedFields = fields.map( field => ( {
-    ...field,
-    input: {
-      ...field.input,
-      name: field.input.name.replace( '{index}', fieldIndex ),
-    },
-  } ) );
+  const mainFields = serializeFields( 'items', fieldIndex, fields );
+  const advFields = serializeFields( 'items', fieldIndex, customLayouts.advanced ?? [] );
 
   return (
     <StyledTabGroup
@@ -38,7 +33,7 @@ const EditMenuItem = ( { data, fields } ) => {
       } ) }
     >
       <Tabs>
-        <Tab variant="simple" hasError={ hasSettingsError }>
+        <Tab variant="simple" hasError={ hasError }>
           { formatMessage( {
             id: getTrad( 'edit.tabs.title.link' ),
             defaultMessage: 'Link',
@@ -56,7 +51,7 @@ const EditMenuItem = ( { data, fields } ) => {
           <Box padding={ 6 } background="neutral0" borderRadius="0 0 4px 4px">
 
             <Stack spacing={ 6 }>
-              <FormLayout fields={ indexedFields } />
+              <FormLayout fields={ mainFields } />
             </Stack>
 
           </Box>
@@ -64,7 +59,9 @@ const EditMenuItem = ( { data, fields } ) => {
         <TabPanel>
           <Box padding={ 6 } background="neutral0" borderRadius="0 0 4px 4px">
 
-            <p style={ { fontStyle: 'italic' } }>Additional UI options coming soon!</p>
+            <Stack spacing={ 6 }>
+              <FormLayout fields={ advFields } />
+            </Stack>
 
           </Box>
         </TabPanel>
@@ -73,7 +70,14 @@ const EditMenuItem = ( { data, fields } ) => {
   );
 };
 
+EditMenuItem.defaultProps = {
+  customLayouts: {
+    edit: {},
+  },
+};
+
 EditMenuItem.propTypes = {
+  customLayouts: PropTypes.object,
   data: menuItemProps.isRequired,
   fields: PropTypes.array.isRequired,
 };

@@ -50,7 +50,7 @@ const menuItem = [
         id: getTrad( 'form.label.title' ),
         defaultMessage: 'Title',
       },
-      name: 'items[{index}].title',
+      name: 'title',
       type: 'text',
       placeholder: {
         id: getTrad( 'form.placeholder.untitled' ),
@@ -70,7 +70,7 @@ const menuItem = [
         id: getTrad( 'form.label.url' ),
         defaultMessage: 'URL',
       },
-      name: 'items[{index}].url',
+      name: 'url',
       type: 'text',
     },
     grid: {
@@ -85,7 +85,7 @@ const menuItem = [
         id: getTrad( 'form.label.target' ),
         defaultMessage: 'Target',
       },
-      name: 'items[{index}].target',
+      name: 'target',
       type: 'select',
       options: targetOptions.map( option => ( {
         key: option,
