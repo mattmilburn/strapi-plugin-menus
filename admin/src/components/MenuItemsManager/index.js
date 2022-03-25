@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import FlipMove from 'react-flip-move';
 import { useFormikContext } from 'formik';
+import { get } from 'lodash';
 import { EmptyStateLayout } from '@strapi/helper-plugin';
 import { Button, Flex } from '@strapi/design-system';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
@@ -26,7 +27,8 @@ const MenuItemsManager = ( { fields } ) => {
     setActiveMenuItem,
   } = useMenuManager();
   const [ activeLevel, setActiveLevel ] = useState( null );
-  const { maxDepth } = useSelector( state => state[ `${pluginId}_config` ].config );
+  const { maxDepth, layouts } = useSelector( state => state[ `${pluginId}_config` ].config );
+  const customLayouts = get( layouts, 'edit', {} );
 
   const addItemLabel = formatMessage( {
     id: getTrad( 'ui.add.menuItem' ),
@@ -106,7 +108,11 @@ const MenuItemsManager = ( { fields } ) => {
       </GridItem>
       <GridItem col={ 6 } s={ 12 }>
         { activeMenuItem && (
-          <EditMenuItem data={ activeMenuItem } fields={ fields } />
+          <EditMenuItem
+            data={ activeMenuItem }
+            fields={ fields }
+            customLayouts={ customLayouts }
+          />
         ) }
       </GridItem>
     </Grid>
