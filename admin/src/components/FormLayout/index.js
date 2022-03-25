@@ -65,7 +65,7 @@ FormLayout.propTypes = {
   fields: PropTypes.arrayOf(
     PropTypes.shape( {
       input: PropTypes.object,
-      grid: PropTypes.object.isRequired
+      grid: PropTypes.object.isRequired,
     } )
   ).isRequired,
   gap: PropTypes.number,

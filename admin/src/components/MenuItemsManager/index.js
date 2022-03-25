@@ -83,9 +83,8 @@ const MenuItemsManager = ( { fields } ) => {
     return (
       <EmptyStateLayout
         content={ {
-          id: 'edit.state.empty',
+          id: getTrad( 'edit.state.empty' ),
           defaultMessage: 'Add the first menu item',
-          values: {},
         } }
         action={
           <Button
