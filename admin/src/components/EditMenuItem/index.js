@@ -21,7 +21,6 @@ const EditMenuItem = ( { data, fields, customLayouts } ) => {
   }
 
   const mainFields = serializeFields( 'items', fieldIndex, fields );
-  const advFields = serializeFields( 'items', fieldIndex, customLayouts.advanced ?? [] );
 
   return (
     <StyledTabGroup
@@ -39,12 +38,9 @@ const EditMenuItem = ( { data, fields, customLayouts } ) => {
             defaultMessage: 'Link',
           } ) }
         </Tab>
-        <Tab variant="simple">
-          { formatMessage( {
-            id: getTrad( 'edit.tabs.title.advanced' ),
-            defaultMessage: 'Advanced',
-          } ) }
-        </Tab>
+        { customLayouts && Object.keys( customLayouts ).map( ( label, i ) => (
+          <Tab variant="simple" key={ i }>{ label }</Tab>
+        ) ) }
       </Tabs>
       <TabPanels style={ { position: 'relative' } }>
         <TabPanel>
@@ -56,15 +52,21 @@ const EditMenuItem = ( { data, fields, customLayouts } ) => {
 
           </Box>
         </TabPanel>
-        <TabPanel>
-          <Box padding={ 6 } background="neutral0" borderRadius="0 0 4px 4px">
+        { customLayouts && Object.keys( customLayouts ).map( ( key, i ) => {
+          const customFields = serializeFields( 'items', fieldIndex, customLayouts[ key ] );
 
-            <Stack spacing={ 6 }>
-              <FormLayout fields={ advFields } />
-            </Stack>
+          return (
+            <TabPanel key={ i }>
+              <Box padding={ 6 } background="neutral0" borderRadius="0 0 4px 4px">
 
-          </Box>
-        </TabPanel>
+                <Stack spacing={ 6 }>
+                  <FormLayout fields={ customFields } />
+                </Stack>
+
+              </Box>
+            </TabPanel>
+          );
+        } ) }
       </TabPanels>
     </StyledTabGroup>
   );
