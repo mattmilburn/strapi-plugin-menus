@@ -1,9 +1,10 @@
 import React, { memo } from 'react';
 import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { Formik } from 'formik';
-import { get, pick, uniqueId } from 'lodash';
+import { get, omit, pick, uniqueId } from 'lodash';
 import { Form, useNotification, useOverlayBlocker } from '@strapi/helper-plugin';
 import { Box, Button, Link, Stack, useNotifyAT } from '@strapi/design-system';
 import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
@@ -38,6 +39,20 @@ const EditView = () => {
   const toggleNotification = useNotification();
   const { lockApp, unlockApp } = useOverlayBlocker();
   const queryClient = useQueryClient();
+
+  const { layouts, maxDepth } = useSelector( state => state[ `${pluginId}_config` ].config );
+  const customLayouts = get( layouts, 'editItem', {} );
+
+  // Merge default fields layout with custom field layouts.
+  const menuItemLayout = {
+    link: [
+      ...formLayout.menuItem,
+      ...get( customLayouts, 'link', [] ),
+    ],
+    ...omit( customLayouts, 'link' ),
+  };
+
+  const menuItemFields = Object.values( menuItemLayout ).flat();
 
   const isCloning = pathname.split( '/' ).includes( 'clone' );
 
@@ -124,7 +139,9 @@ const EditView = () => {
     try {
       const sanitizedMenuData = sanitizeFormData( body, formLayout.menu );
       const sanitizedMenuItemsData = get( body, 'items', [] ).map( item => {
-        return sanitizeFormData( item, formLayout.menuItem );
+        const sanitizedItem = sanitizeEntity( item );
+
+        return sanitizeFormData( sanitizedItem, menuItemFields );
       } );
 
       const res = await submitMutation.mutateAsync( {
@@ -195,7 +212,10 @@ const EditView = () => {
                       <FormLayout fields={ formLayout.menu } />
                     </Section>
                     <MenuManagerProvider menu={ data?.menu }>
-                      <MenuItemsManager fields={ formLayout.menuItem } />
+                      <MenuItemsManager
+                        fields={ menuItemLayout }
+                        maxDepth={ maxDepth }
+                      />
                     </MenuManagerProvider>
                   </Stack>
                 </Box>
