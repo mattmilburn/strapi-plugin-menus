@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { Formik } from 'formik';
-import { pick, uniqueId } from 'lodash';
+import { get, pick, uniqueId } from 'lodash';
 import { Form, useNotification, useOverlayBlocker } from '@strapi/helper-plugin';
 import { Box, Button, Link, Stack, useNotifyAT } from '@strapi/design-system';
 import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
@@ -16,7 +16,13 @@ import {
   MenuManagerProvider,
   Section,
 } from '../../components';
-import { api, getTrad, pluginId, sanitizeEntity } from '../../utils';
+import {
+  api,
+  getTrad,
+  pluginId,
+  sanitizeEntity,
+  sanitizeFormData,
+} from '../../utils';
 
 import formLayout from './form-layout';
 import formSchema from './form-schema';
@@ -116,7 +122,15 @@ const EditView = () => {
     lockApp();
 
     try {
-      const res = await submitMutation.mutateAsync( body );
+      const sanitizedMenuData = sanitizeFormData( body, formLayout.menu );
+      const sanitizedMenuItemsData = get( body, 'items', [] ).map( item => {
+        return sanitizeFormData( item, formLayout.menuItem );
+      } );
+
+      const res = await submitMutation.mutateAsync( {
+        ...sanitizedMenuData,
+        items: sanitizedMenuItemsData,
+      } );
 
       // If we just cloned a page, we need to redirect to the new edit page.
       if ( isCloning && res?.data?.menu ) {
