@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
+
 import FlipMove from 'react-flip-move';
 import { useFormikContext } from 'formik';
-import { get } from 'lodash';
 import { EmptyStateLayout } from '@strapi/helper-plugin';
 import { Button, Flex } from '@strapi/design-system';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 import { PlusCircle } from '@strapi/icons';
 
 import { useMenuManager } from '../../hooks';
-import { getTrad, pluginId } from '../../utils';
+import { getTrad } from '../../utils';
 import { EditMenuItem, TreeMenu, TreeMenuItem } from '../';
 import { AddButton } from './styled';
 
-const MenuItemsManager = ( { fields } ) => {
+const MenuItemsManager = ( { fields, maxDepth } ) => {
   const { formatMessage } = useIntl();
   const { errors, values } = useFormikContext();
   const {
@@ -27,8 +26,6 @@ const MenuItemsManager = ( { fields } ) => {
     setActiveMenuItem,
   } = useMenuManager();
   const [ activeLevel, setActiveLevel ] = useState( null );
-  const { maxDepth, layouts } = useSelector( state => state[ `${pluginId}_config` ].config );
-  const customLayouts = get( layouts, 'edit', {} );
 
   const addItemLabel = formatMessage( {
     id: getTrad( 'ui.add.menuItem' ),
@@ -111,7 +108,6 @@ const MenuItemsManager = ( { fields } ) => {
           <EditMenuItem
             data={ activeMenuItem }
             fields={ fields }
-            customLayouts={ customLayouts }
           />
         ) }
       </GridItem>
@@ -120,7 +116,8 @@ const MenuItemsManager = ( { fields } ) => {
 };
 
 MenuItemsManager.propTypes = {
-  fields: PropTypes.array.isRequired,
+  fields: PropTypes.object.isRequired,
+  maxDepth: PropTypes.number,
 };
 
 export default MenuItemsManager;

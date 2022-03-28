@@ -4,7 +4,6 @@ const sanitizeEntity = entity => {
   return omit(
     omitBy( entity, isNil ),
     [
-      'id',
       'created_at',
       'created_by',
       'createdAt',

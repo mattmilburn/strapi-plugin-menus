@@ -10,17 +10,19 @@ import { FormLayout, Section } from '../';
 
 import { StyledTabGroup } from './styled';
 
-const EditMenuItem = ( { data, fields, customLayouts } ) => {
+const EditMenuItem = ( { data, fields } ) => {
   const { formatMessage } = useIntl();
   const { errors, values } = useFormikContext();
-  const fieldIndex = values.items.findIndex( item => item.id === data.id );
-  const hasError = !! ( errors?.items && errors.items[ fieldIndex ] );
+  const itemIndex = values.items.findIndex( item => item.id === data.id );
 
-  if ( ! fieldIndex && fieldIndex !== 0 ) {
+  /**
+   * @TODO - Refactor this so single tabs can have errors instead of the whole set.
+   */
+  const hasError = !! ( errors?.items && errors.items[ itemIndex ] );
+
+  if ( ! itemIndex && itemIndex !== 0 ) {
     return null;
   }
-
-  const mainFields = serializeFields( 'items', fieldIndex, fields );
 
   return (
     <StyledTabGroup
@@ -32,35 +34,25 @@ const EditMenuItem = ( { data, fields, customLayouts } ) => {
       } ) }
     >
       <Tabs>
-        <Tab variant="simple" hasError={ hasError }>
-          { formatMessage( {
-            id: getTrad( 'edit.tabs.title.link' ),
-            defaultMessage: 'Link',
-          } ) }
-        </Tab>
-        { customLayouts && Object.keys( customLayouts ).map( ( label, i ) => (
-          <Tab variant="simple" key={ i }>{ label }</Tab>
+        { Object.keys( fields ).map( ( key, i ) => (
+          <Tab variant="simple" key={ i } hasError={ hasError }>
+            { formatMessage( {
+              id: getTrad( 'edit.tabs.title.custom' ),
+              defaultMessage: key,
+            } ) }
+          </Tab>
         ) ) }
       </Tabs>
       <TabPanels style={ { position: 'relative' } }>
-        <TabPanel>
-          <Box padding={ 6 } background="neutral0" borderRadius="0 0 4px 4px">
-
-            <Stack spacing={ 6 }>
-              <FormLayout fields={ mainFields } />
-            </Stack>
-
-          </Box>
-        </TabPanel>
-        { customLayouts && Object.keys( customLayouts ).map( ( key, i ) => {
-          const customFields = serializeFields( 'items', fieldIndex, customLayouts[ key ] );
+        { Object.keys( fields ).map( ( key, i ) => {
+          const itemFields = serializeFields( 'items', itemIndex, fields[ key ] );
 
           return (
             <TabPanel key={ i }>
               <Box padding={ 6 } background="neutral0" borderRadius="0 0 4px 4px">
 
                 <Stack spacing={ 6 }>
-                  <FormLayout fields={ customFields } />
+                  <FormLayout fields={ itemFields } />
                 </Stack>
 
               </Box>
@@ -72,16 +64,9 @@ const EditMenuItem = ( { data, fields, customLayouts } ) => {
   );
 };
 
-EditMenuItem.defaultProps = {
-  customLayouts: {
-    edit: {},
-  },
-};
-
 EditMenuItem.propTypes = {
-  customLayouts: PropTypes.object,
   data: menuItemProps.isRequired,
-  fields: PropTypes.array.isRequired,
+  fields: PropTypes.object.isRequired,
 };
 
 export default EditMenuItem;
