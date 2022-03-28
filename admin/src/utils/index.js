@@ -7,4 +7,5 @@ export { default as menuItemProps } from './menu-item-props';
 export { default as pluginId } from './plugin-id';
 export { default as pluginName } from './plugin-name';
 export { default as sanitizeEntity } from './sanitize-entity';
+export { default as sanitizeFormData } from './sanitize-form-data';
 export { default as serializeFields } from './serialize-fields';
