@@ -9,8 +9,8 @@ import { Button, Stack, useNotifyAT } from '@strapi/design-system';
 import { Breadcrumbs, Crumb } from '@strapi/design-system/Breadcrumbs';
 import { ModalLayout, ModalHeader, ModalFooter, ModalBody } from '@strapi/design-system/ModalLayout';
 
-import { api, getTrad, pluginId } from '../../utils';
 import { FormLayout } from '../';
+import { api, getTrad, pluginId, sanitizeFormData } from '../../utils';
 
 const CreateModal = ( {
   fields,
@@ -72,7 +72,8 @@ const CreateModal = ( {
     lockApp();
 
     try {
-      await submitMutation.mutateAsync( body );
+      const sanitizedMenuFields = sanitizeFormData( body, fields );
+      await submitMutation.mutateAsync( sanitizedMenuFields );
 
       // Close modal.
       onClose();
