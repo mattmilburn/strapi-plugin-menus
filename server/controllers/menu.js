@@ -1,6 +1,6 @@
 'use strict';
 
-const { get, isEmpty } = require( 'lodash' );
+const { get, has, isEmpty } = require( 'lodash' );
 const { ValidationError } = require( '@strapi/utils' ).errors;
 
 const { getService, serializeNestedMenu } = require( '../utils' );
@@ -13,7 +13,7 @@ module.exports = {
   },
 
   async find( ctx ) {
-    const nested = get( ctx.request.query, 'nested' ) !== 'false';
+    const nested = has( ctx.request.query, 'nested' );
     const populate = get( ctx.request.query, 'populate' ) !== 'false';
 
     let menus = await getService( 'menu' ).getMenus( populate );
@@ -28,7 +28,7 @@ module.exports = {
 
   async findOne( ctx ) {
     const { slug } = ctx.request.params;
-    const nested = get( ctx.request.query, 'nested' ) !== 'false';
+    const nested = has( ctx.request.query, 'nested' );
 
     let menu = await getService( 'menu' ).getMenu( slug, 'slug' );
 
