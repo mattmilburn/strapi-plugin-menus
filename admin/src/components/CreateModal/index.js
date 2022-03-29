@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { useIntl } from 'react-intl';
 import { Formik } from 'formik';
 import { Form, useNotification, useOverlayBlocker } from '@strapi/helper-plugin';
-import { Button, Stack, useNotifyAT } from '@strapi/design-system';
+import { Button, Stack } from '@strapi/design-system';
 import { Breadcrumbs, Crumb } from '@strapi/design-system/Breadcrumbs';
 import { ModalLayout, ModalHeader, ModalFooter, ModalBody } from '@strapi/design-system/ModalLayout';
 
@@ -20,7 +20,6 @@ const CreateModal = ( {
 } ) => {
   const { push } = useHistory();
   const { formatMessage } = useIntl();
-  const { notifyStatus } = useNotifyAT();
   const toggleNotification = useNotification();
   const { lockApp, unlockApp } = useOverlayBlocker();
   const queryClient = useQueryClient();
@@ -36,7 +35,6 @@ const CreateModal = ( {
   } );
 
   const submitMutation = useMutation( body => api.postAction( body ), {
-    refetchActive: true,
     onSuccess: async ( { data } ) => {
       if ( !! invalidateQueries ) {
         await queryClient.invalidateQueries( invalidateQueries );
