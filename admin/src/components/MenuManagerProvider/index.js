@@ -1,7 +1,7 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useFormikContext } from 'formik';
-import { uniqueId } from 'lodash';
+import { get, uniqueId } from 'lodash';
 
 import { MenuManagerContext } from '../../contexts';
 import {
@@ -117,6 +117,23 @@ const MenuManagerProvider = ( { children, menu } ) => {
 
     setActiveMenuItem( orderedItemA );
   };
+
+  useEffect( () => {
+    if ( ! activeMenuItem || ! `${activeMenuItem.id}`.includes( 'create' ) ) {
+      return;
+    }
+
+    // If active menu item is a new item and we just saved, find that newly
+    // created item again and set it as active.
+    const newActiveItem = get( values, 'items', [] ).find( ( { order, parent } ) => (
+      order === activeMenuItem.order &&
+      parent === activeMenuItem.parent
+    ) );
+
+    if ( newActiveItem ) {
+      setActiveMenuItem( newActiveItem );
+    }
+  }, [ activeMenuItem, values ] );
 
   return (
     <MenuManagerContext.Provider value={ {
