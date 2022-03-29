@@ -9,7 +9,6 @@ const sanitizeEntity = entity => omit( entity, [
   'updated_by',
   'updatedAt',
   'updatedBy',
-  'root_menu',
 ] );
 
 export default sanitizeEntity;

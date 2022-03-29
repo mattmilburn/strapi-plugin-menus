@@ -1,6 +1,6 @@
 'use strict';
 
-const { flattenDeep } = require( 'lodash' );
+const { flattenDeep, omit } = require( 'lodash' );
 
 const { sanitizeEntity } = require( '../utils' );
 
@@ -42,7 +42,7 @@ module.exports = ( { strapi } ) => ( {
     // promises that chain together additional promises to create descendants.
     const createLoop = _items => {
       return _items.map( async item => {
-        const sanitizedItem = sanitizeEntity( item );
+        const sanitizedItem = sanitizeEntity( omit( item, 'id' ) );
         const createdItem = await strapi.query( 'plugin::menus.menu-item' ).create( {
           data: {
             ...sanitizedItem,
@@ -77,7 +77,7 @@ module.exports = ( { strapi } ) => ( {
     const promisedItemsToCreate = createLoop( firstItemsToCreate );
 
     const promisedItemsToUpdate = itemsToUpdate.map( async item => {
-      const sanitizedItem = sanitizeEntity( item );
+      const sanitizedItem = sanitizeEntity( omit( item, 'id' ) );
 
       return await strapi.query( 'plugin::menus.menu-item' ).update( {
         where: { id: item.id },

@@ -60,7 +60,7 @@ module.exports = {
       throw new ValidationError( 'Request body cannot be empty' );
     }
 
-    const slug = ctx.request.body.slug;
+    const { slug } = ctx.request.body;
     const isAvailable = await getService( 'menu' ).checkAvailability( slug );
 
     // Validate slug availability.
@@ -79,14 +79,15 @@ module.exports = {
       throw new ValidationError( 'Request body cannot be empty' );
     }
 
-    const id = ctx.params.id;
+    // Get the entity we are about to update so we can compare it to new data.
+    const { id } = ctx.request.params;
     const menuToUpdate = await getService( 'menu' ).getMenu( id );
 
     if ( ! menuToUpdate ) {
       return ctx.notFound();
     }
 
-    const slug = ctx.request.body.slug;
+    const { slug } = ctx.request.body;
     const isAvailable = await getService( 'menu' ).checkAvailability( slug, id );
 
     // Validate slug availability.
@@ -101,7 +102,7 @@ module.exports = {
   },
 
   async delete( ctx ) {
-    const id = ctx.params.id;
+    const { id } = ctx.request.params;
     const menuToDelete = await getService( 'menu' ).getMenu( id );
 
     if ( ! menuToDelete ) {
