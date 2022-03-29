@@ -29,7 +29,50 @@ module.exports = ( { strapi } ) => ( {
     return ! menu;
   },
 
+  async getFieldsToPopulate( name ) {
+    const { layouts } = await this.getConfig();
+    const customLayouts = get( layouts, name, {} );
+    const fields = Object.values( customLayouts ).flat();
+
+    const fieldsToPopulate = fields.reduce( ( acc, { input } ) => {
+      if ( input && ( input.type === 'media' || input.type === 'relation' ) ) {
+        return {
+          ...acc,
+          [ input.name ]: true,
+        };
+      }
+
+      return acc;
+    }, {} );
+
+    return fieldsToPopulate;
+  },
+
+  async getMenu( value, field = 'id' ) {
+    const fieldsToPopulate = await this.getFieldsToPopulate( 'menuItem' );
+
+    const menu = await strapi.query( 'plugin::menus.menu' ).findOne( {
+      where: {
+        [ field ]: value,
+      },
+      populate: {
+        items: {
+          populate: {
+            ...fieldsToPopulate,
+            parent: {
+              select: [ 'id' ],
+            },
+          },
+        },
+      },
+    } );
+
+    return menu;
+  },
+
   async getMenus( populate = true ) {
+    const fieldsToPopulate = await this.getFieldsToPopulate( 'menuItem' );
+
     const params = {
       orderBy: {
         title: 'ASC',
@@ -40,6 +83,7 @@ module.exports = ( { strapi } ) => ( {
       params.populate = {
         items: {
           populate: {
+            ...fieldsToPopulate,
             parent: {
               select: [ 'id' ],
             },
@@ -51,25 +95,6 @@ module.exports = ( { strapi } ) => ( {
     const menus = await strapi.query( 'plugin::menus.menu' ).findMany( params );
 
     return menus;
-  },
-
-  async getMenu( value, field = 'id' ) {
-    const menu = await strapi.query( 'plugin::menus.menu' ).findOne( {
-      where: {
-        [ field ]: value,
-      },
-      populate: {
-        items: {
-          populate: {
-            parent: {
-              select: [ 'id' ],
-            },
-          },
-        },
-      },
-    } );
-
-    return menu;
   },
 
   async createMenu( data ) {

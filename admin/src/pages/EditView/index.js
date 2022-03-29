@@ -41,7 +41,7 @@ const EditView = () => {
   const queryClient = useQueryClient();
 
   const { layouts, maxDepth } = useSelector( state => state[ `${pluginId}_config` ].config );
-  const customLayouts = get( layouts, 'editItem', {} );
+  const customLayouts = get( layouts, 'menuItem', {} );
 
   // Merge default fields layout with custom field layouts.
   const menuItemLayout = {
