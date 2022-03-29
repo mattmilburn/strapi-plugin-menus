@@ -1,22 +1,17 @@
 'use strict';
 
-const { isNil, omit, omitBy } = require( 'lodash' );
+const { omit } = require( 'lodash' );
 
-const sanitizeEntity = entity => {
-  return omit(
-    omitBy( entity, isNil ),
-    [
-      'id',
-      'created_at',
-      'created_by',
-      'createdAt',
-      'createdBy',
-      'updated_at',
-      'updated_by',
-      'updatedAt',
-      'updatedBy',
-    ]
-  );
-};
+const sanitizeEntity = entity => omit( entity, [
+  'id',
+  'created_at',
+  'created_by',
+  'createdAt',
+  'createdBy',
+  'updated_at',
+  'updated_by',
+  'updatedAt',
+  'updatedBy',
+] );
 
 module.exports = sanitizeEntity;
