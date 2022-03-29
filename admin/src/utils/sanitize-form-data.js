@@ -1,20 +1,32 @@
-const sanitizeFormData = ( data, fields ) => {
-  return Object.entries( data ).reduce( ( acc, [ key, value ] ) => {
-    const field = fields.find( ( { input } ) => input?.name === key );
-    let sanitizedValue;
-
-    if ( ! field || ! field.input ) {
+const sanitizeFormData = ( data, layout ) => {
+  const fields = layout.reduce( ( acc, field ) => {
+    if ( ! field?.input ) {
       return acc;
     }
 
-    switch ( field.input.type ) {
+    return {
+      ...acc,
+      [ field.input.name ]: field.input.type,
+    };
+  }, {} );
+
+  const sanitizedData = Object.entries( data ).reduce( ( acc, [ key, value ] ) => {
+    const type = fields[ key ];
+
+    if ( ! type ) {
+      return acc;
+    }
+
+    let sanitizedValue;
+
+    switch ( type ) {
       case 'media':
         sanitizedValue = value?.id ?? null;
         break;
 
       case 'text':
       case 'textarea':
-        sanitizedValue = value.trim();
+        sanitizedValue = value?.trim() ?? null;
         break;
 
       default:
@@ -25,7 +37,9 @@ const sanitizeFormData = ( data, fields ) => {
       ...acc,
       [ key ]: sanitizedValue,
     };
-  }, {} );
+  }, data );
+
+  return sanitizedData;
 };
 
 export default sanitizeFormData;

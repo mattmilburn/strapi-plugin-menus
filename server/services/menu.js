@@ -3,7 +3,7 @@
 const { get, pick } = require( 'lodash' );
 
 const config = require( '../config' );
-const { getService, pluginId, sanitizeEntity } = require( '../utils' );
+const { getService, pluginId } = require( '../utils' );
 
 module.exports = ( { strapi } ) => ( {
   async getConfig() {

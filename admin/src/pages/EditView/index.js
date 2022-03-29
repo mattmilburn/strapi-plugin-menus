@@ -92,8 +92,8 @@ const EditView = () => {
     if ( isCloning ) {
       const menuData = pick( body, [ 'title', 'slug' ], {} );
       const menuItemsData = body.items.map( item => ( {
-        id: uniqueId( 'create' ),
         ...sanitizeEntity( item ),
+        id: uniqueId( 'create' ),
       } ) );
 
       const clonedBody = {
@@ -137,8 +137,9 @@ const EditView = () => {
     lockApp();
 
     try {
-      const sanitizedMenuData = sanitizeFormData( body, formLayout.menu );
-      const sanitizedMenuItemsData = get( body, 'items', [] ).map( item => {
+      const sanitizedBody = sanitizeEntity( body );
+      const sanitizedMenuData = sanitizeFormData( sanitizedBody, formLayout.menu );
+      const sanitizedMenuItemsData = get( sanitizedBody, 'items', [] ).map( item => {
         const sanitizedItem = sanitizeEntity( item );
 
         return sanitizeFormData( sanitizedItem, menuItemFields );
