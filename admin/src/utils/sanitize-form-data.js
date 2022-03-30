@@ -20,6 +20,14 @@ const sanitizeFormData = ( data, layout ) => {
     let sanitizedValue;
 
     switch ( type ) {
+      case 'bool':
+        sanitizedValue = value === null ? null : !! value;
+        break;
+
+      case 'date':
+        sanitizedValue = value ? new Date( value ) : null;
+        break;
+
       case 'media':
         sanitizedValue = value?.id ?? null;
         break;
