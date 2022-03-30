@@ -6,7 +6,7 @@ import { useFormikContext } from 'formik';
 import { GenericInput, useLibrary } from '@strapi/helper-plugin';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 
-import { InputUID } from '../';
+import { InputUID } from '../../coreComponents';
 
 const FormLayout = ( { fields, gap } ) => {
   const { fields: strapiFields } = useLibrary();

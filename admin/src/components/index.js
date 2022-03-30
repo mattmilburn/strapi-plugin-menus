@@ -11,6 +11,3 @@ export { default as Section } from './Section';
 export { default as Toolbar } from './Toolbar';
 export { default as TreeMenu } from './TreeMenu';
 export { default as TreeMenuItem } from './TreeMenuItem';
-
-// The following components were cloned from Strapi's core files with minor mods.
-export { default as InputUID } from '../coreComponents/InputUID';
