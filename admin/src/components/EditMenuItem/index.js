@@ -5,8 +5,8 @@ import { useFormikContext } from 'formik';
 import { Box, Stack } from '@strapi/design-system';
 import { Tab, Tabs, TabPanel, TabPanels } from '@strapi/design-system/Tabs';
 
-import { getTrad, menuItemProps, serializeFields } from '../../utils';
 import { FormLayout, Section } from '../';
+import { getTrad, menuItemProps, serializeFields } from '../../utils';
 
 import { StyledTabGroup } from './styled';
 

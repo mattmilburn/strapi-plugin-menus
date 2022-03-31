@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { Formik } from 'formik';
-import { get, omit, pick, uniqueId } from 'lodash';
+import { get, pick, uniqueId } from 'lodash';
 import { Form, useNotification, useOverlayBlocker } from '@strapi/helper-plugin';
 import { Box, Button, Link, Stack, useNotifyAT } from '@strapi/design-system';
 import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
@@ -20,6 +20,7 @@ import {
 import {
   api,
   getTrad,
+  normalizeItemFields,
   pluginId,
   sanitizeEntity,
   sanitizeFormData,
@@ -44,14 +45,7 @@ const EditView = () => {
   const customLayouts = get( layouts, 'menuItem', {} );
 
   // Merge default fields layout with custom field layouts.
-  const menuItemLayout = {
-    link: [
-      ...formLayout.menuItem,
-      ...get( customLayouts, 'link', [] ),
-    ],
-    ...omit( customLayouts, 'link' ),
-  };
-
+  const menuItemLayout = normalizeItemFields( formLayout.menuItem, customLayouts );
   const menuItemFields = Object.values( menuItemLayout ).flat();
 
   const isCloning = pathname.split( '/' ).includes( 'clone' );
