@@ -206,7 +206,10 @@ const EditView = () => {
                     <Section>
                       <FormLayout fields={ formLayout.menu } />
                     </Section>
-                    <MenuManagerProvider menu={ data?.menu }>
+                    <MenuManagerProvider
+                      menu={ data?.menu }
+                      isCreatingEntry={ false }
+                    >
                       <MenuItemsManager
                         fields={ menuItemLayout }
                         maxDepth={ maxDepth }

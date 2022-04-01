@@ -11,7 +11,7 @@ import {
   sortByOrder,
 } from './utils';
 
-const MenuManagerProvider = ( { children, menu } ) => {
+const MenuManagerProvider = ( { children, isCreatingEntry, menu } ) => {
   const { setValues, values } = useFormikContext();
   const [ activeMenuItem, setActiveMenuItem ] = useState( null );
 
@@ -140,6 +140,7 @@ const MenuManagerProvider = ( { children, menu } ) => {
       activeMenuItem,
       addMenuItem,
       deleteMenuItem,
+      isCreatingEntry,
       items,
       moveMenuItem,
       setActiveMenuItem,
@@ -156,6 +157,7 @@ MenuManagerProvider.propTypes = {
     slug: PropTypes.string,
     items: PropTypes.array,
   } ),
+  isCreatingEntry: PropTypes.bool.isRequired,
 };
 
 export default MenuManagerProvider;
