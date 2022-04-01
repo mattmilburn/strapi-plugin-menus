@@ -9,7 +9,7 @@ import { Button, Stack } from '@strapi/design-system';
 import { Breadcrumbs, Crumb } from '@strapi/design-system/Breadcrumbs';
 import { ModalLayout, ModalHeader, ModalFooter, ModalBody } from '@strapi/design-system/ModalLayout';
 
-import { FormLayout } from '../';
+import { FormLayout, MenuManagerProvider } from '../';
 import { api, getTrad, pluginId, sanitizeFormData } from '../../utils';
 
 const CreateModal = ( {
@@ -105,7 +105,9 @@ const CreateModal = ( {
             <Form onSubmit={ handleSubmit }>
               <ModalBody>
                 <Stack spacing={ 6 }>
-                  <FormLayout fields={ fields } />
+                  <MenuManagerProvider isCreatingEntry={ true }>
+                    <FormLayout fields={ fields } />
+                  </MenuManagerProvider>
                 </Stack>
               </ModalBody>
               <ModalFooter
