@@ -16,6 +16,10 @@ const MenuManagerProvider = ( { children, isCreatingEntry, menu } ) => {
   const [ activeMenuItem, setActiveMenuItem ] = useState( null );
 
   const items = useMemo( () => {
+    if ( ! values?.items ) {
+      return [];
+    }
+
     const rootItems = values.items.filter( item => ! item.parent );
 
     // Recursively add descendant items to top-level items.
@@ -148,6 +152,13 @@ const MenuManagerProvider = ( { children, isCreatingEntry, menu } ) => {
       { children }
     </MenuManagerContext.Provider>
   );
+};
+
+MenuManagerProvider.defaultProps = {
+  isCreatingEntry: false,
+  menu: {
+    id: null,
+  },
 };
 
 MenuManagerProvider.propTypes = {
