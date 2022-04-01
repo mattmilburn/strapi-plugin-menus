@@ -3,29 +3,30 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
 import FlipMove from 'react-flip-move';
-import { useFormikContext } from 'formik';
 import { EmptyStateLayout } from '@strapi/helper-plugin';
 import { Button, Flex } from '@strapi/design-system';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 import { PlusCircle } from '@strapi/icons';
 
+import { EditMenuItem, TreeMenu, TreeMenuItem } from '../';
 import { useMenuData } from '../../hooks';
 import { getTrad } from '../../utils';
-import { EditMenuItem, TreeMenu, TreeMenuItem } from '../';
+
 import { AddButton } from './styled';
 
 const MenuItemsManager = ( { fields, maxDepth } ) => {
   const { formatMessage } = useIntl();
-  const { errors, values } = useFormikContext();
+  const [ activeLevel, setActiveLevel ] = useState( null );
   const {
     activeMenuItem,
     addMenuItem,
     deleteMenuItem,
+    errors,
     items,
+    modifiedData,
     moveMenuItem,
     setActiveMenuItem,
   } = useMenuData();
-  const [ activeLevel, setActiveLevel ] = useState( null );
 
   const addItemLabel = formatMessage( {
     id: getTrad( 'ui.add.menuItem' ),
@@ -33,7 +34,7 @@ const MenuItemsManager = ( { fields, maxDepth } ) => {
   } );
 
   const renderItems = ( _items, level = 0 ) => {
-    const parentId = _items[0]?.parent?.id;
+    const parentId = _items[ 0 ]?.parent?.id;
     const maxDepthReached = ! maxDepth ? false : level + 1 >= maxDepth;
 
     const action = (
@@ -50,8 +51,8 @@ const MenuItemsManager = ( { fields, maxDepth } ) => {
     return (
       <TreeMenu action={ action } level={ level } activeLevel={ activeLevel }>
         { _items.map( ( item, i ) => {
-          const siblings = values.items.filter( _item => _item?.parent?.id === item?.parent?.id );
-          const itemIndex = values.items.findIndex( _item => _item.id === item.id );
+          const siblings = modifiedData.items.filter( _item => _item?.parent?.id === item?.parent?.id );
+          const itemIndex = modifiedData.items.findIndex( _item => _item.id === item.id );
           const hasErrors = !! ( errors?.items && errors.items[ itemIndex ] );
           const isActive = item.id === activeMenuItem?.id;
 

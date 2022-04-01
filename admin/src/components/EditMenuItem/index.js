@@ -1,19 +1,19 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import { useFormikContext } from 'formik';
 import { Box, Stack } from '@strapi/design-system';
 import { Tab, Tabs, TabPanel, TabPanels } from '@strapi/design-system/Tabs';
 
 import { FormLayout, Section } from '../';
 import { getTrad, menuItemProps, serializeFields } from '../../utils';
+import { useMenuData } from '../../hooks';
 
 import { StyledTabGroup } from './styled';
 
 const EditMenuItem = ( { data, fields } ) => {
   const { formatMessage } = useIntl();
-  const { errors, values } = useFormikContext();
-  const itemIndex = values.items.findIndex( item => item.id === data.id );
+  const { errors, modifiedData } = useMenuData();
+  const itemIndex = modifiedData.items.findIndex( item => item.id === data.id );
 
   /**
    * @TODO - Refactor this so single tabs can have errors instead of the whole set.

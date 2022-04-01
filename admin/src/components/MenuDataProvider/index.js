@@ -12,8 +12,14 @@ import {
 } from './utils';
 
 const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
-  const { setValues, values } = useFormikContext();
   const [ activeMenuItem, setActiveMenuItem ] = useState( null );
+  const {
+    errors,
+    handleChange,
+    initialValues,
+    setValues,
+    values,
+  } = useFormikContext();
 
   const items = useMemo( () => {
     if ( ! values?.items ) {
@@ -144,8 +150,12 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
       activeMenuItem,
       addMenuItem,
       deleteMenuItem,
+      errors,
+      handleChange,
+      initialData: initialValues,
       isCreatingEntry,
       items,
+      modifiedData: values,
       moveMenuItem,
       setActiveMenuItem,
     } }>
