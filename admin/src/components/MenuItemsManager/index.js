@@ -9,7 +9,7 @@ import { Button, Flex } from '@strapi/design-system';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 import { PlusCircle } from '@strapi/icons';
 
-import { useMenuManager } from '../../hooks';
+import { useMenuData } from '../../hooks';
 import { getTrad } from '../../utils';
 import { EditMenuItem, TreeMenu, TreeMenuItem } from '../';
 import { AddButton } from './styled';
@@ -24,7 +24,7 @@ const MenuItemsManager = ( { fields, maxDepth } ) => {
     items,
     moveMenuItem,
     setActiveMenuItem,
-  } = useMenuManager();
+  } = useMenuData();
   const [ activeLevel, setActiveLevel ] = useState( null );
 
   const addItemLabel = formatMessage( {

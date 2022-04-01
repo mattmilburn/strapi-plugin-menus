@@ -1,1 +1,1 @@
-export { default as MenuManagerContext } from './menu-manager';
+export { default as MenuDataContext } from './menu-data';
