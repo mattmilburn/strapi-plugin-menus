@@ -13,8 +13,8 @@ import { ArrowLeft, Check } from '@strapi/icons';
 import {
   FormLayout,
   Layout,
+  MenuDataProvider,
   MenuItemsManager,
-  MenuManagerProvider,
   Section,
 } from '../../components';
 import {
@@ -206,7 +206,7 @@ const EditView = () => {
                     <Section>
                       <FormLayout fields={ formLayout.menu } />
                     </Section>
-                    <MenuManagerProvider
+                    <MenuDataProvider
                       menu={ data?.menu }
                       isCreatingEntry={ false }
                     >
@@ -214,7 +214,7 @@ const EditView = () => {
                         fields={ menuItemLayout }
                         maxDepth={ maxDepth }
                       />
-                    </MenuManagerProvider>
+                    </MenuDataProvider>
                   </Stack>
                 </Box>
               </ContentLayout>
