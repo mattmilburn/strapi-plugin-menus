@@ -203,13 +203,13 @@ const EditView = () => {
               <ContentLayout>
                 <Box paddingBottom={ 10 }>
                   <Stack spacing={ 8 }>
-                    <Section>
-                      <FormLayout fields={ formLayout.menu } />
-                    </Section>
                     <MenuDataProvider
-                      menu={ data?.menu }
                       isCreatingEntry={ false }
+                      menu={ data?.menu }
                     >
+                      <Section>
+                        <FormLayout fields={ formLayout.menu } />
+                      </Section>
                       <MenuItemsManager
                         fields={ menuItemLayout }
                         maxDepth={ maxDepth }

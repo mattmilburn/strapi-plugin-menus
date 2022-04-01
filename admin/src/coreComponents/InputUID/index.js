@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 // import { useCMEditViewDataManager } from '@strapi/helper-plugin'; // CUSTOM MOD [1].
-import { useFormikContext } from 'formik'; // CUSTOM MOD [1].
 import { useIntl } from 'react-intl';
 import get from 'lodash/get';
 import { TextInput } from '@strapi/design-system/TextInput';
@@ -10,6 +9,7 @@ import Refresh from '@strapi/icons/Refresh';
 import CheckCircle from '@strapi/icons/CheckCircle';
 import ExclamationMarkCircle from '@strapi/icons/ExclamationMarkCircle';
 import Loader from '@strapi/icons/Loader';
+import { useMenuData } from '../../hooks'; // CUSTOM MOD [1].
 import { axiosInstance } from '../../utils'; // CUSTOM MOD [2].
 // import { getRequestUrl } from '../../utils'; // CUSTOM MOD [3].
 import useDebounce from './useDebounce';
@@ -36,7 +36,7 @@ const InputUID = ({
   required,
 }) => {
   // const { modifiedData, initialData, layout } = useCMEditViewDataManager(); // CUSTOM MOD [1].
-  const { initialValues: initialData, values: modifiedData } = useFormikContext(); // CUSTOM MOD [1].
+  const { initialData, modifiedData } = useMenuData(); // CUSTOM MOD [1].
   const [isLoading, setIsLoading] = useState(false);
   const [availability, setAvailability] = useState(null);
   const debouncedValue = useDebounce(value, 300);

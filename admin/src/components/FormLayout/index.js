@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { get } from 'lodash';
-import { useFormikContext } from 'formik';
 
 import { GenericInput, useLibrary } from '@strapi/helper-plugin';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 
 import { InputUID } from '../../coreComponents';
+import { useMenuData } from '../../hooks';
 
 const FormLayout = ( { fields, gap } ) => {
   const { fields: strapiFields } = useLibrary();
-  const { errors, handleChange, values } = useFormikContext();
+  const { errors, handleChange, modifiedData } = useMenuData();
 
   return (
     <Grid gap={ gap }>
@@ -35,7 +35,7 @@ const FormLayout = ( { fields, gap } ) => {
 
         // Cannot use the default value param in the first `get` because we
         // actually want to use the `defaultValue` if we get `null`.
-        const fieldValue = get( values, input.name ) ?? defaultValue;
+        const fieldValue = get( modifiedData, input.name ) ?? defaultValue;
         const fieldErrors = get( errors, input.name, null );
 
         return (
