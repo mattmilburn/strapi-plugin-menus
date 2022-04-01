@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useFormikContext } from 'formik';
 import { get, uniqueId } from 'lodash';
 
-import { MenuManagerContext } from '../../contexts';
+import { MenuDataContext } from '../../contexts';
 import {
   defaultItem,
   getChildren,
@@ -140,7 +140,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
   }, [ activeMenuItem, values ] );
 
   return (
-    <MenuManagerContext.Provider value={ {
+    <MenuDataContext.Provider value={ {
       activeMenuItem,
       addMenuItem,
       deleteMenuItem,
@@ -150,7 +150,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
       setActiveMenuItem,
     } }>
       { children }
-    </MenuManagerContext.Provider>
+    </MenuDataContext.Provider>
   );
 };
 
