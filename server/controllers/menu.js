@@ -1,7 +1,9 @@
 'use strict';
 
 const { get, isEmpty } = require( 'lodash' );
+const { prop, pick } = require( 'lodash/fp' );
 const { ValidationError } = require( '@strapi/utils' ).errors;
+const { PUBLISHED_AT_ATTRIBUTE } = require('@strapi/utils').contentTypes.constants;
 
 const { getService, serializeNestedMenu } = require( '../utils' );
 
@@ -53,6 +55,48 @@ module.exports = {
     }
 
     ctx.send( { menu } );
+  },
+
+  async findRelations( ctx ) {
+    const { targetField } = ctx.params;
+    const { query } = ctx.request;
+    const contentManager = strapi.plugin( 'content-manager' );
+    const contentTypes = contentManager.service( 'content-types' );
+    const entityManager = contentManager.service( 'entity-manager' );
+
+    if ( ! targetField ) {
+      return ctx.badRequest();
+    }
+
+    const modelDef = strapi.getModel( 'plugin::menus.menu-item' );
+
+    if ( ! modelDef ) {
+      return ctx.notFound( 'model.notFound' );
+    }
+
+    const attribute = modelDef.attributes[ targetField ];
+
+    if ( ! attribute || attribute.type !== 'relation' ) {
+      return ctx.badRequest( 'targetField.invalid' );
+    }
+
+    const target = strapi.getModel( attribute.target );
+
+    if ( ! target ) {
+      return ctx.notFound( 'target.notFound' );
+    }
+
+    const entities = await entityManager.find( query, target.uid, [] );
+
+    if ( ! entities ) {
+      return ctx.notFound();
+    }
+
+    const modelConfig = await contentTypes.findConfiguration( modelDef );
+    const field = prop( `metadatas.${targetField}.edit.mainField`, modelConfig ) || 'id';
+    const pickFields = [ field, 'id', target.primaryKey, PUBLISHED_AT_ATTRIBUTE ];
+
+    ctx.send( entities.map( pick( pickFields ) ) );
   },
 
   async create( ctx ) {

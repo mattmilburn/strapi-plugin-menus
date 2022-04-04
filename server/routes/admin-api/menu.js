@@ -27,6 +27,14 @@ module.exports = [
   },
   {
     method: 'POST',
+    path: '/relations/:targetField',
+    handler: 'menu.findRelations',
+    config: {
+      policies: [ 'admin::isAuthenticatedAdmin' ],
+    },
+  },
+  {
+    method: 'POST',
     path: '/',
     handler: 'menu.create',
     config: {
