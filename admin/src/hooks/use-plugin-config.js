@@ -10,7 +10,7 @@ const fetchConfig = async ( toggleNotification ) => {
     const endpoint = `/${pluginId}/config`;
     const data = await request( endpoint, { method: 'GET' } );
 
-    return data?.config ?? {};
+    return data ?? {};
   } catch ( err ) {
     toggleNotification( {
       type: 'warning',
@@ -24,8 +24,11 @@ const fetchConfig = async ( toggleNotification ) => {
 const usePluginConfig = () => {
   const dispatch = useDispatch();
   const toggleNotification = useNotification();
-  const config = useSelector( state => state[ `${pluginId}_config` ].config );
-  const isLoading = useSelector( state => state[ `${pluginId}_config` ].isLoading );
+
+  const stateKey = `${pluginId}_config`;
+  const config = useSelector( state => state[ stateKey ].config );
+  const schema = useSelector( state => state[ stateKey ].schema );
+  const isLoading = useSelector( state => state[ stateKey ].isLoading );
 
   useEffect( () => {
     fetchConfig( toggleNotification ).then( data => {
@@ -33,7 +36,7 @@ const usePluginConfig = () => {
     } );
   }, [ dispatch, toggleNotification ] );
 
-  return { config, isLoading };
+  return { isLoading, config, schema };
 };
 
 export default usePluginConfig;
