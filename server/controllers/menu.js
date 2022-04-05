@@ -10,8 +10,12 @@ const { getService, serializeNestedMenu } = require( '../utils' );
 module.exports = {
   async config( ctx ) {
     const config = await getService( 'menu' ).getConfig();
+    const schema = await getService( 'menu' ).getSchema();
 
-    ctx.send( { config } );
+    ctx.send( {
+      config,
+      schema,
+    } );
   },
 
   async find( ctx ) {
