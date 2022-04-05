@@ -13,7 +13,8 @@ import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
 import set from 'lodash/set';
-import { NotAllowedInput, useCMEditViewDataManager, useQueryParams } from '@strapi/helper-plugin';
+import { NotAllowedInput, useQueryParams } from '@strapi/helper-plugin'; // CUSTOM MOD [1].
+import { useMenuData } from '../../hooks'; // CUSTOM MOD [1].
 import { stringify } from 'qs';
 import axios from 'axios';
 // import { axiosInstance } from '../../../core/utils'; // CUSTOM MOD [2].
@@ -25,7 +26,7 @@ import ClearIndicator from './ClearIndicator';
 import DropdownIndicator from './DropdownIndicator';
 import IndicatorSeparator from './IndicatorSeparator';
 import Option from './Option';
-import { connect, select } from './utils';
+// import { connect, select } from './utils'; // CUSTOM MOD [5].
 import getSelectStyles from './utils/getSelectStyles';
 
 const initialPaginationState = {
@@ -68,13 +69,18 @@ function SelectWrapper({
   const [{ query }] = useQueryParams();
   // Disable the input in case of a polymorphic relation
   const isMorph = useMemo(() => relationType.toLowerCase().includes('morph'), [relationType]);
-  const {
-    addRelation,
-    modifiedData,
-    moveRelation,
-    onChange,
-    onRemoveRelation,
-  } = useCMEditViewDataManager();
+  // const {
+  //   addRelation,
+  //   modifiedData,
+  //   moveRelation,
+  //   onChange,
+  //   onRemoveRelation,
+  // } = useCMEditViewDataManager(); // CUSTOM MOD [1].
+  const { handleChange: onChange, modifiedData } = useMenuData(); // CUSTOM MOD [1].
+  const addRelation = args => console.log( 'ADD RELATION', args );
+  const moveRelation = args => console.log( 'MOVE RELATION', args );
+  const onRemoveRelation = args => console.log( 'ON REMOVE RELATION', args );
+
   const { pathname } = useLocation();
   const theme = useTheme();
 
@@ -270,17 +276,17 @@ function SelectWrapper({
   }, [isMorph, isCreatingEntry, editable, isFieldAllowed, isFieldReadable]);
 
   if (!isFieldAllowed && isCreatingEntry) {
-    return <NotAllowedInput intlLabel={intlLabel} labelAction={labelAction} />;
+    return <NotAllowedInput intlLabel={intlLabel} labelAction={labelAction} name={name} />;
   }
 
   if (!isCreatingEntry && !isFieldAllowed && !isFieldReadable) {
-    return <NotAllowedInput intlLabel={intlLabel} labelAction={labelAction} />;
+    return <NotAllowedInput intlLabel={intlLabel} labelAction={labelAction} name={name} />;
   }
 
   const styles = getSelectStyles(theme);
 
   return (
-    <Stack size={1}>
+    <Stack spacing={1}>
       <Label
         intlLabel={intlLabel}
         isSingle={isSingle}
@@ -328,6 +334,7 @@ SelectWrapper.defaultProps = {
   description: '',
   labelAction: null,
   isFieldAllowed: true,
+  isFieldReadable: true, // CUSTOM MOD [5].
   placeholder: null,
 };
 
@@ -342,7 +349,7 @@ SelectWrapper.propTypes = {
   labelAction: PropTypes.element,
   isCreatingEntry: PropTypes.bool.isRequired,
   isFieldAllowed: PropTypes.bool,
-  isFieldReadable: PropTypes.bool.isRequired,
+  isFieldReadable: PropTypes.bool, // CUSTOM MOD [5].
   mainField: PropTypes.shape({
     name: PropTypes.string.isRequired,
     schema: PropTypes.shape({
@@ -368,7 +375,9 @@ SelectWrapper.propTypes = {
 
 const Memoized = memo(SelectWrapper);
 
-export default connect(
-  Memoized,
-  select
-);
+// export default connect( // CUSTOM MOD [5].
+//   Memoized,
+//   select
+// );
+
+export default Memoized; // CUSTOM MOD [5].

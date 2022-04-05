@@ -1,6 +1,6 @@
 # Core components
 
-Certain components are cloned directly from Strapi at the locations below:
+Certain components are cloned directly from Strapi, with their locations listed below:
 
 ```
 /packages/core/admin/admin/src/content-manager/components/InputUID
@@ -9,17 +9,16 @@ Certain components are cloned directly from Strapi at the locations below:
 /packages/core/admin/admin/src/content-manager/components/SelectWrapper
 ```
 
-### How to keep it updated
+### How to keep core components updated
 
-As Strapi updates and these components, they may also need to be updated in this plugin. Thankfully the updates are minor and easy to describe.
+As Strapi updates, these components may also need to be updated in this plugin. Thankfully the updates are minor and easy to describe. See the table below for the current modifications.
 
-In the table below are the current modifications.
-
-| Component | Filename | Num | Description |
+| Num | Component | Filename | Description |
 |-|-|-|-|
-| InputUID | index.js | 1 | The `useFormikContext` hook will be used in place of `useCMEditViewDataManager` to provide `initialData` and `modifiedData`. |
-| InputUID<br>SelectWrapper | index.js | 2 | The path to `axiosInstance` is updated to use the instance provided in the plugin. |
-| InputUID | index.js | 3 | The `getRequestUrl` util will not be used. Instead, we use explicit paths for `/content-manager/uid/` routes. |
-| InputUID | index.js | 4 | The `createdAtName` var will be explicitly defined as `createdAt` instead of deriving from `layout` data. |
+| 1 | InputUID<br>SelectWrapper | index.js | The `useMenuData` hook will be used in place of `useCMEditViewDataManager`. |
+| 2 | InputUID<br>SelectWrapper | index.js | The path to `axiosInstance` is updated to use the instance provided in the plugin. |
+| 3 | InputUID | index.js | The `getRequestUrl` util will not be used. Instead, we use explicit paths for `/content-manager/uid/` routes. |
+| 4 | InputUID | index.js | The `createdAtName` var will be explicitly defined as `createdAt` instead of deriving from `layout` data. |
+| 5 | SelectWrapper | index.js | The `connect` and `select` functions are omitted because this plugin is not handling RBAC yet. Previous props from these functions are hard-coded in the plugin. |
 
 Look for `CUSTOM MOD [n]` comments to identify exactly what lines were changed. The number in the comment corresponds to the table above.
