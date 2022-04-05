@@ -11,7 +11,7 @@ import {
   sortByOrder,
 } from './utils';
 
-const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
+const MenuDataProvider = ( { children, isCreatingEntry, menu, schema } ) => {
   const [ activeMenuItem, setActiveMenuItem ] = useState( null );
   const {
     errors,
@@ -157,6 +157,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
       items,
       modifiedData: values,
       moveMenuItem,
+      schema,
       setActiveMenuItem,
     } }>
       { children }
@@ -179,6 +180,7 @@ MenuDataProvider.propTypes = {
     items: PropTypes.array,
   } ),
   isCreatingEntry: PropTypes.bool.isRequired,
+  schema: PropTypes.object.isRequired,
 };
 
 export default MenuDataProvider;

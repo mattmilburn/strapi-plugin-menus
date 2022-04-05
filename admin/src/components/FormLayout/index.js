@@ -15,6 +15,7 @@ const FormLayout = ( { fields, gap } ) => {
     handleChange,
     isCreatingEntry,
     modifiedData,
+    schema,
   } = useMenuData();
 
   return (
@@ -42,27 +43,15 @@ const FormLayout = ( { fields, gap } ) => {
         // actually want to use the `defaultValue` if we get `null`.
         const fieldValue = get( modifiedData, input.name ) ?? defaultValue;
         const fieldErrors = get( errors, input.name, null );
+        const fieldName = input.name.split( '.' ).slice( 1 ).join( '' );
 
         if ( input.type === 'relation' ) {
-          // @TODO - Remove this fixture data.
-          const targetField = input.name.split( '.' ).slice( 1 ).join( '' );
-          const relationData = {
-            relationType: 'oneToOne',
-            targetModel: 'api::page.page',
-            mainField: {
-              name: 'title',
-              schema: {
-                type: 'string',
-              },
-            },
-            queryInfos: {
-              containsKey: '',
-              defaultParams: {},
-              endPoint: `menus/relations/${targetField}`,
-              shouldDisplayRelationLink: true,
-              paramsToKeep: [],
-            },
-          };
+          const relationData = schema.menuItem[ fieldName ]?.metadata ?? {};
+
+          if ( ! relationData ) {
+            console.warn( `Missing metadata for ${fieldName} relation field.` );
+            return null;
+          }
 
           return (
             <GridItem key={ input.name } { ...grid.size }>

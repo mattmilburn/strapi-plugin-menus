@@ -1,6 +1,6 @@
 'use strict';
 
-const { get, omit, pick } = require( 'lodash' );
+const { get, pick, without } = require( 'lodash' );
 
 const config = require( '../config' );
 const { getService, pluginId } = require( '../utils' );
@@ -20,11 +20,11 @@ module.exports = ( { strapi } ) => ( {
 
     // Determine custom relation fields, if any.
     const editItemRelations = get( menuItemConfig, 'layouts.editRelations', [] );
-    const customItemRelations = omit( editItemRelations, [ 'parent', 'root_menu' ] );
+    const customItemRelations = without( editItemRelations, 'parent', 'root_menu' );
 
     // For the `MenuItem` schema, we're going to append extra metadata for custom
     // relations to more easily provide their necessary config on the frontend.
-    const menuItemAttributes = customItemRelations.reduce( ( acc, name ) => {
+    const menuItemAttributes = await customItemRelations.reduce( async ( acc, name ) => {
       const attr = acc[ name ];
 
       if ( ! attr || ! attr.target ) {
@@ -39,13 +39,13 @@ module.exports = ( { strapi } ) => ( {
 
       const relationConfig = await contentTypes.findConfiguration( relationModel );
       const mainFieldName = get( relationConfig, 'settings.mainField' );
-      const mainFieldType = get( menuIteModel, `attributes.${mainFieldName}`, 'type' );
+      const mainFieldType = get( menuItemModel, `attributes.${mainFieldName}.type` );
 
       const metadata = {
         relationType: attr.relation,
         targetModel: attr.target,
         mainField: {
-          name: mainField,
+          name: mainFieldName,
           schema: {
             type: mainFieldType,
           },
@@ -63,7 +63,7 @@ module.exports = ( { strapi } ) => ( {
         ...acc,
         [ name ]: {
           ...attr,
-          ...metadata,
+          metadata,
         }
       };
     }, menuItemModel.attributes );
