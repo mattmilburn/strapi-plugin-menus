@@ -14,7 +14,7 @@ import { getTrad } from '../../utils';
 
 import { AddButton } from './styled';
 
-const MenuItemsManager = ( { fields, maxDepth } ) => {
+const MenuItemsManager = ( { fields } ) => {
   const { formatMessage } = useIntl();
   const [ activeLevel, setActiveLevel ] = useState( null );
   const {
@@ -23,6 +23,7 @@ const MenuItemsManager = ( { fields, maxDepth } ) => {
     deleteMenuItem,
     errors,
     items,
+    maxDepth,
     modifiedData,
     moveMenuItem,
     setActiveMenuItem,
@@ -118,7 +119,6 @@ const MenuItemsManager = ( { fields, maxDepth } ) => {
 
 MenuItemsManager.propTypes = {
   fields: PropTypes.object.isRequired,
-  maxDepth: PropTypes.number,
 };
 
 export default MenuItemsManager;

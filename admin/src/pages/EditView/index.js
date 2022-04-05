@@ -41,9 +41,8 @@ const EditView = () => {
   const { lockApp, unlockApp } = useOverlayBlocker();
   const queryClient = useQueryClient();
 
-  const { config, schema } = useSelector( state => state[ `${pluginId}_config` ] );
-  const { layouts, maxDepth } = config;
-  const customLayouts = get( layouts, 'menuItem', {} );
+  const { config } = useSelector( state => state[ `${pluginId}_config` ] );
+  const customLayouts = get( config, 'layouts.menuItem', {} );
 
   // Merge default fields layout with custom field layouts.
   const menuItemLayout = normalizeItemFields( formLayout.menuItem, customLayouts );
@@ -207,15 +206,11 @@ const EditView = () => {
                     <MenuDataProvider
                       isCreatingEntry={ false }
                       menu={ data?.menu }
-                      schema={ schema }
                     >
                       <Section>
                         <FormLayout fields={ formLayout.menu } />
                       </Section>
-                      <MenuItemsManager
-                        fields={ menuItemLayout }
-                        maxDepth={ maxDepth }
-                      />
+                      <MenuItemsManager fields={ menuItemLayout } />
                     </MenuDataProvider>
                   </Stack>
                 </Box>

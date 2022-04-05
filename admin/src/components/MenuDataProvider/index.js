@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { useFormikContext } from 'formik';
 import { get, uniqueId } from 'lodash';
 
 import { MenuDataContext } from '../../contexts';
+import { pluginId } from '../../utils';
 import {
   defaultItem,
   getChildren,
@@ -11,8 +13,10 @@ import {
   sortByOrder,
 } from './utils';
 
-const MenuDataProvider = ( { children, isCreatingEntry, menu, schema } ) => {
+const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
   const [ activeMenuItem, setActiveMenuItem ] = useState( null );
+  const { config, schema } = useSelector( state => state[ `${pluginId}_config` ] );
+  const { maxDepth } = config;
   const {
     errors,
     handleChange,
@@ -155,6 +159,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu, schema } ) => {
       initialData: initialValues,
       isCreatingEntry,
       items,
+      maxDepth,
       modifiedData: values,
       moveMenuItem,
       schema,
@@ -180,7 +185,6 @@ MenuDataProvider.propTypes = {
     items: PropTypes.array,
   } ),
   isCreatingEntry: PropTypes.bool.isRequired,
-  schema: PropTypes.object.isRequired,
 };
 
 export default MenuDataProvider;
