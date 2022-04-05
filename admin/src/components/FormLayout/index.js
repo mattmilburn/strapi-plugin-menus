@@ -5,12 +5,17 @@ import { get } from 'lodash';
 import { GenericInput, useLibrary } from '@strapi/helper-plugin';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 
-import { InputUID } from '../../coreComponents';
+import { InputUID, SelectWrapper } from '../../coreComponents';
 import { useMenuData } from '../../hooks';
 
 const FormLayout = ( { fields, gap } ) => {
   const { fields: strapiFields } = useLibrary();
-  const { errors, handleChange, modifiedData } = useMenuData();
+  const {
+    errors,
+    handleChange,
+    isCreatingEntry,
+    modifiedData,
+  } = useMenuData();
 
   return (
     <Grid gap={ gap }>
@@ -37,6 +42,39 @@ const FormLayout = ( { fields, gap } ) => {
         // actually want to use the `defaultValue` if we get `null`.
         const fieldValue = get( modifiedData, input.name ) ?? defaultValue;
         const fieldErrors = get( errors, input.name, null );
+
+        if ( input.type === 'relation' ) {
+          // @TODO - Remove this fixture data.
+          const targetField = input.name.split( '.' ).slice( 1 ).join( '' );
+          const relationData = {
+            relationType: 'oneToOne',
+            targetModel: 'api::page.page',
+            mainField: {
+              name: 'title',
+              schema: {
+                type: 'string',
+              },
+            },
+            queryInfos: {
+              containsKey: '',
+              defaultParams: {},
+              endPoint: `menus/relations/${targetField}`,
+              shouldDisplayRelationLink: true,
+              paramsToKeep: [],
+            },
+          };
+
+          return (
+            <GridItem key={ input.name } { ...grid.size }>
+              <SelectWrapper
+                { ...input }
+                { ...relationData }
+                isCreatingEntry={ isCreatingEntry }
+                value={ fieldValue }
+              />
+            </GridItem>
+          );
+        }
 
         return (
           <GridItem key={ input.name } { ...grid.size }>
