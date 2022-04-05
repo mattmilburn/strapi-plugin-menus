@@ -24,7 +24,8 @@ module.exports = ( { strapi } ) => ( {
 
     // For the `MenuItem` schema, we're going to append extra metadata for custom
     // relations to more easily provide their necessary config on the frontend.
-    const menuItemAttributes = await customItemRelations.reduce( async ( acc, name ) => {
+    const menuItemAttributes = await customItemRelations.reduce( async ( prevPromise, name ) => {
+      const acc = await prevPromise;
       const attr = acc[ name ];
 
       if ( ! attr || ! attr.target ) {
@@ -39,7 +40,7 @@ module.exports = ( { strapi } ) => ( {
 
       const relationConfig = await contentTypes.findConfiguration( relationModel );
       const mainFieldName = get( relationConfig, 'settings.mainField' );
-      const mainFieldType = get( menuItemModel, `attributes.${mainFieldName}.type` );
+      const mainFieldType = get( relationModel, `attributes.${mainFieldName}.type` );
 
       const metadata = {
         relationType: attr.relation,
@@ -66,7 +67,7 @@ module.exports = ( { strapi } ) => ( {
           metadata,
         }
       };
-    }, menuItemModel.attributes );
+    }, Promise.resolve( menuItemModel.attributes ) );
 
     return {
       menu: menuModel.attributes,
