@@ -46,7 +46,7 @@ const FormLayout = ( { fields, gap } ) => {
         const fieldName = input.name.split( '.' ).slice( 1 ).join( '' );
 
         if ( input.type === 'relation' ) {
-          const relationData = schema.menuItem[ fieldName ]?.metadata ?? {};
+          const relationData = schema.menuItem[ fieldName ]?.metadata;
 
           if ( ! relationData ) {
             console.warn( `Missing metadata for ${fieldName} relation field.` );
