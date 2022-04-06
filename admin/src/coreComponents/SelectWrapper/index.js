@@ -76,10 +76,13 @@ function SelectWrapper({
   //   onChange,
   //   onRemoveRelation,
   // } = useCMEditViewDataManager(); // CUSTOM MOD [1].
-  const { handleChange: onChange, modifiedData } = useMenuData(); // CUSTOM MOD [1].
-  const addRelation = args => console.log( 'ADD RELATION', args );
-  const moveRelation = args => console.log( 'MOVE RELATION', args );
-  const onRemoveRelation = args => console.log( 'ON REMOVE RELATION', args );
+  const {
+    addRelation,
+    modifiedData,
+    moveRelation,
+    handleChange: onChange,
+    onRemoveRelation,
+} = useMenuData(); // CUSTOM MOD [1].
 
   const { pathname } = useLocation();
   const theme = useTheme();
