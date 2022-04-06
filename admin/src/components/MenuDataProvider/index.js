@@ -2,9 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFormikContext } from 'formik';
-import { get, uniqueId } from 'lodash';
+import { get, set, take, uniqueId } from 'lodash';
 
-import { ADD_RELATION, MOVE_RELATION, REMOVE_RELATION } from '../../constants';
 import { MenuDataContext } from '../../contexts';
 import { pluginId } from '../../utils';
 import {
@@ -65,11 +64,20 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
   };
 
   const addRelation = ( { target: { name, value } } ) => {
-    dispatch( {
-      type: ADD_RELATION,
-      keys: name.split( '.' ),
-      value,
-    } );
+    if ( ! Array.isArray( value ) || ! value.length ) {
+      return;
+    }
+
+    const currentRelations = get( values, name, [] );
+    const newRelation = value[ 0 ].value;
+    let newValues = values;
+
+    set( newValues, name, [
+      ...currentRelations,
+      newRelation,
+    ] );
+
+    setValues( newValues );
   };
 
   const deleteMenuItem = id => {
@@ -142,20 +150,12 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     setActiveMenuItem( orderedItemA );
   };
 
-  const moveRelation = ( dragIndex, overIndex, name ) => {
-    dispatch( {
-      type: MOVE_RELATION,
-      keys: name.split( '.' ),
-      dragIndex,
-      overIndex,
-    } );
+  const moveRelation = () => {
+    // This is a no-op in Strapi but we're keeping in place in case it gets used in the future.
   };
 
   const onRemoveRelation = keys => {
-    dispatch( {
-      type: REMOVE_RELATION,
-      keys,
-    } );
+    // TBD
   };
 
   useEffect( () => {
