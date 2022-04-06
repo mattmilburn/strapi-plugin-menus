@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useFormikContext } from 'formik';
 import { get, uniqueId } from 'lodash';
 
+import { ADD_RELATION, MOVE_RELATION, REMOVE_RELATION } from '../../constants';
 import { MenuDataContext } from '../../contexts';
 import { pluginId } from '../../utils';
 import {
@@ -14,6 +15,7 @@ import {
 } from './utils';
 
 const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
+  const dispatch = useDispatch();
   const [ activeMenuItem, setActiveMenuItem ] = useState( null );
   const { config, schema } = useSelector( state => state[ `${pluginId}_config` ] );
   const { maxDepth } = config;
@@ -60,6 +62,14 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     } );
 
     setActiveMenuItem( newItem );
+  };
+
+  const addRelation = ( { target: { name, value } } ) => {
+    dispatch( {
+      type: ADD_RELATION,
+      keys: name.split( '.' ),
+      value,
+    } );
   };
 
   const deleteMenuItem = id => {
@@ -132,6 +142,22 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     setActiveMenuItem( orderedItemA );
   };
 
+  const moveRelation = ( dragIndex, overIndex, name ) => {
+    dispatch( {
+      type: MOVE_RELATION,
+      keys: name.split( '.' ),
+      dragIndex,
+      overIndex,
+    } );
+  };
+
+  const onRemoveRelation = keys => {
+    dispatch( {
+      type: REMOVE_RELATION,
+      keys,
+    } );
+  };
+
   useEffect( () => {
     if ( ! activeMenuItem || ! `${activeMenuItem.id}`.includes( 'create' ) ) {
       return;
@@ -153,6 +179,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     <MenuDataContext.Provider value={ {
       activeMenuItem,
       addMenuItem,
+      addRelation,
       deleteMenuItem,
       errors,
       handleChange,
@@ -162,6 +189,8 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
       maxDepth,
       modifiedData: values,
       moveMenuItem,
+      moveRelation,
+      onRemoveRelation,
       schema,
       setActiveMenuItem,
     } }>
@@ -179,12 +208,12 @@ MenuDataProvider.defaultProps = {
 
 MenuDataProvider.propTypes = {
   children: PropTypes.node,
+  isCreatingEntry: PropTypes.bool.isRequired,
   menu: PropTypes.shape( {
     title: PropTypes.string,
     slug: PropTypes.string,
     items: PropTypes.array,
   } ),
-  isCreatingEntry: PropTypes.bool.isRequired,
 };
 
 export default MenuDataProvider;
