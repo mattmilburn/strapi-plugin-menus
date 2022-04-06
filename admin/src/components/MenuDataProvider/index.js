@@ -155,7 +155,15 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
   };
 
   const onRemoveRelation = keys => {
-    // TBD
+    const [ itemPath, fieldName, relationIndex ] = keys.split( '.' );
+    const fieldPath = `${itemPath}.${fieldName}`;
+    const indexToRemove = parseInt( relationIndex );
+    const currentRelations = get( values, fieldPath, [] );
+    const newRelations = currentRelations.filter( ( r, i ) => i !== indexToRemove );
+    let newValues = values;
+
+    set( newValues, fieldPath, newRelations );
+    setValues( newValues );
   };
 
   useEffect( () => {
