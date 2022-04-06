@@ -1,8 +1,5 @@
 import pluginId from './utils/plugin-id';
 
-export const ADD_RELATION = `${pluginId}/add-relation`;
-export const MOVE_RELATION = `${pluginId}/move-relation`;
-export const REMOVE_RELATION = `${pluginId}/remove-relation`;
 export const RESOLVE_CONFIG = `${pluginId}/resolve-config`;
 
 export const URL_ABSOLUTE_REGEX = new RegExp(
