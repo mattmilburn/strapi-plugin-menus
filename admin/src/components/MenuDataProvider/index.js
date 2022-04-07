@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFormikContext } from 'formik';
-import { get, set, take, uniqueId } from 'lodash';
+import { get, uniqueId } from 'lodash';
 
 import { MenuDataContext } from '../../contexts';
 import { pluginId } from '../../utils';
@@ -22,6 +22,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     errors,
     handleChange,
     initialValues,
+    setFieldValue,
     setValues,
     values,
   } = useFormikContext();
@@ -70,14 +71,12 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
 
     const currentRelations = get( values, name, [] );
     const newRelation = value[ 0 ].value;
-    let newValues = values;
-
-    set( newValues, name, [
+    const newRelations = [
       ...currentRelations,
       newRelation,
-    ] );
+    ];
 
-    setValues( newValues );
+    setFieldValue( name, newRelations );
   };
 
   const deleteMenuItem = id => {
@@ -160,10 +159,8 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     const indexToRemove = parseInt( relationIndex );
     const currentRelations = get( values, fieldPath, [] );
     const newRelations = currentRelations.filter( ( r, i ) => i !== indexToRemove );
-    let newValues = values;
 
-    set( newValues, fieldPath, newRelations );
-    setValues( newValues );
+    setFieldValue( fieldPath, newRelations );
   };
 
   useEffect( () => {
