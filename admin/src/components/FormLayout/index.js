@@ -41,9 +41,13 @@ const FormLayout = ( { fields, gap } ) => {
 
         // Cannot use the default value param in the first `get` because we
         // actually want to use the `defaultValue` if we get `null`.
-        const fieldValue = get( modifiedData, input.name ) ?? defaultValue;
-        const fieldErrors = get( errors, input.name, null );
         const fieldName = input.name.split( '.' ).slice( 1 ).join( '' );
+        const fieldErrors = get( errors, input.name, null );
+        let fieldValue = get( modifiedData, input.name ) ?? defaultValue;
+
+        if ( input.type === 'number') {
+          fieldValue = Number( fieldValue );
+        }
 
         if ( input.type === 'relation' ) {
           const relationData = schema.menuItem[ fieldName ]?.metadata;

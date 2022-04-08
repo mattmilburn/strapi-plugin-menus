@@ -1,3 +1,5 @@
+import { TIME_HHMM_REGEX } from '../constants';
+
 const sanitizeFormData = ( data, layout ) => {
   const fields = layout.reduce( ( acc, field ) => {
     if ( ! field?.input ) {
@@ -25,6 +27,7 @@ const sanitizeFormData = ( data, layout ) => {
         break;
 
       case 'date':
+      case 'datetime':
         sanitizedValue = value ? new Date( value ) : null;
         break;
 
@@ -32,9 +35,20 @@ const sanitizeFormData = ( data, layout ) => {
         sanitizedValue = value?.id ?? null;
         break;
 
+      case 'number':
+        sanitizedValue = value !== null ? Number( value ) : null;
+        break;
+
+      case 'string':
       case 'text':
       case 'textarea':
         sanitizedValue = value?.trim() ?? null;
+        break;
+
+      case 'time':
+        if ( value.match( TIME_HHMM_REGEX )  ) {
+          sanitizedValue = `${value}:00.000`;
+        }
         break;
 
       default:
