@@ -1,5 +1,6 @@
 export { default as api } from './api';
 export { default as axiosInstance } from './axios-instance';
+export { default as camelToTitle } from './camel-to-title';
 export { default as getBoxProps } from './get-box-props';
 export { default as getRequestUrl } from './get-request-url';
 export { default as getTrad } from './get-trad';
