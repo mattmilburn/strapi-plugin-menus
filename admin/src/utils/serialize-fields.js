@@ -1,7 +1,5 @@
 const defaultGrid = {
-  size: {
-    col: 12,
-  },
+  col: 12,
 };
 
 const serializeFields = ( prefix, index, fields ) => {

@@ -14,10 +14,8 @@ const menu = [
       required: true,
     },
     grid: {
-      size: {
-        col: 6,
-        s: 12,
-      },
+      col: 6,
+      s: 12,
     },
   },
   {
@@ -35,10 +33,8 @@ const menu = [
       required: true,
     },
     grid: {
-      size: {
-        col: 6,
-        s: 12,
-      },
+      col: 6,
+      s: 12,
     },
   },
 ];
@@ -58,11 +54,6 @@ const menuItem = [
       },
       required: true,
     },
-    grid: {
-      size: {
-        col: 12,
-      },
-    },
   },
   {
     input: {
@@ -72,11 +63,6 @@ const menuItem = [
       },
       name: 'url',
       type: 'text',
-    },
-    grid: {
-      size: {
-        col: 12,
-      },
     },
   },
   {
@@ -99,9 +85,7 @@ const menuItem = [
       } ) ),
     },
     grid: {
-      size: {
-        col: 6,
-      },
+      col: 6,
     },
   },
 ];

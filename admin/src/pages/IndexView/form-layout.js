@@ -12,10 +12,8 @@ const menu = [
       required: true,
     },
     grid: {
-      size: {
-        col: 6,
-        s: 12,
-      },
+      col: 6,
+      s: 12,
     },
   },
   {
@@ -33,10 +31,8 @@ const menu = [
       required: true,
     },
     grid: {
-      size: {
-        col: 6,
-        s: 12,
-      },
+      col: 6,
+      s: 12,
     },
   },
 ];

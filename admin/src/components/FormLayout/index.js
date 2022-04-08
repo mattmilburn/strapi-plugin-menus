@@ -25,7 +25,7 @@ const FormLayout = ( { fields, gap } ) => {
 
         // If no input to render, we still try to render the grid cell.
         if ( ! input ) {
-          return <GridItem key={ i } { ...grid.size } />;
+          return <GridItem key={ i } { ...grid } />;
         }
 
         // Determine default value based on input type.
@@ -58,7 +58,7 @@ const FormLayout = ( { fields, gap } ) => {
           }
 
           return (
-            <GridItem key={ input.name } { ...grid.size }>
+            <GridItem key={ input.name } { ...grid }>
               <SelectWrapper
                 { ...input }
                 { ...relationData }
@@ -70,7 +70,7 @@ const FormLayout = ( { fields, gap } ) => {
         }
 
         return (
-          <GridItem key={ input.name } { ...grid.size }>
+          <GridItem key={ input.name } { ...grid }>
             <GenericInput
               { ...input }
               value={ fieldValue }
