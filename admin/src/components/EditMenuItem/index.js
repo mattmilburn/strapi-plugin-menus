@@ -5,8 +5,13 @@ import { Box, Stack } from '@strapi/design-system';
 import { Tab, Tabs, TabPanel, TabPanels } from '@strapi/design-system/Tabs';
 
 import { FormLayout, Section } from '../';
-import { getTrad, menuItemProps, serializeFields } from '../../utils';
 import { useMenuData } from '../../hooks';
+import {
+  camelToTitle,
+  getTrad,
+  menuItemProps,
+  serializeFields,
+} from '../../utils';
 
 import { StyledTabGroup } from './styled';
 
@@ -37,8 +42,8 @@ const EditMenuItem = ( { data, fields } ) => {
         { Object.keys( fields ).map( ( key, i ) => (
           <Tab variant="simple" key={ i } hasError={ hasError }>
             { formatMessage( {
-              id: getTrad( 'edit.tabs.title.custom' ),
-              defaultMessage: key,
+              id: key,
+              defaultMessage: camelToTitle( key ),
             } ) }
           </Tab>
         ) ) }
