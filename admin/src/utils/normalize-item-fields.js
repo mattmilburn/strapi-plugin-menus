@@ -6,16 +6,34 @@ const normalizeField = field => {
   }
 
   const label = get( field, 'input.label' );
+  const placeholder = get( field, 'input.placeholder' );
+  const description = get( field, 'input.description' );
   const options = get( field, 'input.options' );
 
   // We don't want the `label` prop for the rendered input component.
   let input = omit( field.input, 'label' );
 
-  // Replace `label` props in custom config with `intlLabel` object.
+  // Replace `label` props in custom config with formatted object.
   if ( label ) {
     input.intlLabel = {
       id: label,
       defaultMessage: label,
+    };
+  }
+
+  // Replace `placeholder` props in custom config with formatted object.
+  if ( typeof placeholder === 'string' ) {
+    input.placeholder = {
+      id: placeholder,
+      defaultMessage: placeholder,
+    };
+  }
+
+  // Replace `description` props in custom config with formatted object.
+  if ( typeof description === 'string' ) {
+    input.description = {
+      id: description,
+      defaultMessage: description,
     };
   }
 
