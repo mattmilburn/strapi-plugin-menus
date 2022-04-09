@@ -1,64 +1,78 @@
 import { get, omit } from 'lodash';
 
-const normalizeField = field => {
+const formatString = str => ( {
+  id: str,
+  defaultMessage: str,
+} );
+
+const formatOption = option => {
+  const isString = typeof option === 'string';
+  const isCustom = ! isString && !! option?.label && !! option?.value;
+  let label, value;
+
+  // String option (raw values).
+  if ( isString ) {
+    label = option;
+    value = option;
+  }
+
+  // Custom option with `label` and `value`.
+  if ( isCustom ) {
+    label = option.label;
+    value = option.value;
+  }
+
+  // Must be a mandatory field from the plugin with options already formatted.
+  if ( ! isString && ! isCustom ) {
+    return option;
+  }
+
+  return {
+    key: value,
+    value,
+    metadatas: {
+      intlLabel: {
+        id: label,
+        defaultMessage: label,
+      },
+    },
+  };
+};
+
+const normalizeField = ( field, schema ) => {
   if ( ! field?.input ) {
     return field;
   }
 
+  const name = get( field, 'input.name' );
+  const type = get( field, 'input.type' );
   const label = get( field, 'input.label' );
   const placeholder = get( field, 'input.placeholder' );
   const description = get( field, 'input.description' );
-  const options = get( field, 'input.options' );
+  const defaultOptions = get( schema, `menuItem.${name}.enum`, [] );
+  const options = get( field, 'input.options', defaultOptions );
 
   // We don't want the `label` prop for the rendered input component.
   let input = omit( field.input, 'label' );
 
-  // Replace `label` props in custom config with formatted object.
+  // Replace `label` prop in custom config with formatted object.
   if ( label ) {
-    input.intlLabel = {
-      id: label,
-      defaultMessage: label,
-    };
+    input.intlLabel = formatString( label );
   }
 
-  // Replace `placeholder` props in custom config with formatted object.
+  // Replace `placeholder` prop in custom config with formatted object.
   if ( typeof placeholder === 'string' ) {
-    input.placeholder = {
-      id: placeholder,
-      defaultMessage: placeholder,
-    };
+    input.placeholder = formatString( placeholder );
   }
 
-  // Replace `description` props in custom config with formatted object.
+  // Replace `description` prop in custom config with formatted object.
   if ( typeof description === 'string' ) {
-    input.description = {
-      id: description,
-      defaultMessage: description,
-    };
+    input.description = formatString( description );
   }
 
   // Replace `options` props in custom config with `metadatas`, `key`, and `value` object.
-  if ( options ) {
-    input.options = options.map( option => {
-      const optionLabel = get( option, 'label' );
-      const optionValue = get( option, 'value' );
-
-      // A `label` prop indicates a simpler config that needs extra data.
-      if ( ! optionLabel ) {
-        return option;
-      }
-
-      return {
-        metadatas: {
-          intlLabel: {
-            id: optionLabel,
-            defaultMessage: optionLabel,
-          },
-        },
-        key: optionValue,
-        value: optionValue,
-      };
-    } );
+  if ( type === 'select' ) {
+    input.options = options.map( formatOption );
   }
 
   return {
@@ -67,7 +81,7 @@ const normalizeField = field => {
   };
 };
 
-const normalizeItemFields = ( defaultLayout, customLayouts ) => {
+const normalizeItemFields = ( defaultLayout, customLayouts, schema ) => {
   // Combine custom layouts with default layout.
   let layouts = {
     link: [
@@ -79,7 +93,7 @@ const normalizeItemFields = ( defaultLayout, customLayouts ) => {
 
   // Normalize fields so their simpler config props adapt to the actual component props.
   Object.keys( layouts ).forEach( key => {
-    layouts[ key ] = layouts[ key ].map( normalizeField );
+    layouts[ key ] = layouts[ key ].map( field => normalizeField( field, schema ) );
   } );
 
   return layouts;

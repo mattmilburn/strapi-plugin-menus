@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
@@ -41,11 +41,13 @@ const EditView = () => {
   const { lockApp, unlockApp } = useOverlayBlocker();
   const queryClient = useQueryClient();
 
-  const { config } = useSelector( state => state[ `${pluginId}_config` ] );
+  const { config, schema } = useSelector( state => state[ `${pluginId}_config` ] );
   const customLayouts = get( config, 'layouts.menuItem', {} );
 
   // Merge default fields layout with custom field layouts.
-  const menuItemLayout = normalizeItemFields( formLayout.menuItem, customLayouts );
+  const menuItemLayout = useMemo( () => {
+    return normalizeItemFields( formLayout.menuItem, customLayouts, schema );
+  }, [ customLayouts ] );
   const menuItemFields = Object.values( menuItemLayout ).flat();
 
   const isCloning = pathname.split( '/' ).includes( 'clone' );
@@ -223,4 +225,4 @@ const EditView = () => {
   );
 };
 
-export default EditView;
+export default memo( EditView );
