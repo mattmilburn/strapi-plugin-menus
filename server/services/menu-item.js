@@ -21,21 +21,16 @@ module.exports = ( { strapi } ) => ( {
     const itemsToCreate = items.filter( item => `${item.id}`.includes( 'create' ) );
 
     // Maybe create root menu items before others.
-    let firstItemsToCreate = itemsToCreate.filter( item => ! item.parent );
+    const firstRootItemsToCreate = itemsToCreate.filter( item => ! item.parent );
 
     // If there are no root items to create, maybe start with items that already
     // have an existing parent.
-    if ( itemsToCreate.length && ! firstItemsToCreate.length ) {
-      firstItemsToCreate = itemsToCreate.filter( item => item.parent && typeof item.parent.id !== 'string' );
-    }
+    const firstChildItemsToCreate = itemsToCreate.filter( item => item.parent && typeof item.parent.id !== 'string' );
 
-    /**
-     * @NOTE - The `createMany` method would be preferable here, but Strapi does
-     * not currently support creating the relations within bulk operations while
-     * single operation methods do support it, so we're looping to `create` items.
-     *
-     * @SEE - /packages/core/database/lib/entity-manager.js
-     */
+    const firstItemsToCreate = [
+      ...firstRootItemsToCreate,
+      ...firstChildItemsToCreate,
+    ];
 
     // If a parent AND child item are being created in the same save operation,
     // we need to ensure that the parent is created before the child by returning
