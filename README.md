@@ -500,6 +500,12 @@ module.exports = {
 };
 ```
 
+With everything configured properly, you should end up with a menu item edit panel that looks like the image below. Refer to the [Supported Field Types](#supported-field-types) section if you are still confused on how to enable the **rich text editor**.
+
+<div align="center">
+  <img style="width: 662px; height: auto;" src="public/screenshot-complete-config.png" alt="Screenshot for 100% complete config UI for Strapi menus plugin" />
+</div>
+
 ## <a id="user-guide"></a>📘 User Guide
 
 ### Create
