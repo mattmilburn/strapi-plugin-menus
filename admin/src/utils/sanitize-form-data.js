@@ -1,7 +1,7 @@
 import { TIME_HHMM_REGEX } from '../constants';
 
 const sanitizeFormData = ( data, layout ) => {
-  const fields = layout.reduce( ( acc, field ) => {
+  const fieldTypes = layout.reduce( ( acc, field ) => {
     if ( ! field?.input ) {
       return acc;
     }
@@ -13,7 +13,7 @@ const sanitizeFormData = ( data, layout ) => {
   }, {} );
 
   const sanitizedData = Object.entries( data ).reduce( ( acc, [ key, value ] ) => {
-    const type = fields[ key ];
+    const type = fieldTypes[ key ];
 
     if ( ! type ) {
       return acc;
@@ -46,13 +46,12 @@ const sanitizeFormData = ( data, layout ) => {
         break;
 
       case 'time':
-        if ( value.match( TIME_HHMM_REGEX )  ) {
-          sanitizedValue = `${value}:00.000`;
-        }
+        sanitizedValue = value?.match( TIME_HHMM_REGEX ) ? `${value}:00.000` : value;
         break;
 
       default:
         sanitizedValue = value;
+        break;
     }
 
     return {
