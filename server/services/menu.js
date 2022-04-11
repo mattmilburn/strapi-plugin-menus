@@ -3,7 +3,7 @@
 const { get, pick, without } = require( 'lodash' );
 
 const config = require( '../config' );
-const { getService, pluginId } = require( '../utils' );
+const { getService, isTruthy, pluginId } = require( '../utils' );
 
 module.exports = ( { strapi } ) => ( {
   async getConfig() {
@@ -134,15 +134,15 @@ module.exports = ( { strapi } ) => ( {
   },
 
   async getMenus( populate = true ) {
-    const fieldsToPopulate = await this.getFieldsToPopulate( 'menuItem' );
-
     const params = {
       orderBy: {
         title: 'ASC',
       },
     };
 
-    if ( populate ) {
+    if ( isTruthy( populate ) ) {
+      const fieldsToPopulate = await this.getFieldsToPopulate( 'menuItem' );
+
       params.populate = {
         items: {
           populate: {
