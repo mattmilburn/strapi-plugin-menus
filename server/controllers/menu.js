@@ -5,12 +5,13 @@ const { prop, pick } = require( 'lodash/fp' );
 const { ValidationError } = require( '@strapi/utils' ).errors;
 const { PUBLISHED_AT_ATTRIBUTE } = require('@strapi/utils').contentTypes.constants;
 
-const { getService, serializeNestedMenu } = require( '../utils' );
+const { getService, isTruthy, serializeNestedMenu } = require( '../utils' );
 
 module.exports = {
   async config( ctx ) {
-    const config = await getService( 'menu' ).getConfig();
-    const schema = await getService( 'menu' ).getSchema();
+    const pluginService = getService( 'menu' );
+    const config = await pluginService.getConfig();
+    const schema = await pluginService.getSchema();
 
     ctx.send( {
       config,
@@ -19,13 +20,12 @@ module.exports = {
   },
 
   async find( ctx ) {
-    const nested = get( ctx.request.query, 'nested' ) !== 'false';
-    const populate = get( ctx.request.query, 'populate' ) !== 'false';
+    const { nested, populate } = ctx.request.query;
 
     let menus = await getService( 'menu' ).getMenus( populate );
 
     // Maybe serialize menus into a nested format, otherwise leave them flat.
-    if ( nested ) {
+    if ( isTruthy( nested ) ) {
       menus = menus.map( menu => serializeNestedMenu( menu ) );
     }
 
@@ -34,7 +34,7 @@ module.exports = {
 
   async findOne( ctx ) {
     const { slug } = ctx.request.params;
-    const nested = get( ctx.request.query, 'nested' ) !== 'false';
+    const { nested } = ctx.request.query;
 
     let menu = await getService( 'menu' ).getMenu( slug, 'slug' );
 
@@ -43,7 +43,7 @@ module.exports = {
     }
 
     // Maybe serialize menus into a nested format, otherwise leave them flat.
-    if ( nested ) {
+    if ( isTruthy( nested ) ) {
       menu = serializeNestedMenu( menu );
     }
 
