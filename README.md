@@ -83,6 +83,8 @@ module.exports = {
 };
 ```
 
+> **NOTE:** After setting up `layouts` and `maxDepth`, run **yarn build** and **yarn develop**, otherwise you might not see menus plugin in Strapi.
+
 ## <a id="extending"></a>🔩 Extending
 
 This plugin can be extended to add new attributes to the `MenuItem` schema and include editable fields for those attributes in the UI. Follow along with each section below to become familiar with this process.
