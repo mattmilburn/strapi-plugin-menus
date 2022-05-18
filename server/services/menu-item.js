@@ -5,7 +5,24 @@ const { flattenDeep, omit } = require( 'lodash' );
 const { sanitizeEntity } = require( '../utils' );
 
 module.exports = ( { strapi } ) => ( {
-  async getMenuItems( menuId ) {
+  async getMenuItem( id ) {
+    const menuItem = await strapi.query( 'plugin::menus.menu-item' ).findOne( {
+      where: { id },
+      populate: true,
+    } );
+
+    return menuItem;
+  },
+
+  async getMenuItems() {
+    const menuItems = await strapi.query( 'plugin::menus.menu-item' ).findMany( {
+      populate: true,
+    } );
+
+    return menuItems;
+  },
+
+  async getMenuItemsByRootMenu( menuId ) {
     const menuItems = await strapi.query( 'plugin::menus.menu-item' ).findMany( {
       where: {
         root_menu: { id: menuId },
