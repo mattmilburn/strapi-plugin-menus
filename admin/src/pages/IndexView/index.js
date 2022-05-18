@@ -2,7 +2,12 @@ import React, { memo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { DynamicTable, useNotification, useOverlayBlocker } from '@strapi/helper-plugin';
+import {
+  DynamicTable,
+  EmptyStateLayout,
+  useNotification,
+  useOverlayBlocker,
+} from '@strapi/helper-plugin';
 import { Box, Button, useNotifyAT } from '@strapi/design-system';
 import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
 import { Plus } from '@strapi/icons';
@@ -156,20 +161,30 @@ const IndexView = () => {
       />
       <ContentLayout>
         <Box paddingBottom={ 10 }>
-          <DynamicTable
-            contentType="Menus"
-            isLoading={ isLoading }
-            headers={ !! data?.menus?.length ? tableHeaders : [] }
-            rows={ data?.menus }
-            action={ primaryAction }
-            onConfirmDelete={ onConfirmDelete }
-          >
-            <MenuRows
-              menus={ data?.menus }
-              onClickClone={ id => push( `/plugins/${pluginId}/clone/${id}` ) }
-              onClickEdit={ id => push( `/plugins/${pluginId}/edit/${id}` ) }
+          { data?.menus?.length ? (
+            <DynamicTable
+              contentType="Menus"
+              isLoading={ isLoading }
+              headers={ !! data?.menus?.length ? tableHeaders : [] }
+              rows={ data?.menus }
+              action={ primaryAction }
+              onConfirmDelete={ onConfirmDelete }
+            >
+              <MenuRows
+                menus={ data?.menus }
+                onClickClone={ id => push( `/plugins/${pluginId}/clone/${id}` ) }
+                onClickEdit={ id => push( `/plugins/${pluginId}/edit/${id}` ) }
+              />
+            </DynamicTable>
+          ) : (
+            <EmptyStateLayout
+              content={ {
+                id: getTrad( 'index.state.empty' ),
+                defaultMessage: 'No menus created yet',
+              } }
+              action={ primaryAction }
             />
-          </DynamicTable>
+          ) }
         </Box>
       </ContentLayout>
       { activeModal && (
