@@ -7,7 +7,7 @@ import { Box, Button, useNotifyAT } from '@strapi/design-system';
 import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
 import { Plus } from '@strapi/icons';
 
-import { api, getTrad, pluginId } from '../../utils';
+import { api, getTrad, pluginId, pluginName } from '../../utils';
 import { CreateModal, Layout, MenuRows } from '../../components';
 
 import formLayout from './form-layout';
@@ -139,14 +139,14 @@ const IndexView = () => {
     <Layout
       isLoading={ isLoading }
       title={ formatMessage( {
-        id: getTrad( 'index.header.title' ),
-        defaultMessage: 'Menu Manager',
+        id: getTrad( 'plugin.name' ),
+        defaultMessage: pluginName,
       } ) }
     >
       <HeaderLayout
         title={ formatMessage( {
-          id: getTrad( 'index.header.title' ),
-          defaultMessage: 'Menu Manager',
+          id: getTrad( 'plugin.name' ),
+          defaultMessage: pluginName,
         } ) }
         subtitle={ formatMessage( {
           id: getTrad( 'index.header.subtitle' ),
