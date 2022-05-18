@@ -29,6 +29,7 @@
   "edit.tabs.title.link": "Link",
   "edit.tabs.title.advanced": "Advanced",
   "index.header.subtitle": "Customize the structure of menus and menu items",
+  "index.state.empty": "No menus created yet",
 
   "form.label.option._blank": "_blank",
   "form.label.option._parent": "_parent",
