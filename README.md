@@ -13,6 +13,7 @@
 * [Extending](#extending)
 * [User Guide](#user-guide)
 * [API Usage](#api-usage)
+* [Gatsby source data](#gatsby-source-data-plugin)
 * [Roadmap](#roadmap)
 
 ## <a id="features"></a>✨ Features
@@ -661,6 +662,9 @@ await fetch( '/api/menus/main?nested' );
   }
 }
 ```
+
+## <a id="gatsby-source-data-plugin"></a>🪄 Gatsby source data plugin
+For sourcing data into Gatsby GraphiQl checkout - [gatsby source menus strapi plugin](https://github.com/everythinginjs/gatsby-source-menus-strapi-plugin)
 
 ## <a id="roadmap"></a>🚧 Roadmap
 * GraphQL support
