@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { onRowClick, stopPropagation } from '@strapi/helper-plugin';
-import { Box, Flex, IconButton, Typography } from '@strapi/design-system';
+import { Badge, Box, Flex, IconButton, Typography } from '@strapi/design-system';
 import { Tbody, Tr, Td } from '@strapi/design-system/Table';
 import { Duplicate, Pencil, Trash } from '@strapi/icons';
 
@@ -25,6 +25,10 @@ const MenuRows = ( { menus, onClickClone, onClickDelete, onClickEdit } ) => {
           </Td>
           <Td>
             <Typography textColor="neutral800">{ menu.slug }</Typography>
+          </Td>
+          <Td>
+            <Badge>{ menu.items.length }</Badge>{ ' ' }
+            <Typography textColor="neutral800">item{ menu.items.length !== 1 && 's' }</Typography>
           </Td>
           <Td>
             <Flex justifyContent="end">

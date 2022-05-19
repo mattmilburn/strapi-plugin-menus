@@ -121,6 +121,17 @@ const IndexView = () => {
         sortable: true,
       },
     },
+    {
+      name: 'items',
+      key: 'items',
+      metadatas: {
+        label: formatMessage( {
+          id: getTrad( 'form.label.items' ),
+          defaultMessage: 'Items',
+        } ),
+        sortable: false,
+      },
+    },
   ];
 
   /**
