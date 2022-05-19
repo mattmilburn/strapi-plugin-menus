@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { Box } from '@strapi/design-system';
 
+import { StyledIconButtonGroup } from '../Toolbar/styled';
+
 export const Label = styled.div`
   padding-right: 1rem;
   line-height: 2rem;
@@ -22,4 +24,27 @@ export const Wrapper = styled( Box )`
       `;
     }
   }}
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.primary100};
+    color: ${({ theme }) => theme.colors.primary600};
+
+    ${StyledIconButtonGroup} {
+      button {
+        svg {
+          path {
+            fill: ${({ theme }) => theme.colors.primary600} !important;
+          }
+        }
+
+        &:hover {
+          svg {
+            path {
+              fill: ${({ theme }) => theme.colors.neutral600} !important;
+            }
+          }
+        }
+      }
+    }
+  }
 `;
