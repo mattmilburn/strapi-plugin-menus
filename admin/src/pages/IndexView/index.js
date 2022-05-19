@@ -127,15 +127,19 @@ const IndexView = () => {
    * @TODO - This primary action currently does not render when the `DynamicTable`
    * passes the `action` prop through to `EmptyStateLayout`. No idea why.
    */
-  const primaryAction = (
+  const PrimaryAction = ( {
+    size = 'L',
+    variant = 'default',
+  } ) => (
     <Button
       onClick={ () => setActiveModal( true ) }
       startIcon={ <Plus /> }
-      size="L"
+      variant={ variant }
+      size={ size }
     >
       { formatMessage( {
         id: getTrad( 'ui.create.menu' ),
-        defaultMessage: 'Create menu',
+        defaultMessage: 'Create new menu',
       } ) }
     </Button>
   );
@@ -157,7 +161,7 @@ const IndexView = () => {
           id: getTrad( 'index.header.subtitle' ),
           defaultMessage: 'Customize the structure of menus and menu items',
         } ) }
-        primaryAction={ primaryAction }
+        primaryAction={ <PrimaryAction /> }
       />
       <ContentLayout>
         <Box paddingBottom={ 10 }>
@@ -167,7 +171,7 @@ const IndexView = () => {
               isLoading={ isLoading }
               headers={ !! data?.menus?.length ? tableHeaders : [] }
               rows={ data?.menus }
-              action={ primaryAction }
+              action={ <PrimaryAction size="S" variant="secondary" /> }
               onConfirmDelete={ onConfirmDelete }
             >
               <MenuRows
@@ -180,9 +184,9 @@ const IndexView = () => {
             <EmptyStateLayout
               content={ {
                 id: getTrad( 'index.state.empty' ),
-                defaultMessage: 'No menus created yet',
+                defaultMessage: 'No menus found',
               } }
-              action={ primaryAction }
+              action={ <PrimaryAction size="S" variant="secondary" /> }
             />
           ) }
         </Box>
