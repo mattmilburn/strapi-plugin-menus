@@ -231,7 +231,7 @@ The following field types in the table below are supported. Some fields use a di
 The following field types are **NOT** supported:
 * Component
 * Dynamic Zone
-* InputUID
+* UID
 * JSON
 
 > **NOTE:** By default, **rich text fields** are not supported unless a custom plugin overrides the core **WYSIWYG** editor, which is covered in the [Strapi guide to creating a new WYSIWYG field in the admin panel](https://docs.strapi.io/developer-docs/latest/guides/registering-a-field-in-admin.html).
