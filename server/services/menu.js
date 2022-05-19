@@ -153,6 +153,10 @@ module.exports = ( { strapi } ) => ( {
           },
         },
       };
+    } else {
+      params.populate = {
+        items: true,
+      };
     }
 
     const menus = await strapi.query( 'plugin::menus.menu' ).findMany( params );
