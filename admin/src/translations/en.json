@@ -5,7 +5,7 @@
   "ui.cancel": "Cancel",
   "ui.clone": "Clone",
   "ui.create": "Create",
-  "ui.create.menu": "Create menu",
+  "ui.create.menu": "Create new menu",
   "ui.created": "Created",
   "ui.delete": "Delete",
   "ui.delete.menuItem": "Delete menu item",
@@ -29,7 +29,7 @@
   "edit.tabs.title.link": "Link",
   "edit.tabs.title.advanced": "Advanced",
   "index.header.subtitle": "Customize the structure of menus and menu items",
-  "index.state.empty": "No menus created yet",
+  "index.state.empty": "No menus found",
 
   "form.label.option._blank": "_blank",
   "form.label.option._parent": "_parent",
