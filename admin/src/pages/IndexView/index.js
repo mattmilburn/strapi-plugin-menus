@@ -1,6 +1,5 @@
 import React, { memo, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { useHistory } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import {
   DynamicTable,
@@ -13,22 +12,17 @@ import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
 import { Plus } from '@strapi/icons';
 
 import { api, getTrad, pluginId, pluginName } from '../../utils';
-import { CreateModal, Layout, MenuRows } from '../../components';
-
-import formLayout from './form-layout';
-import formSchema from './form-schema';
+import { Layout, MenuRows } from '../../components';
 
 const QUERY_KEY = 'menus-index';
 
-const IndexView = () => {
+const IndexView = ( { history } ) => {
   const { formatMessage } = useIntl();
-  const { push } = useHistory();
   const { notifyStatus } = useNotifyAT();
   const toggleNotification = useNotification();
   const { lockApp, unlockApp } = useOverlayBlocker();
   const queryClient = useQueryClient();
 
-  const [ activeModal, setActiveModal ] = useState( false );
   const fetchParams = { populate: false };
 
   const { status, data } = useQuery( QUERY_KEY, () => api.get( null, fetchParams ), {
@@ -143,7 +137,7 @@ const IndexView = () => {
     variant = 'default',
   } ) => (
     <Button
-      onClick={ () => setActiveModal( true ) }
+      onClick={ () => history.push( `/plugins/${pluginId}/create` ) }
       startIcon={ <Plus /> }
       variant={ variant }
       size={ size }
@@ -187,8 +181,8 @@ const IndexView = () => {
             >
               <MenuRows
                 menus={ data?.menus }
-                onClickClone={ id => push( `/plugins/${pluginId}/clone/${id}` ) }
-                onClickEdit={ id => push( `/plugins/${pluginId}/edit/${id}` ) }
+                onClickClone={ id => history.push( `/plugins/${pluginId}/clone/${id}` ) }
+                onClickEdit={ id => history.push( `/plugins/${pluginId}/edit/${id}` ) }
               />
             </DynamicTable>
           ) : (
@@ -202,14 +196,6 @@ const IndexView = () => {
           ) }
         </Box>
       </ContentLayout>
-      { activeModal && (
-        <CreateModal
-          fields={ formLayout.menu }
-          onClose={ () => setActiveModal( false ) }
-          invalidateQueries={ QUERY_KEY }
-          schema={ formSchema }
-        />
-      ) }
     </Layout>
   );
 };

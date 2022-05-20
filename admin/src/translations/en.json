@@ -21,7 +21,7 @@
   "ui.untitled": "Untitled",
 
   "clone.header.title": "Clone menu",
-  "create.header.title": "Create new menu",
+  "create.header.title": "Create menu",
   "edit.header.title": "Edit menu",
   "edit.item.title": "Edit menu item",
   "edit.state.empty": "Add the first menu item",
