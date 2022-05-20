@@ -18,12 +18,21 @@ import { StyledTabGroup } from './styled';
 const EditMenuItem = ( { data, fields } ) => {
   const { formatMessage } = useIntl();
   const { errors, modifiedData } = useMenuData();
-  const itemIndex = modifiedData.items.findIndex( item => item.id === data.id );
 
-  /**
-   * @TODO - Refactor this so single tabs can have errors instead of the whole set.
-   */
-  const hasError = !! ( errors?.items && errors.items[ itemIndex ] );
+  const itemIndex = modifiedData.items.findIndex( item => item.id === data.id );
+  const hasItemError = !! ( errors?.items && errors.items[ itemIndex ] );
+
+  const hasTabError = key => {
+    if ( ! hasItemError ) {
+      return false;
+    }
+
+    const errorFieldKeys = Object.keys( errors.items[ itemIndex ] );
+    const tabFieldKeys = fields[ key ].map( field => field?.input?.name );
+    const hasError = errorFieldKeys.some( name => tabFieldKeys.includes( name ) );
+
+    return hasError;
+  };
 
   if ( ! itemIndex && itemIndex !== 0 ) {
     return null;
@@ -42,7 +51,7 @@ const EditMenuItem = ( { data, fields } ) => {
       >
         <Tabs variant="simple">
           { Object.keys( fields ).map( ( key, i ) => (
-            <Tab variant="simple" key={ i } hasError={ hasError }>
+            <Tab variant="simple" key={ i } hasError={ hasTabError( key ) }>
               { formatMessage( {
                 id: key,
                 defaultMessage: camelToTitle( key ),
