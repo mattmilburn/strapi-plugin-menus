@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import { Box, Stack } from '@strapi/design-system';
+import { Box, Stack, Typography } from '@strapi/design-system';
 import { Tab, Tabs, TabPanel, TabPanels } from '@strapi/design-system/Tabs';
 
 import { FormLayout, Section } from '../';
@@ -30,42 +30,43 @@ const EditMenuItem = ( { data, fields } ) => {
   }
 
   return (
-    <StyledTabGroup
-      id="menu-item-tabs"
-      variant="simple"
-      label={ formatMessage( {
-        id: getTrad( 'edit.tabs.title' ),
-        defaultMessage: 'Menu item settings',
-      } ) }
-    >
-      <Tabs>
-        { Object.keys( fields ).map( ( key, i ) => (
-          <Tab variant="simple" key={ i } hasError={ hasError }>
-            { formatMessage( {
-              id: key,
-              defaultMessage: camelToTitle( key ),
-            } ) }
-          </Tab>
-        ) ) }
-      </Tabs>
-      <TabPanels style={ { position: 'relative' } }>
-        { Object.keys( fields ).map( ( key, i ) => {
-          const itemFields = serializeFields( 'items', itemIndex, fields[ key ] );
-
-          return (
-            <TabPanel key={ i }>
-              <Box padding={ 6 } background="neutral0" borderRadius="0 0 4px 4px">
-
-                <Stack spacing={ 6 }>
-                  <FormLayout fields={ itemFields } />
-                </Stack>
-
-              </Box>
-            </TabPanel>
-          );
+    <Box padding={ 6 } background="neutral0" borderRadius="4px" shadow="filterShadow">
+      <Typography variant="delta">Edit item</Typography>
+      <StyledTabGroup
+        id="menu-item-tabs"
+        variant="simple"
+        label={ formatMessage( {
+          id: getTrad( 'edit.tabs.title' ),
+          defaultMessage: 'Menu item settings',
         } ) }
-      </TabPanels>
-    </StyledTabGroup>
+      >
+        <Tabs variant="simple">
+          { Object.keys( fields ).map( ( key, i ) => (
+            <Tab variant="simple" key={ i } hasError={ hasError }>
+              { formatMessage( {
+                id: key,
+                defaultMessage: camelToTitle( key ),
+              } ) }
+            </Tab>
+          ) ) }
+        </Tabs>
+        <TabPanels style={ { position: 'relative' } }>
+          { Object.keys( fields ).map( ( key, i ) => {
+            const itemFields = serializeFields( 'items', itemIndex, fields[ key ] );
+
+            return (
+              <TabPanel key={ i }>
+                <Box paddingTop={ 6 }>
+                  <Stack spacing={ 6 }>
+                    <FormLayout fields={ itemFields } />
+                  </Stack>
+                </Box>
+              </TabPanel>
+            );
+          } ) }
+        </TabPanels>
+      </StyledTabGroup>
+    </Box>
   );
 };
 
