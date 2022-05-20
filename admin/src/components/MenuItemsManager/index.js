@@ -91,7 +91,8 @@ const MenuItemsManager = ( { fields } ) => {
           <Button
             onClick={ () => addMenuItem() }
             startIcon={ <Plus /> }
-            size="L"
+            variant="secondary"
+            size="S"
           >
             { addItemLabel }
           </Button>

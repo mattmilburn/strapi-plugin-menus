@@ -20,6 +20,7 @@ const App = () => {
       <div>
         <Switch>
           <Route path={ `/plugins/${pluginId}` } component={ IndexView } exact />
+          <Route path={ `/plugins/${pluginId}/create` } component={ EditView } exact />
           <Route path={ `/plugins/${pluginId}/clone/:id` } component={ EditView } exact />
           <Route path={ `/plugins/${pluginId}/edit/:id` } component={ EditView } exact />
           <Route component={ NotFound } />
