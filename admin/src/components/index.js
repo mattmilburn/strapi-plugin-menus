@@ -1,4 +1,3 @@
-export { default as CreateModal } from './CreateModal';
 export { default as EditMenuItem } from './EditMenuItem';
 export { default as FormLayout } from './FormLayout';
 export { default as Initializer } from './Initializer';
