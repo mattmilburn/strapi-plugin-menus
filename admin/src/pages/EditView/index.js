@@ -1,14 +1,19 @@
 import React, { memo, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { Formik } from 'formik';
 import { get, pick, uniqueId } from 'lodash';
+import { Formik } from 'formik';
 import { Form, useNotification, useOverlayBlocker } from '@strapi/helper-plugin';
 import { Box, Button, Link, Stack, useNotifyAT } from '@strapi/design-system';
 import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
 import { ArrowLeft, Check } from '@strapi/icons';
+
+const defaultValues = {
+  title: '',
+  slug: '',
+  items: [],
+};
 
 import {
   FormLayout,
@@ -29,18 +34,19 @@ import {
 import formLayout from './form-layout';
 import formSchema from './form-schema';
 
-const QUERY_KEY = 'edit-menu';
+const CLONE_QUERY_KEY = 'menus-clone-{id}';
+const CREATE_QUERY_KEY = 'menus-create';
+const EDIT_QUERY_KEY = 'menus-edit-{id}';
 
-const EditView = () => {
-  const { id } = useParams();
-  const { push } = useHistory();
-  const { pathname } = useLocation();
+const EditView = ( { history, location, match } ) => {
+  const { id } = match.params;
   const { formatMessage } = useIntl();
   const { notifyStatus } = useNotifyAT();
   const toggleNotification = useNotification();
   const { lockApp, unlockApp } = useOverlayBlocker();
   const queryClient = useQueryClient();
 
+  // Get config and custom layouts.
   const { config, schema } = useSelector( state => state[ `${pluginId}_config` ] );
   const customLayouts = get( config, 'layouts.menuItem', {} );
 
@@ -50,20 +56,37 @@ const EditView = () => {
   }, [ customLayouts ] );
   const menuItemFields = Object.values( menuItemLayout ).flat();
 
-  const isCloning = pathname.split( '/' ).includes( 'clone' );
+  const isCreating = ! id;
+  const isCloning = location.pathname.split( '/' ).includes( 'clone' );
 
-  const headerTitle = isCloning ?
-    formatMessage( {
-      id: getTrad( 'clone.header.title' ),
-      defaultMessage: 'Clone menu',
-    } ) :
-    formatMessage( {
-      id: getTrad( 'edit.header.title' ),
-      defaultMessage: 'Edit menu',
+  let headerTitle = formatMessage( {
+    id: getTrad( 'edit.header.title' ),
+    defaultMessage: 'Edit menu',
+  } );
+
+  let queryKey = EDIT_QUERY_KEY.replace( '{id}', id );
+
+  // Set props based on `isCreating` or `isCloning`.
+  if ( isCreating ) {
+    headerTitle = formatMessage( {
+      id: getTrad( 'create.header.title' ),
+      defaultMessage: 'Create menu',
     } );
 
-  const { status, data } = useQuery( QUERY_KEY, () => api.get( id ), {
-    enabled: !! id,
+    queryKey = CREATE_QUERY_KEY;
+  }
+
+  if ( isCloning ) {
+    headerTitle = formatMessage( {
+      id: getTrad( 'clone.header.title' ),
+      defaultMessage: 'Clone menu',
+    } );
+
+    queryKey = CLONE_QUERY_KEY.replace( '{id}', id );
+  }
+
+  const { status, data } = useQuery( queryKey, () => api.get( id ), {
+    enabled: ! isCreating,
     onSuccess: data => {
       notifyStatus(
         formatMessage( {
@@ -100,12 +123,17 @@ const EditView = () => {
       return api.postAction( clonedBody );
     }
 
-    // If not cloning, update this menu.
+    // Maybe submit a new menu.
+    if ( isCreating ) {
+      return api.postAction( body );
+    }
+
+    // If not creating or cloning, update this menu.
     return api.putAction( id, body );
   }, {
     refetchActive: true,
     onSuccess: async () => {
-      await queryClient.invalidateQueries( QUERY_KEY );
+      await queryClient.invalidateQueries( queryKey );
 
       toggleNotification( {
         type: 'success',
@@ -147,8 +175,8 @@ const EditView = () => {
       } );
 
       // If we just cloned a page, we need to redirect to the new edit page.
-      if ( isCloning && res?.data?.menu ) {
-        push( `/plugins/${pluginId}/edit/${res.data.menu.id}` );
+      if ( ( isCreating || isCloning ) && res?.data?.menu ) {
+        history.push( `/plugins/${pluginId}/edit/${res.data.menu.id}` );
       }
     } catch ( err ) {
       unlockApp();
@@ -164,12 +192,12 @@ const EditView = () => {
 
   return (
     <Layout
-      isLoading={ status !== 'success' }
+      isLoading={ ! isCreating && status !== 'success' }
       title={ headerTitle }
     >
       <Formik
         onSubmit={ onSubmit }
-        initialValues={ data?.menu }
+        initialValues={ data?.menu ?? defaultValues }
         validateOnChange={ false }
         validationSchema={ formSchema }
         enableReinitialize
@@ -206,7 +234,7 @@ const EditView = () => {
                 <Box paddingBottom={ 10 }>
                   <Stack spacing={ 8 }>
                     <MenuDataProvider
-                      isCreatingEntry={ false }
+                      isCreatingEntry={ isCreating }
                       menu={ data?.menu }
                     >
                       <Section>
