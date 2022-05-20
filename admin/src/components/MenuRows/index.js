@@ -28,7 +28,15 @@ const MenuRows = ( { menus, onClickClone, onClickDelete, onClickEdit } ) => {
           </Td>
           <Td>
             <Badge>{ menu.items.length }</Badge>{ ' ' }
-            <Typography textColor="neutral800">item{ menu.items.length !== 1 && 's' }</Typography>
+            <Typography textColor="neutral800">
+              { formatMessage(
+                {
+                  id: getTrad( 'ui.items' ),
+                  defaultMessage: '{number, plural, =0 {items} one {item} other {items}}',
+                },
+                { number: menu.items.length }
+              ) }
+            </Typography>
           </Td>
           <Td>
             <Flex justifyContent="end">
