@@ -40,13 +40,18 @@ const EditMenuItem = ( { data, fields } ) => {
 
   return (
     <Box padding={ 6 } background="neutral0" borderRadius="4px" shadow="filterShadow">
-      <Typography variant="delta">Edit item</Typography>
+      <Typography variant="delta">
+        { formatMessage( {
+          id: getTrad( 'edit.tabs.title' ),
+          defaultMessage: 'Edit item',
+        } ) }
+      </Typography>
       <StyledTabGroup
         id="menu-item-tabs"
         variant="simple"
         label={ formatMessage( {
           id: getTrad( 'edit.tabs.title' ),
-          defaultMessage: 'Menu item settings',
+          defaultMessage: 'Edit item',
         } ) }
       >
         <Tabs variant="simple">
