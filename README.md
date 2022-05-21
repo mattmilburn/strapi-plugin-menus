@@ -13,6 +13,7 @@
 * [Extending](#extending)
 * [User Guide](#user-guide)
 * [API Usage](#api-usage)
+* [Troubleshooting](#troubleshooting)
 * [Roadmap](#roadmap)
 
 ## <a id="features"></a>✨ Features
@@ -41,8 +42,7 @@ Limits how deep menus can be nested. By default, there is no limit.
 
 ```js
 module.exports = {
-  'menus': {
-    enabled: true,
+  menus: {
     config: {
       maxDepth: 3,
     },
@@ -59,8 +59,7 @@ Provide form layout configuration for custom fields. The example below is quite 
 
 ```js
 module.exports = {
-  'menus': {
-    enabled: true,
+  menus: {
     config: {
       layouts: {
         menuItem: {
@@ -124,8 +123,7 @@ New tabs in the edit panel are configured with each key in the `layouts.menuItem
 
 ```js
 module.exports = {
-  'menus': {
-    enabled: true,
+  menus: {
     config: {
       layouts: {
         menuItem: { // This is the menu item edit panel.
@@ -327,8 +325,7 @@ Next, add the plugin config for `menus` to `./config/plugins.js` to include cust
 
 ```js
 module.exports = {
-  'menus': {
-    enabled: true,
+  menus: {
     config: {
       maxDepth: 3,
       layouts: {
@@ -509,7 +506,7 @@ With everything configured properly, you should end up with a menu item edit pan
 ## <a id="user-guide"></a>📘 User Guide
 
 ### Create
-On the menus plugin home page, use the "Create Menu" button to open a modal form. You will need to provide a `title` and a unique `slug` value for the new menu.
+On the menus plugin home page, use the "Create new menu" button to get started. You will need to provide a `title` and a unique `slug` value for the new menu. Saving the menu before adding menu items is **recommended** but not required.
 
 ### Clone
 Choosing to clone an existing menu will take you to the edit view as usual, but this time it will be pre-populated with another menu's data. Once the cloned menu is saved, a brand new menu and menu items are created.
@@ -660,8 +657,22 @@ await fetch( '/api/menus/main?nested' );
 }
 ```
 
+## <a id="troubleshooting"></a>💩 Troubleshooting
+
+#### In general
+Remember to **rebuild your app** after making changes to some config or other code.
+
+```bash
+yarn build
+# OR
+yarn develop
+```
+
+#### Custom `MenuItem` fields don't save or appear in the database table schema.
+Custom fields require both the **form layout** extension as well as the **schema** extension. Please make sure both of these are configured as described in the [Extending](#extending) section.
+
 ## <a id="roadmap"></a>🚧 Roadmap
-* GraphQL support
+* Extra GraphQL support
 * RBAC support
 * Populate `url` by selecting from list of relations
 * More translations
