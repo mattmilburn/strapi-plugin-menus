@@ -1,29 +1,28 @@
 import React, { memo, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { useHistory } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { DynamicTable, useNotification, useOverlayBlocker } from '@strapi/helper-plugin';
+import {
+  DynamicTable,
+  EmptyStateLayout,
+  useNotification,
+  useOverlayBlocker,
+} from '@strapi/helper-plugin';
 import { Box, Button, useNotifyAT } from '@strapi/design-system';
 import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
 import { Plus } from '@strapi/icons';
 
-import { api, getTrad, pluginId } from '../../utils';
-import { CreateModal, Layout, MenuRows } from '../../components';
-
-import formLayout from './form-layout';
-import formSchema from './form-schema';
+import { api, getTrad, pluginId, pluginName } from '../../utils';
+import { Layout, MenuRows } from '../../components';
 
 const QUERY_KEY = 'menus-index';
 
-const IndexView = () => {
+const IndexView = ( { history } ) => {
   const { formatMessage } = useIntl();
-  const { push } = useHistory();
   const { notifyStatus } = useNotifyAT();
   const toggleNotification = useNotification();
   const { lockApp, unlockApp } = useOverlayBlocker();
   const queryClient = useQueryClient();
 
-  const [ activeModal, setActiveModal ] = useState( false );
   const fetchParams = { populate: false };
 
   const { status, data } = useQuery( QUERY_KEY, () => api.get( null, fetchParams ), {
@@ -116,21 +115,36 @@ const IndexView = () => {
         sortable: true,
       },
     },
+    {
+      name: 'items',
+      key: 'items',
+      metadatas: {
+        label: formatMessage( {
+          id: getTrad( 'form.label.items' ),
+          defaultMessage: 'Items',
+        } ),
+        sortable: false,
+      },
+    },
   ];
 
   /**
    * @TODO - This primary action currently does not render when the `DynamicTable`
    * passes the `action` prop through to `EmptyStateLayout`. No idea why.
    */
-  const primaryAction = (
+  const PrimaryAction = ( {
+    size = 'L',
+    variant = 'default',
+  } ) => (
     <Button
-      onClick={ () => setActiveModal( true ) }
+      onClick={ () => history.push( `/plugins/${pluginId}/create` ) }
       startIcon={ <Plus /> }
-      size="L"
+      variant={ variant }
+      size={ size }
     >
       { formatMessage( {
         id: getTrad( 'ui.create.menu' ),
-        defaultMessage: 'Create menu',
+        defaultMessage: 'Create new menu',
       } ) }
     </Button>
   );
@@ -139,47 +153,49 @@ const IndexView = () => {
     <Layout
       isLoading={ isLoading }
       title={ formatMessage( {
-        id: getTrad( 'index.header.title' ),
-        defaultMessage: 'Menu Manager',
+        id: getTrad( 'plugin.name' ),
+        defaultMessage: pluginName,
       } ) }
     >
       <HeaderLayout
         title={ formatMessage( {
-          id: getTrad( 'index.header.title' ),
-          defaultMessage: 'Menu Manager',
+          id: getTrad( 'plugin.name' ),
+          defaultMessage: pluginName,
         } ) }
         subtitle={ formatMessage( {
           id: getTrad( 'index.header.subtitle' ),
           defaultMessage: 'Customize the structure of menus and menu items',
         } ) }
-        primaryAction={ primaryAction }
+        primaryAction={ <PrimaryAction /> }
       />
       <ContentLayout>
         <Box paddingBottom={ 10 }>
-          <DynamicTable
-            contentType="Menus"
-            isLoading={ isLoading }
-            headers={ !! data?.menus?.length ? tableHeaders : [] }
-            rows={ data?.menus }
-            action={ primaryAction }
-            onConfirmDelete={ onConfirmDelete }
-          >
-            <MenuRows
-              menus={ data?.menus }
-              onClickClone={ id => push( `/plugins/${pluginId}/clone/${id}` ) }
-              onClickEdit={ id => push( `/plugins/${pluginId}/edit/${id}` ) }
+          { data?.menus?.length ? (
+            <DynamicTable
+              contentType="Menus"
+              isLoading={ isLoading }
+              headers={ !! data?.menus?.length ? tableHeaders : [] }
+              rows={ data?.menus }
+              action={ <PrimaryAction size="S" variant="secondary" /> }
+              onConfirmDelete={ onConfirmDelete }
+            >
+              <MenuRows
+                menus={ data?.menus }
+                onClickClone={ id => history.push( `/plugins/${pluginId}/clone/${id}` ) }
+                onClickEdit={ id => history.push( `/plugins/${pluginId}/edit/${id}` ) }
+              />
+            </DynamicTable>
+          ) : (
+            <EmptyStateLayout
+              content={ {
+                id: getTrad( 'index.state.empty' ),
+                defaultMessage: 'No menus found',
+              } }
+              action={ <PrimaryAction size="S" variant="secondary" /> }
             />
-          </DynamicTable>
+          ) }
         </Box>
       </ContentLayout>
-      { activeModal && (
-        <CreateModal
-          fields={ formLayout.menu }
-          onClose={ () => setActiveModal( false ) }
-          invalidateQueries={ QUERY_KEY }
-          schema={ formSchema }
-        />
-      ) }
     </Layout>
   );
 };

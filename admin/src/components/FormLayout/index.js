@@ -18,6 +18,23 @@ const FormLayout = ( { fields, gap } ) => {
     schema,
   } = useMenuData();
 
+  const getFieldName = name => {
+    if ( name.indexOf( '.' ) !== -1 ) {
+      return name.split( '.' ).slice( 1 ).join( '' );
+    }
+
+    return name;
+  };
+
+  const getFieldError = ( name, label ) => {
+    const msg = get( errors, name, null );
+
+    // Ensure that repeatable items remove the array bracket notation from the error.
+    if ( msg ) {
+      return msg.replace( name, label );
+    }
+  };
+
   return (
     <Grid gap={ gap }>
       { fields.map( ( config, i ) => {
@@ -41,8 +58,8 @@ const FormLayout = ( { fields, gap } ) => {
 
         // Cannot use the default value param in the first `get` because we
         // actually want to use the `defaultValue` if we get `null`.
-        const fieldName = input.name.split( '.' ).slice( 1 ).join( '' );
-        const fieldErrors = get( errors, input.name, null );
+        const fieldName = getFieldName( input.name );
+        const fieldError = getFieldError( input.name, fieldName );
         let fieldValue = get( modifiedData, input.name ) ?? defaultValue;
 
         if ( input.type === 'number') {
@@ -74,7 +91,7 @@ const FormLayout = ( { fields, gap } ) => {
             <GenericInput
               { ...input }
               value={ fieldValue }
-              error={ fieldErrors }
+              error={ fieldError }
               onChange={ handleChange }
               customInputs={ {
                 ...strapiFields,

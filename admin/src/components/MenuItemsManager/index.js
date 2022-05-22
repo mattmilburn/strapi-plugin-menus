@@ -6,7 +6,7 @@ import FlipMove from 'react-flip-move';
 import { EmptyStateLayout } from '@strapi/helper-plugin';
 import { Button, Flex } from '@strapi/design-system';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
-import { PlusCircle } from '@strapi/icons';
+import { Plus, PlusCircle } from '@strapi/icons';
 
 import { EditMenuItem, TreeMenu, TreeMenuItem } from '../';
 import { useMenuData } from '../../hooks';
@@ -90,8 +90,9 @@ const MenuItemsManager = ( { fields } ) => {
         action={
           <Button
             onClick={ () => addMenuItem() }
-            startIcon={ <PlusCircle /> }
-            size="L"
+            startIcon={ <Plus /> }
+            variant="secondary"
+            size="S"
           >
             { addItemLabel }
           </Button>

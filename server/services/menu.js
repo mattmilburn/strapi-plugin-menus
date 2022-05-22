@@ -153,6 +153,10 @@ module.exports = ( { strapi } ) => ( {
           },
         },
       };
+    } else {
+      params.populate = {
+        items: true,
+      };
     }
 
     const menus = await strapi.query( 'plugin::menus.menu' ).findMany( params );
@@ -204,7 +208,7 @@ module.exports = ( { strapi } ) => ( {
 
   async deleteMenu( id ) {
     // First, delete menu items belonging to the menu that will be deleted.
-    const itemsToDelete = await getService( 'menu-item' ).getMenuItems( id );
+    const itemsToDelete = await getService( 'menu-item' ).getMenuItemsByRootMenu( id );
 
     if ( itemsToDelete.length ) {
       await getService( 'menu-item' ).bulkDeleteMenuItems( itemsToDelete );

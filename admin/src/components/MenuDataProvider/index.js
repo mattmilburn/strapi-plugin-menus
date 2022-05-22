@@ -41,7 +41,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     } ) );
 
     return sortByOrder( nestedItems );
-  }, [ values.items ] );
+  }, [ values?.items ] );
 
   const addMenuItem = parentId => {
     const order = getChildren( parentId, values.items ).length;

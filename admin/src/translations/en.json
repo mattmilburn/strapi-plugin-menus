@@ -5,7 +5,7 @@
   "ui.cancel": "Cancel",
   "ui.clone": "Clone",
   "ui.create": "Create",
-  "ui.create.menu": "Create menu",
+  "ui.create.menu": "Create new menu",
   "ui.created": "Created",
   "ui.delete": "Delete",
   "ui.delete.menuItem": "Delete menu item",
@@ -13,6 +13,7 @@
   "ui.edit": "Edit",
   "ui.error": "An error occured",
   "ui.goBack": "Go back",
+  "ui.items": "{number, plural, =0 {items} one {item} other {items}}",
   "ui.loaded": "Data has been loaded",
   "ui.move.menuItem.down": "Move item down",
   "ui.move.menuItem.up": "Move item up",
@@ -21,15 +22,15 @@
   "ui.untitled": "Untitled",
 
   "clone.header.title": "Clone menu",
-  "create.header.title": "Create new menu",
+  "create.header.title": "Create menu",
   "edit.header.title": "Edit menu",
   "edit.item.title": "Edit menu item",
   "edit.state.empty": "Add the first menu item",
-  "edit.tabs.title": "Menu item settings",
+  "edit.tabs.title": "Edit item",
   "edit.tabs.title.link": "Link",
   "edit.tabs.title.advanced": "Advanced",
-  "index.header.title": "Menu Manager",
   "index.header.subtitle": "Customize the structure of menus and menu items",
+  "index.state.empty": "No menus found",
 
   "form.label.option._blank": "_blank",
   "form.label.option._parent": "_parent",
@@ -37,5 +38,6 @@
   "form.label.option._top": "_top",
   "form.label.slug": "Slug",
   "form.label.title": "Title",
+  "form.label.items": "Items",
   "form.placeholder.untitled": "Untitled"
 }
