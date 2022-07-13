@@ -1,80 +1,11 @@
 'use strict';
 
-const { get, pick, without } = require( 'lodash' );
+const { get, pick } = require( 'lodash' );
 
 const config = require( '../config' );
-const { getService, isTruthy, pluginId, sanitizeEntity } = require( '../utils' );
+const { getService, isTruthy, sanitizeEntity } = require( '../utils' );
 
 module.exports = ( { strapi } ) => ( {
-  async getConfig() {
-    const data = await strapi.config.get( `plugin.${pluginId}`, config.default );
-
-    return data;
-  },
-
-  async getSchema() {
-    const contentTypes = strapi.plugin( 'content-manager' ).service( 'content-types' );
-    const menuModel = strapi.getModel( 'plugin::menus.menu' );
-    const menuItemModel = strapi.getModel( 'plugin::menus.menu-item' );
-    const menuItemConfig = await contentTypes.findConfiguration( menuItemModel );
-
-    // Determine custom relation fields, if any.
-    const editItemRelations = get( menuItemConfig, 'layouts.editRelations', [] );
-    const customItemRelations = without( editItemRelations, 'parent', 'root_menu' );
-
-    // For the `MenuItem` schema, we're going to append extra metadata for custom
-    // relations to more easily provide their necessary config on the frontend.
-    const menuItemAttributes = await customItemRelations.reduce( async ( prevPromise, name ) => {
-      const acc = await prevPromise;
-      const attr = acc[ name ];
-
-      if ( ! attr || ! attr.target ) {
-        return acc;
-      }
-
-      const relationModel = strapi.getModel( attr.target );
-
-      if ( ! relationModel ) {
-        return acc;
-      }
-
-      const relationConfig = await contentTypes.findConfiguration( relationModel );
-      const mainFieldName = get( relationConfig, 'settings.mainField' );
-      const mainFieldType = get( relationModel, `attributes.${mainFieldName}.type` );
-
-      const metadata = {
-        relationType: attr.relation,
-        targetModel: attr.target,
-        mainField: {
-          name: mainFieldName,
-          schema: {
-            type: mainFieldType,
-          },
-        },
-        queryInfos: {
-          containsKey: '',
-          defaultParams: {},
-          endPoint: `menus/relations/${name}`,
-          shouldDisplayRelationLink: true,
-          paramsToKeep: [],
-        },
-      };
-
-      return {
-        ...acc,
-        [ name ]: {
-          ...attr,
-          metadata,
-        }
-      };
-    }, Promise.resolve( menuItemModel.attributes ) );
-
-    return {
-      menu: menuModel.attributes,
-      menuItem: menuItemAttributes,
-    };
-  },
-
   async checkAvailability( slug, id ) {
     const params = {
       where: { slug },
@@ -93,7 +24,7 @@ module.exports = ( { strapi } ) => ( {
   },
 
   async getPopulation( name ) {
-    const { layouts } = await this.getConfig();
+    const { layouts } = await getService( 'plugin' ).getConfig();
     const customLayouts = get( layouts, name, {} );
     const fields = Object.values( customLayouts ).flat();
 
