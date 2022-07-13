@@ -9,9 +9,9 @@ const { getService, isTruthy, serializeNestedMenu } = require( '../utils' );
 
 module.exports = {
   async config( ctx ) {
-    const pluginService = getService( 'menu' );
-    const config = await pluginService.getConfig();
-    const schema = await pluginService.getSchema();
+    const service = getService( 'plugin' );
+    const config = await service.getConfig();
+    const schema = await service.getSchema();
 
     ctx.send( {
       config,
