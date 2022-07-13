@@ -3,7 +3,7 @@
 const { get, pick, without } = require( 'lodash' );
 
 const config = require( '../config' );
-const { getService, isTruthy, pluginId } = require( '../utils' );
+const { getService, isTruthy, pluginId, sanitizeEntity } = require( '../utils' );
 
 module.exports = ( { strapi } ) => ( {
   async getConfig() {
@@ -92,27 +92,80 @@ module.exports = ( { strapi } ) => ( {
     return ! menu;
   },
 
-  async getFieldsToPopulate( name ) {
+  async getPopulation( name ) {
     const { layouts } = await this.getConfig();
     const customLayouts = get( layouts, name, {} );
     const fields = Object.values( customLayouts ).flat();
 
-    const fieldsToPopulate = fields.reduce( ( acc, { input } ) => {
-      if ( input && ( input.type === 'media' || input.type === 'relation' ) ) {
+    const population = fields.reduce( ( acc, { input } ) => {
+      if ( ! input ) {
+        return acc;
+      }
+
+      // Shallow populate media relations.
+      if ( input.type === 'media' ) {
         return {
           ...acc,
           [ input.name ]: true,
         };
       }
 
+      // Maybe deep populate media relations.
+      if ( input.type === 'relation' ) {
+        const relationPopulation = getService( 'menu' ).getRelationPopulation( input.name );
+
+        return {
+          ...acc,
+          [ input.name ]: relationPopulation,
+        };
+      }
+
       return acc;
     }, {} );
 
-    return fieldsToPopulate;
+    return population;
+  },
+
+  getRelationPopulation( field ) {
+    const menuItemModel = strapi.getModel( 'plugin::menus.menu-item' );
+    const attr = menuItemModel.attributes[ field ];
+
+    if ( ! attr ) {
+      return true;
+    }
+
+    const targetModel = strapi.getModel( attr.target );
+
+    if ( ! targetModel ) {
+      return true;
+    }
+
+    const attrs = sanitizeEntity( targetModel.attributes );
+
+    // Get list of relational field names.
+    const relations = Object.keys( attrs ).filter( key => {
+      const { type } = attrs[ key ];
+
+      return type === 'media' || type === 'relation';
+    } );
+
+    if ( ! relations.length ) {
+      return true;
+    }
+
+    // Build population object.
+    const populate = relations.reduce( ( acc, relation ) => {
+      return {
+        ...acc,
+        [ relation ]: true,
+      };
+    }, {} );
+
+    return { populate };
   },
 
   async getMenu( value, field = 'id' ) {
-    const fieldsToPopulate = await this.getFieldsToPopulate( 'menuItem' );
+    const fieldsToPopulate = await this.getPopulation( 'menuItem' );
 
     const menu = await strapi.query( 'plugin::menus.menu' ).findOne( {
       where: {
@@ -141,7 +194,7 @@ module.exports = ( { strapi } ) => ( {
     };
 
     if ( isTruthy( populate ) ) {
-      const fieldsToPopulate = await this.getFieldsToPopulate( 'menuItem' );
+      const fieldsToPopulate = await this.getPopulation( 'menuItem' );
 
       params.populate = {
         items: {
