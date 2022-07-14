@@ -2,12 +2,13 @@
 
 const { get, isEmpty } = require( 'lodash' );
 const { prop, pick } = require( 'lodash/fp' );
+const { createCoreController } = require('@strapi/strapi').factories;
 const { ValidationError } = require( '@strapi/utils' ).errors;
 const { PUBLISHED_AT_ATTRIBUTE } = require('@strapi/utils').contentTypes.constants;
 
 const { getService, isTruthy, serializeNestedMenu } = require( '../utils' );
 
-module.exports = {
+module.exports = createCoreController( 'plugin::menus.menu', ( { strapi } ) =>  ( {
   async config( ctx ) {
     const service = getService( 'plugin' );
     const config = await service.getConfig();
@@ -161,4 +162,4 @@ module.exports = {
 
     ctx.send( { ok: true } );
   },
-};
+} ) );
