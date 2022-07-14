@@ -1,10 +1,11 @@
 'use strict';
 
 const { flattenDeep, omit } = require( 'lodash' );
+const { createCoreService } = require('@strapi/strapi').factories;
 
 const { sanitizeEntity } = require( '../utils' );
 
-module.exports = ( { strapi } ) => ( {
+module.exports = createCoreService( 'plugin::menus.menu-item', ( { strapi } ) => ( {
   async getMenuItem( id ) {
     const menuItem = await strapi.query( 'plugin::menus.menu-item' ).findOne( {
       where: { id },
@@ -141,4 +142,4 @@ module.exports = ( { strapi } ) => ( {
       },
     } );
   },
-} );
+} ) );

@@ -1,11 +1,12 @@
 'use strict';
 
 const { get, pick } = require( 'lodash' );
+const { createCoreService } = require('@strapi/strapi').factories;
 
 const config = require( '../config' );
 const { getService, isTruthy, sanitizeEntity } = require( '../utils' );
 
-module.exports = ( { strapi } ) => ( {
+module.exports = createCoreService( 'plugin::menus.menu', ( { strapi } ) => ( {
   async checkAvailability( slug, id ) {
     const params = {
       where: { slug },
@@ -205,4 +206,4 @@ module.exports = ( { strapi } ) => ( {
 
     return menu;
   },
-} );
+} ) );
