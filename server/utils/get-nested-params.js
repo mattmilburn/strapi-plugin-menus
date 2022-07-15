@@ -1,11 +1,11 @@
 'use strict';
 
-const { uniq } = require( 'lodash' );
+const { get, uniq } = require( 'lodash' );
 
 const getNestedParams = params => ( {
   ...params,
   populate: uniq( [
-    ...params.populate,
+    ...get( params, 'populate', [] ),
     'items',
     'items.parent',
   ] ),
