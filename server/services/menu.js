@@ -16,7 +16,7 @@ const {
 module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
   async find( params ) {
     const isNested = isTruthy( params.nested );
-    const hasParentPopulation = params.populate && params.populate.includes( 'items.parent' );
+    const hasParentPopulation = get( params, 'populate', [] ).includes( 'items.parent' );
 
     const { results, pagination } = await super.find( isNested ? getNestedParams( params ) : params );
 
@@ -32,7 +32,7 @@ module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
 
   async findOne( entityId, params ) {
     const isNested = isTruthy( params.nested );
-    const hasParentPopulation = params.populate && params.populate.includes( 'items.parent' );
+    const hasParentPopulation = get( params, 'populate', [] ).includes( 'items.parent' );
 
     const result = await super.findOne( entityId, isNested ? getNestedParams( params ) : params );
 
