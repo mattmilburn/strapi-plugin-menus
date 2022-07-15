@@ -6,7 +6,7 @@ const { createCoreController } = require('@strapi/strapi').factories;
 const { ValidationError } = require( '@strapi/utils' ).errors;
 const { PUBLISHED_AT_ATTRIBUTE } = require('@strapi/utils').contentTypes.constants;
 
-const { getService, isTruthy, serializeNestedMenu } = require( '../utils' );
+const { getService } = require( '../utils' );
 
 module.exports = createCoreController( 'plugin::menus.menu', ( { strapi } ) =>  ( {
   async config( ctx ) {
@@ -18,48 +18,6 @@ module.exports = createCoreController( 'plugin::menus.menu', ( { strapi } ) =>  
       config,
       schema,
     } );
-  },
-
-  async find( ctx ) {
-    const { nested, populate } = ctx.request.query;
-
-    let menus = await getService( 'menu' ).getMenus( populate );
-
-    // Maybe serialize menus into a nested format, otherwise leave them flat.
-    if ( isTruthy( nested ) ) {
-      menus = menus.map( menu => serializeNestedMenu( menu ) );
-    }
-
-    ctx.send( { menus } );
-  },
-
-  async findOne( ctx ) {
-    const { slug } = ctx.request.params;
-    const { nested } = ctx.request.query;
-
-    let menu = await getService( 'menu' ).getMenu( slug, 'slug' );
-
-    if ( ! menu ) {
-      return ctx.notFound();
-    }
-
-    // Maybe serialize menus into a nested format, otherwise leave them flat.
-    if ( isTruthy( nested ) ) {
-      menu = serializeNestedMenu( menu );
-    }
-
-    ctx.send( { menu } );
-  },
-
-  async findOneById( ctx ) {
-    const { id } = ctx.request.params;
-    const menu = await getService( 'menu' ).getMenu( id );
-
-    if ( ! menu ) {
-      return ctx.notFound();
-    }
-
-    ctx.send( { menu } );
   },
 
   async findRelations( ctx ) {
@@ -118,6 +76,10 @@ module.exports = createCoreController( 'plugin::menus.menu', ( { strapi } ) =>  
       return ctx.badRequest( errorMessage, { slug: errorMessage } );
     }
 
+    /**
+     * @TODO - Use core service here to create menu. Then create menu items.
+     */
+
     const menu = await getService( 'menu' ).createMenu( ctx.request.body );
 
     ctx.send( { menu } );
@@ -145,6 +107,10 @@ module.exports = createCoreController( 'plugin::menus.menu', ( { strapi } ) =>  
       return ctx.badRequest( errorMessage, { slug: errorMessage } );
     }
 
+    /**
+     * @TODO - Use core service here to update menu. Then update menu items.
+     */
+
     const menu = await getService( 'menu' ).updateMenu( id, ctx.request.body, menuToUpdate );
 
     ctx.send( { menu } );
@@ -157,6 +123,10 @@ module.exports = createCoreController( 'plugin::menus.menu', ( { strapi } ) =>  
     if ( ! menuToDelete ) {
       return ctx.notFound();
     }
+
+    /**
+     * @TODO - Use core service here to delete menu. Then delete menu items.
+     */
 
     await getService( 'menu' ).deleteMenu( id );
 

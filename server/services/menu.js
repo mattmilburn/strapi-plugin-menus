@@ -7,6 +7,28 @@ const config = require( '../config' );
 const { getService, isTruthy, sanitizeEntity } = require( '../utils' );
 
 module.exports = createCoreService( 'plugin::menus.menu', ( { strapi } ) => ( {
+  async find( params ) {
+    const { results, pagination } = await super.find( params );
+
+    /**
+     * @TODO - Handle optional nesting here.
+     */
+
+    return { results, pagination };
+  },
+
+  async findOne( entityId, params ) {
+    const result = await super.findOne( entityId, params );
+
+    /**
+     * @TODO - Handle optional nesting here.
+     */
+
+    return result;
+  },
+
+  //////////////////////////////////////////////////////////////////////////////
+
   async checkAvailability( slug, id ) {
     const params = {
       where: { slug },

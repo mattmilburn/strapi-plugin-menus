@@ -3,14 +3,6 @@
 module.exports = [
   {
     method: 'GET',
-    path: '/config',
-    handler: 'menu.config',
-    config: {
-      policies: [ 'admin::isAuthenticatedAdmin' ],
-    },
-  },
-  {
-    method: 'GET',
     path: '/',
     handler: 'menu.find',
     config: {
@@ -20,15 +12,7 @@ module.exports = [
   {
     method: 'GET',
     path: '/:id',
-    handler: 'menu.findOneById',
-    config: {
-      policies: [ 'admin::isAuthenticatedAdmin' ],
-    },
-  },
-  {
-    method: 'POST',
-    path: '/relations/:targetField',
-    handler: 'menu.findRelations',
+    handler: 'menu.findOne',
     config: {
       policies: [ 'admin::isAuthenticatedAdmin' ],
     },
@@ -53,6 +37,22 @@ module.exports = [
     method: 'DELETE',
     path: '/:id',
     handler: 'menu.delete',
+    config: {
+      policies: [ 'admin::isAuthenticatedAdmin' ],
+    },
+  },
+  {
+    method: 'GET',
+    path: '/config',
+    handler: 'menu.config',
+    config: {
+      policies: [ 'admin::isAuthenticatedAdmin' ],
+    },
+  },
+  {
+    method: 'POST',
+    path: '/relations/:targetField',
+    handler: 'menu.findRelations',
     config: {
       policies: [ 'admin::isAuthenticatedAdmin' ],
     },
