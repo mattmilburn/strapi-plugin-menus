@@ -3,6 +3,7 @@
 const { get, without } = require( 'lodash' );
 
 const config = require( '../config' );
+const { UID_MENU, UID_MENU_ITEM } = require( '../constants' );
 const { pluginId } = require( '../utils' );
 
 module.exports = ( { strapi } ) => ( {
@@ -14,8 +15,8 @@ module.exports = ( { strapi } ) => ( {
 
   async getSchema() {
     const contentTypes = strapi.plugin( 'content-manager' ).service( 'content-types' );
-    const menuModel = strapi.getModel( 'plugin::menus.menu' );
-    const menuItemModel = strapi.getModel( 'plugin::menus.menu-item' );
+    const menuModel = strapi.getModel( UID_MENU );
+    const menuItemModel = strapi.getModel( UID_MENU_ITEM );
     const menuItemConfig = await contentTypes.findConfiguration( menuItemModel );
 
     // Determine custom relation fields, if any.

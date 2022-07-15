@@ -3,11 +3,12 @@
 const { flattenDeep, omit } = require( 'lodash' );
 const { createCoreService } = require('@strapi/strapi').factories;
 
+const { UID_MENU_ITEM } = require( '../constants' );
 const { sanitizeEntity } = require( '../utils' );
 
-module.exports = createCoreService( 'plugin::menus.menu-item', ( { strapi } ) => ( {
+module.exports = createCoreService( UID_MENU_ITEM, ( { strapi } ) => ( {
   async getMenuItem( id ) {
-    const menuItem = await strapi.query( 'plugin::menus.menu-item' ).findOne( {
+    const menuItem = await strapi.query( UID_MENU_ITEM ).findOne( {
       where: { id },
       populate: true,
     } );
@@ -16,7 +17,7 @@ module.exports = createCoreService( 'plugin::menus.menu-item', ( { strapi } ) =>
   },
 
   async getMenuItems() {
-    const menuItems = await strapi.query( 'plugin::menus.menu-item' ).findMany( {
+    const menuItems = await strapi.query( UID_MENU_ITEM ).findMany( {
       populate: true,
     } );
 
@@ -24,7 +25,7 @@ module.exports = createCoreService( 'plugin::menus.menu-item', ( { strapi } ) =>
   },
 
   async getMenuItemsByRootMenu( menuId ) {
-    const menuItems = await strapi.query( 'plugin::menus.menu-item' ).findMany( {
+    const menuItems = await strapi.query( UID_MENU_ITEM ).findMany( {
       where: {
         root_menu: { id: menuId },
       },
@@ -56,7 +57,7 @@ module.exports = createCoreService( 'plugin::menus.menu-item', ( { strapi } ) =>
     const createLoop = _items => {
       return _items.map( async item => {
         const sanitizedItem = sanitizeEntity( omit( item, 'id' ) );
-        const createdItem = await strapi.query( 'plugin::menus.menu-item' ).create( {
+        const createdItem = await strapi.query( UID_MENU_ITEM ).create( {
           data: {
             ...sanitizedItem,
             root_menu: menuId,
@@ -92,7 +93,7 @@ module.exports = createCoreService( 'plugin::menus.menu-item', ( { strapi } ) =>
     const promisedItemsToUpdate = itemsToUpdate.map( async item => {
       const sanitizedItem = sanitizeEntity( omit( item, 'id' ) );
 
-      return await strapi.query( 'plugin::menus.menu-item' ).update( {
+      return await strapi.query( UID_MENU_ITEM ).update( {
         where: { id: item.id },
         data: sanitizedItem,
       } );
@@ -136,7 +137,7 @@ module.exports = createCoreService( 'plugin::menus.menu-item', ( { strapi } ) =>
     let itemsToDelete = deleteLoop( lastItemsToDelete );
     itemsToDelete = flattenDeep( itemsToDelete ).reverse();
 
-    await strapi.query( 'plugin::menus.menu-item' ).deleteMany( {
+    await strapi.query( UID_MENU_ITEM ).deleteMany( {
       where: {
         id: itemsToDelete,
       },

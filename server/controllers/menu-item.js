@@ -2,4 +2,6 @@
 
 const { createCoreController } = require('@strapi/strapi').factories;
 
-module.exports = createCoreController( 'plugin::menus.menu-item' );
+const { UID_MENU_ITEM } = require( '../constants' );
+
+module.exports = createCoreController( UID_MENU_ITEM );

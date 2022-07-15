@@ -4,6 +4,7 @@ const { get, pick } = require( 'lodash' );
 const { createCoreService } = require('@strapi/strapi').factories;
 
 const config = require( '../config' );
+const { UID_MENU, UID_MENU_ITEM } = require( '../constants' );
 const {
   getNestedParams,
   getService,
@@ -12,7 +13,7 @@ const {
   serializeNestedMenu,
 } = require( '../utils' );
 
-module.exports = createCoreService( 'plugin::menus.menu', ( { strapi } ) => ( {
+module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
   async find( params ) {
     const isNested = isTruthy( params.nested );
     const { results, pagination } = await super.find( isNested ? getNestedParams( params ) : params );
@@ -52,7 +53,7 @@ module.exports = createCoreService( 'plugin::menus.menu', ( { strapi } ) => ( {
       };
     }
 
-    const menu = await strapi.query( 'plugin::menus.menu' ).findOne( params );
+    const menu = await strapi.query( UID_MENU ).findOne( params );
 
     return ! menu;
   },
@@ -92,7 +93,7 @@ module.exports = createCoreService( 'plugin::menus.menu', ( { strapi } ) => ( {
   },
 
   getRelationPopulation( field ) {
-    const menuItemModel = strapi.getModel( 'plugin::menus.menu-item' );
+    const menuItemModel = strapi.getModel( UID_MENU_ITEM );
     const attr = menuItemModel.attributes[ field ];
 
     if ( ! attr ) {
@@ -132,7 +133,7 @@ module.exports = createCoreService( 'plugin::menus.menu', ( { strapi } ) => ( {
   async getMenu( value, field = 'id' ) {
     const fieldsToPopulate = await this.getPopulation( 'menuItem' );
 
-    const menu = await strapi.query( 'plugin::menus.menu' ).findOne( {
+    const menu = await strapi.query( UID_MENU ).findOne( {
       where: {
         [ field ]: value,
       },
@@ -177,7 +178,7 @@ module.exports = createCoreService( 'plugin::menus.menu', ( { strapi } ) => ( {
       };
     }
 
-    const menus = await strapi.query( 'plugin::menus.menu' ).findMany( params );
+    const menus = await strapi.query( UID_MENU ).findMany( params );
 
     return menus;
   },
@@ -187,7 +188,7 @@ module.exports = createCoreService( 'plugin::menus.menu', ( { strapi } ) => ( {
     const menuItemsData = get( data, 'items', [] );
 
     // Create new menu.
-    const menu = await strapi.query( 'plugin::menus.menu' ).create( { data: menuData } );
+    const menu = await strapi.query( UID_MENU ).create( { data: menuData } );
 
     // Maybe create menu items (should only happen when cloning).
     if ( menuItemsData ) {
@@ -216,7 +217,7 @@ module.exports = createCoreService( 'plugin::menus.menu', ( { strapi } ) => ( {
     await getService( 'menu-item' ).bulkCreateOrUpdateMenuItems( menuItemsData, id );
 
     // Finally, update the menu.
-    const menu = await strapi.query( 'plugin::menus.menu' ).update( {
+    const menu = await strapi.query( UID_MENU ).update( {
       where: { id },
       data: menuData,
     } );
@@ -233,7 +234,7 @@ module.exports = createCoreService( 'plugin::menus.menu', ( { strapi } ) => ( {
     }
 
     // Finally, delete the menu.
-    const menu = await strapi.query( 'plugin::menus.menu' ).delete( {
+    const menu = await strapi.query( UID_MENU ).delete( {
       where: { id },
     } );
 

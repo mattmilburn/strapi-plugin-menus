@@ -6,9 +6,10 @@ const { createCoreController } = require('@strapi/strapi').factories;
 const { ValidationError } = require( '@strapi/utils' ).errors;
 const { PUBLISHED_AT_ATTRIBUTE } = require('@strapi/utils').contentTypes.constants;
 
+const { UID_MENU, UID_MENU_ITEM } = require( '../constants' );
 const { getService } = require( '../utils' );
 
-module.exports = createCoreController( 'plugin::menus.menu', ( { strapi } ) =>  ( {
+module.exports = createCoreController( UID_MENU, ( { strapi } ) =>  ( {
   async config( ctx ) {
     const service = getService( 'plugin' );
     const config = await service.getConfig();
@@ -31,7 +32,7 @@ module.exports = createCoreController( 'plugin::menus.menu', ( { strapi } ) =>  
       return ctx.badRequest();
     }
 
-    const modelDef = strapi.getModel( 'plugin::menus.menu-item' );
+    const modelDef = strapi.getModel( UID_MENU_ITEM );
 
     if ( ! modelDef ) {
       return ctx.notFound( 'model.notFound' );
