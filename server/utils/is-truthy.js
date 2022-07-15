@@ -1,10 +1,18 @@
 'use strict';
 
+/**
+ * @NOTE - We do not include `null` as falsey here so query string params can
+ * evaluate as truthy when only their key is set.
+ */
+
 const isTruthy = value => {
-  return value !== undefined
-    && value !== 'false'
-    && value !== ''
-    && value !== 0;
+  return ! [
+    undefined,
+    false,
+    'false',
+    '',
+    0,
+  ].includes( value );
 };
 
 module.exports = isTruthy;

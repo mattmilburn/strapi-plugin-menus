@@ -4,25 +4,36 @@ const { get, pick } = require( 'lodash' );
 const { createCoreService } = require('@strapi/strapi').factories;
 
 const config = require( '../config' );
-const { getService, isTruthy, sanitizeEntity } = require( '../utils' );
+const {
+  getNestedParams,
+  getService,
+  isTruthy,
+  sanitizeEntity,
+  serializeNestedMenu,
+} = require( '../utils' );
 
 module.exports = createCoreService( 'plugin::menus.menu', ( { strapi } ) => ( {
   async find( params ) {
-    const { results, pagination } = await super.find( params );
+    const isNested = isTruthy( params.nested );
+    const { results, pagination } = await super.find( isNested ? getNestedParams( params ) : params );
 
-    /**
-     * @TODO - Handle optional nesting here.
-     */
+    if ( isNested ) {
+      return {
+        results: results.map( result => serializeNestedMenu( result ) ),
+        pagination,
+      };
+    }
 
     return { results, pagination };
   },
 
   async findOne( entityId, params ) {
-    const result = await super.findOne( entityId, params );
+    const isNested = isTruthy( params.nested );
+    const result = await super.findOne( entityId, isNested ? getNestedParams( params ) : params );
 
-    /**
-     * @TODO - Handle optional nesting here.
-     */
+    if ( isNested ) {
+      return serializeNestedMenu( result );
+    }
 
     return result;
   },
