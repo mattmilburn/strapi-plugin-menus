@@ -2,20 +2,19 @@
 
 const findChildren = require( './find-children' );
 const sortByOrder = require( './sort-by-order' );
+const removeParentData = require( './remove-parent-data' );
 
-const serializeNestedMenu = menu => {
-  const { items } = menu;
-
+const serializeNestedMenu = ( menu, keepParentData ) => {
   // Do nothing if there are no items to serialize.
-  if ( ! items || ! items.length ) {
+  if ( ! menu.items || ! menu.items.length ) {
     return menu;
   }
 
-  const rootItems = items.filter( _item => ! _item.parent );
+  const rootItems = menu.items.filter( _item => ! _item.parent );
 
   // Assign ordered and nested items to root items.
   const nestedItems = rootItems.reduce( ( acc, item ) => {
-    const descendants = findChildren( items, item.id );
+    const descendants = findChildren( menu.items, item.id );
 
     const rootItem = {
       ...item,
@@ -25,9 +24,11 @@ const serializeNestedMenu = menu => {
     return [ ...acc, rootItem ];
   }, [] );
 
+  const items = keepParentData ? nestedItems : removeParentData( nestedItems );
+
   return {
     ...menu,
-    items: sortByOrder( nestedItems ),
+    items: sortByOrder( items ),
   };
 };
 
