@@ -2,18 +2,15 @@ import qs from 'qs';
 
 import { pluginId } from './';
 
-const getRequestUrl = ( endpoint, params ) => {
+const getRequestUrl = ( path, params = {} ) => {
+  const query = qs.stringify( params, { addQueryPrefix: true } );
   let url = `/${pluginId}`;
 
-  if ( endpoint ) {
-    url = `${url}/${endpoint}`;
+  if ( path ) {
+    url = `${url}/${path}`;
   }
 
-  if ( params ) {
-    url = `${url}?${qs.stringify( params )}`;
-  }
-
-  return url;
+  return `${url}${query}`;
 }
 
 export default getRequestUrl;
