@@ -23,7 +23,13 @@ const IndexView = ( { history } ) => {
   const { lockApp, unlockApp } = useOverlayBlocker();
   const queryClient = useQueryClient();
 
-  const fetchParams = { populate: false };
+  const fetchParams = {
+    populate: {
+      items: {
+        parent: true,
+      },
+    },
+  };
 
   const { status, data } = useQuery( QUERY_KEY, () => api.get( null, fetchParams ), {
     onSuccess: () => {
@@ -90,7 +96,7 @@ const IndexView = ( { history } ) => {
 
   const isLoading = status !== 'success';
   const colCount = 3;
-  const rowCount = ( data?.menus?.length ?? 0 ) + 1;
+  const rowCount = ( data?.data?.length ?? 0 ) + 1;
 
   const tableHeaders = [
     {
@@ -170,17 +176,17 @@ const IndexView = ( { history } ) => {
       />
       <ContentLayout>
         <Box paddingBottom={ 10 }>
-          { data?.menus?.length ? (
+          { !! data?.data?.length ? (
             <DynamicTable
               contentType="Menus"
               isLoading={ isLoading }
-              headers={ !! data?.menus?.length ? tableHeaders : [] }
-              rows={ data?.menus }
+              headers={ tableHeaders }
+              rows={ data.data }
               action={ <PrimaryAction size="S" variant="secondary" /> }
               onConfirmDelete={ onConfirmDelete }
             >
               <MenuRows
-                menus={ data?.menus }
+                rows={ data.data }
                 onClickClone={ id => history.push( `/plugins/${pluginId}/clone/${id}` ) }
                 onClickEdit={ id => history.push( `/plugins/${pluginId}/edit/${id}` ) }
               />

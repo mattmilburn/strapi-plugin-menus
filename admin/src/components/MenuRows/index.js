@@ -8,33 +8,33 @@ import { Duplicate, Pencil, Trash } from '@strapi/icons';
 
 import { getTrad } from '../../utils';
 
-const MenuRows = ( { menus, onClickClone, onClickDelete, onClickEdit } ) => {
+const MenuRows = ( { rows, onClickClone, onClickDelete, onClickEdit } ) => {
   const { formatMessage } = useIntl();
 
   return (
     <Tbody>
-      { menus.map( menu => (
+      { rows.map( row => (
         <Tr
-          key={ menu.id }
+          key={ row.id }
           { ...onRowClick( {
-            fn: () => onClickEdit( menu.id ),
+            fn: () => onClickEdit( row.id ),
           } ) }
         >
           <Td>
-            <Typography textColor="neutral800">{ menu.title }</Typography>
+            <Typography textColor="neutral800">{ row.attributes.title }</Typography>
           </Td>
           <Td>
-            <Typography textColor="neutral800">{ menu.slug }</Typography>
+            <Typography textColor="neutral800">{ row.attributes.slug }</Typography>
           </Td>
           <Td>
-            <Badge>{ menu.items.length }</Badge>{ ' ' }
+            <Badge>{ row.attributes.items.length }</Badge>{ ' ' }
             <Typography textColor="neutral800">
               { formatMessage(
                 {
                   id: getTrad( 'ui.items' ),
                   defaultMessage: '{number, plural, =0 {items} one {item} other {items}}',
                 },
-                { number: menu.items.length }
+                { number: row.attributes.items.length }
               ) }
             </Typography>
           </Td>
@@ -42,7 +42,7 @@ const MenuRows = ( { menus, onClickClone, onClickDelete, onClickEdit } ) => {
             <Flex justifyContent="end">
               <Box paddingLeft={ 1 } { ...stopPropagation }>
                 <IconButton
-                  onClick={ () => onClickEdit( menu.id ) }
+                  onClick={ () => onClickEdit( row.id ) }
                   label={ formatMessage( { id: getTrad( 'ui.edit' ), defaultMessage: 'Edit' } ) }
                   icon={ <Pencil /> }
                   noBorder
@@ -50,7 +50,7 @@ const MenuRows = ( { menus, onClickClone, onClickDelete, onClickEdit } ) => {
               </Box>
               <Box paddingLeft={ 1 } { ...stopPropagation }>
                 <IconButton
-                  onClick={ () => onClickClone( menu.id ) }
+                  onClick={ () => onClickClone( row.id ) }
                   label={ formatMessage( { id: getTrad( 'ui.clone' ), defaultMessage: 'Clone' } ) }
                   icon={ <Duplicate /> }
                   noBorder
@@ -58,7 +58,7 @@ const MenuRows = ( { menus, onClickClone, onClickDelete, onClickEdit } ) => {
               </Box>
               <Box paddingLeft={ 1 } { ...stopPropagation }>
                 <IconButton
-                  onClick={ () => onClickDelete( menu.id ) }
+                  onClick={ () => onClickDelete( row.id ) }
                   label={ formatMessage( { id: getTrad( 'ui.delete' ), defaultMessage: 'Delete' } ) }
                   icon={ <Trash /> }
                   noBorder
@@ -79,10 +79,15 @@ MenuRows.defaultProps = {
 };
 
 MenuRows.propTypes = {
-  menus: PropTypes.arrayOf(
+  rows: PropTypes.arrayOf(
     PropTypes.shape( {
-      title: PropTypes.string,
-      slug: PropTypes.string,
+      id: PropTypes.number,
+      attributes: PropTypes.shape( {
+        id: PropTypes.number,
+        title: PropTypes.string,
+        slug: PropTypes.string,
+        items: PropTypes.array,
+      } ),
     } )
   ),
   onClickClone: PropTypes.func,
