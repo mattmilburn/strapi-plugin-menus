@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
+import { get } from 'lodash';
 import { onRowClick, stopPropagation } from '@strapi/helper-plugin';
 import { Badge, Box, Flex, IconButton, Typography } from '@strapi/design-system';
 import { Tbody, Tr, Td } from '@strapi/design-system/Table';
@@ -27,14 +28,14 @@ const MenuRows = ( { rows, onClickClone, onClickDelete, onClickEdit } ) => {
             <Typography textColor="neutral800">{ row.attributes.slug }</Typography>
           </Td>
           <Td>
-            <Badge>{ row.attributes.items.length }</Badge>{ ' ' }
+            <Badge>{ get( row, 'attributes.items.data.length', 0 ) }</Badge>{ ' ' }
             <Typography textColor="neutral800">
               { formatMessage(
                 {
                   id: getTrad( 'ui.items' ),
                   defaultMessage: '{number, plural, =0 {items} one {item} other {items}}',
                 },
-                { number: row.attributes.items.length }
+                { number: get( row, 'attributes.items.data.length', 0 ) }
               ) }
             </Typography>
           </Td>
@@ -86,7 +87,9 @@ MenuRows.propTypes = {
         id: PropTypes.number,
         title: PropTypes.string,
         slug: PropTypes.string,
-        items: PropTypes.array,
+        items: PropTypes.shape( {
+          data: PropTypes.array,
+        } ),
       } ),
     } )
   ),
