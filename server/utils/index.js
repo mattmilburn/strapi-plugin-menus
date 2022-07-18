@@ -3,6 +3,7 @@
 const findChildren = require( './find-children' );
 const getNestedParams = require( './get-nested-params' );
 const getService = require( './get-service' );
+const hasParentPopulation = require( './has-parent-population' );
 const isTruthy = require( './is-truthy' );
 const pluginId = require( './plugin-id' );
 const removeParentData = require( './remove-parent-data' );
@@ -14,6 +15,7 @@ module.exports = {
   findChildren,
   getNestedParams,
   getService,
+  hasParentPopulation,
   isTruthy,
   pluginId,
   removeParentData,
