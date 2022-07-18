@@ -24,11 +24,7 @@ const IndexView = ( { history } ) => {
   const queryClient = useQueryClient();
 
   const fetchParams = {
-    populate: {
-      items: {
-        parent: true,
-      },
-    },
+    populate: '*',
   };
 
   const { status, data } = useQuery( QUERY_KEY, () => api.get( null, fetchParams ), {
