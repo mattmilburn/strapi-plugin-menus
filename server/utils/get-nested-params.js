@@ -1,14 +1,16 @@
 'use strict';
 
-const { get, uniq } = require( 'lodash' );
+const { get } = require( 'lodash' );
 
 const getNestedParams = params => ( {
   ...params,
-  populate: uniq( [
-    ...get( params, 'populate', [] ),
-    'items',
-    'items.parent',
-  ] ),
+  populate: {
+    ...get( params, 'populate', {} ),
+    items: {
+      ...get( params, 'populate.items', {} ),
+      parent: true,
+    },
+  },
 } );
 
 module.exports = getNestedParams;
