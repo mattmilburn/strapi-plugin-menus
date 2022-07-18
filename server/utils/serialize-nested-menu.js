@@ -10,7 +10,7 @@ const serializeNestedMenu = ( menu, keepParentData ) => {
     return menu;
   }
 
-  const rootItems = menu.items.filter( _item => ! _item.parent );
+  const rootItems = menu.items.filter( item => ! item.parent );
 
   // Assign ordered and nested items to root items.
   const nestedItems = rootItems.reduce( ( acc, item ) => {
