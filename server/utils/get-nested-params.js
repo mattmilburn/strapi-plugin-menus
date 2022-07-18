@@ -7,8 +7,10 @@ const getNestedParams = params => ( {
   populate: {
     ...get( params, 'populate', {} ),
     items: {
-      ...get( params, 'populate.items', {} ),
-      parent: true,
+      populate: {
+        ...get( params, 'populate.items.populate', {} ),
+        parent: true,
+      },
     },
   },
 } );
