@@ -8,6 +8,7 @@ const { UID_MENU, UID_MENU_ITEM } = require( '../constants' );
 const {
   getNestedParams,
   getService,
+  hasParentPopulation,
   isTruthy,
   sanitizeEntity,
   serializeNestedMenu,
@@ -16,15 +17,15 @@ const {
 module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
   async find( params ) {
     const isNested = Object.keys( params ).includes( 'nested' );
-    const hasParentPopulation = !! get( params, 'populate.items.parent', false );
-
     const findParams = isNested ? getNestedParams( params ) : params;
     const { results, pagination } = await super.find( findParams );
 
     // Maybe return data in nested format.
     if ( isNested ) {
       return {
-        results: results.map( result => serializeNestedMenu( result, hasParentPopulation ) ),
+        results: results.map( result => {
+          return serializeNestedMenu( result, hasParentPopulation( params ) );
+        } ),
         pagination,
       };
     }
@@ -34,14 +35,12 @@ module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
 
   async findOne( entityId, params ) {
     const isNested = Object.keys( params ).includes( 'nested' );
-    const hasParentPopulation = !! get( params, 'populate.items.parent', false );
-
     const findParams = isNested ? getNestedParams( params ) : params;
     const result = await super.findOne( entityId, findParams );
 
     // Maybe return data in nested format.
     if ( isNested ) {
-      return serializeNestedMenu( result, hasParentPopulation );
+      return serializeNestedMenu( result, hasParentPopulation( params ) );
     }
 
     return result;
