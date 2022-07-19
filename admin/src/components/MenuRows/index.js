@@ -84,7 +84,6 @@ MenuRows.propTypes = {
     PropTypes.shape( {
       id: PropTypes.number.isRequired,
       attributes: PropTypes.shape( {
-        id: PropTypes.number.isRequired,
         title: PropTypes.string.isRequired,
         slug: PropTypes.string.isRequired,
         items: PropTypes.shape( {
