@@ -11,3 +11,4 @@ export { default as pluginName } from './plugin-name';
 export { default as sanitizeEntity } from './sanitize-entity';
 export { default as sanitizeFormData } from './sanitize-form-data';
 export { default as serializeFields } from './serialize-fields';
+export { default as transformResponse } from './transform-response';
