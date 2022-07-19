@@ -2,7 +2,7 @@ import React, { memo, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { get, pick, uniqueId } from 'lodash';
+import { get, pick, uniq, uniqueId } from 'lodash';
 import { Formik } from 'formik';
 import { Form, useNotification, useOverlayBlocker } from '@strapi/helper-plugin';
 import { Box, Button, Link, Stack, useNotifyAT } from '@strapi/design-system';
@@ -86,11 +86,19 @@ const EditView = ( { history, location, match } ) => {
     queryKey = CLONE_QUERY_KEY.replace( '{id}', id );
   }
 
+  const fetchRelations = Object.keys( schema.menuItem ).filter( key => {
+    const ignoreFields = [ 'parent', 'root_menu', 'createdBy', 'updatedBy' ];
+    const prop = schema.menuItem[ key ];
+
+    return prop.type === 'relation' && ! ignoreFields.includes( key );
+  } );
+
   const fetchParams = {
-    populate: [
+    populate: uniq( [
       'items',
       'items.parent',
-    ],
+      ...fetchRelations.map( relation => `items.${relation}` ),
+    ] ),
   };
 
   const { status, data } = useQuery( queryKey, () => api.get( id, fetchParams ), {
