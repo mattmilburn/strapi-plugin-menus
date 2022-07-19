@@ -82,14 +82,14 @@ MenuRows.defaultProps = {
 MenuRows.propTypes = {
   rows: PropTypes.arrayOf(
     PropTypes.shape( {
-      id: PropTypes.number,
+      id: PropTypes.number.isRequired,
       attributes: PropTypes.shape( {
-        id: PropTypes.number,
-        title: PropTypes.string,
-        slug: PropTypes.string,
+        id: PropTypes.number.isRequired,
+        title: PropTypes.string.isRequired,
+        slug: PropTypes.string.isRequired,
         items: PropTypes.shape( {
-          data: PropTypes.array,
-        } ),
+          data: PropTypes.array.isRequired,
+        } ).isRequired,
       } ),
     } )
   ),

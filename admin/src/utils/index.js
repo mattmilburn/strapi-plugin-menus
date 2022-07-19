@@ -4,6 +4,7 @@ export { default as camelToTitle } from './camel-to-title';
 export { default as getBoxProps } from './get-box-props';
 export { default as getRequestUrl } from './get-request-url';
 export { default as getTrad } from './get-trad';
+export { default as menuProps } from './menu-props';
 export { default as menuItemProps } from './menu-item-props';
 export { default as normalizeItemFields } from './normalize-item-fields';
 export { default as pluginId } from './plugin-id';
