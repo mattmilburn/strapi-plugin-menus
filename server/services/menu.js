@@ -159,37 +159,6 @@ module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
     return menu;
   },
 
-  async getMenus( populate = true ) {
-    const params = {
-      orderBy: {
-        title: 'ASC',
-      },
-    };
-
-    if ( isTruthy( populate ) ) {
-      const fieldsToPopulate = await this.getPopulation( 'menuItem' );
-
-      params.populate = {
-        items: {
-          populate: {
-            ...fieldsToPopulate,
-            parent: {
-              select: [ 'id' ],
-            },
-          },
-        },
-      };
-    } else {
-      params.populate = {
-        items: true,
-      };
-    }
-
-    const menus = await strapi.query( UID_MENU ).findMany( params );
-
-    return menus;
-  },
-
   async createMenu( data ) {
     const menuData = pick( data, [ 'title', 'slug' ], {} );
     const menuItemsData = get( data, 'items', [] );
