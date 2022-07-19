@@ -29,6 +29,7 @@ import {
   pluginId,
   sanitizeEntity,
   sanitizeFormData,
+  transformResponse,
 } from '../../utils';
 
 import formLayout from './form-layout';
@@ -85,9 +86,16 @@ const EditView = ( { history, location, match } ) => {
     queryKey = CLONE_QUERY_KEY.replace( '{id}', id );
   }
 
-  const { status, data } = useQuery( queryKey, () => api.get( id ), {
+  const fetchParams = {
+    populate: [
+      'items',
+      'items.parent',
+    ],
+  };
+
+  const { status, data } = useQuery( queryKey, () => api.get( id, fetchParams ), {
     enabled: ! isCreating,
-    onSuccess: data => {
+    onSuccess: () => {
       notifyStatus(
         formatMessage( {
           id: getTrad( 'ui.loaded' ),
@@ -105,6 +113,8 @@ const EditView = ( { history, location, match } ) => {
       } );
     },
   } );
+
+  const transformedData = data ? transformResponse( data ) : null;
 
   const submitMutation = useMutation( body => {
     // Maybe clone this menu with sanitized data.
@@ -175,8 +185,8 @@ const EditView = ( { history, location, match } ) => {
       } );
 
       // If we just cloned a page, we need to redirect to the new edit page.
-      if ( ( isCreating || isCloning ) && res?.data?.menu ) {
-        history.push( `/plugins/${pluginId}/edit/${res.data.menu.id}` );
+      if ( ( isCreating || isCloning ) && res?.data?.data?.id ) {
+        history.push( `/plugins/${pluginId}/edit/${res.data.data.id}` );
       }
     } catch ( err ) {
       unlockApp();
@@ -197,7 +207,7 @@ const EditView = ( { history, location, match } ) => {
     >
       <Formik
         onSubmit={ onSubmit }
-        initialValues={ data?.menu ?? defaultValues }
+        initialValues={ transformedData ?? defaultValues }
         validateOnChange={ false }
         validationSchema={ formSchema }
         enableReinitialize
@@ -235,7 +245,7 @@ const EditView = ( { history, location, match } ) => {
                   <Stack spacing={ 8 }>
                     <MenuDataProvider
                       isCreatingEntry={ isCreating }
-                      menu={ data?.menu }
+                      menu={ transformedData }
                     >
                       <Section>
                         <FormLayout fields={ formLayout.menu } />
