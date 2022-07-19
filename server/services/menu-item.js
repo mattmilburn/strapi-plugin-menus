@@ -7,23 +7,6 @@ const { UID_MENU_ITEM } = require( '../constants' );
 const { sanitizeEntity } = require( '../utils' );
 
 module.exports = createCoreService( UID_MENU_ITEM, ( { strapi } ) => ( {
-  async getMenuItem( id ) {
-    const menuItem = await strapi.query( UID_MENU_ITEM ).findOne( {
-      where: { id },
-      populate: true,
-    } );
-
-    return menuItem;
-  },
-
-  async getMenuItems() {
-    const menuItems = await strapi.query( UID_MENU_ITEM ).findMany( {
-      populate: true,
-    } );
-
-    return menuItems;
-  },
-
   async getMenuItemsByRootMenu( menuId ) {
     const menuItems = await strapi.query( UID_MENU_ITEM ).findMany( {
       where: {
