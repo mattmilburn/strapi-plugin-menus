@@ -5,7 +5,7 @@ import { useFormikContext } from 'formik';
 import { get, uniqueId } from 'lodash';
 
 import { MenuDataContext } from '../../contexts';
-import { pluginId } from '../../utils';
+import { menuProps, pluginId } from '../../utils';
 import {
   defaultItem,
   getChildren,
@@ -214,11 +214,7 @@ MenuDataProvider.defaultProps = {
 MenuDataProvider.propTypes = {
   children: PropTypes.node,
   isCreatingEntry: PropTypes.bool.isRequired,
-  menu: PropTypes.shape( {
-    title: PropTypes.string,
-    slug: PropTypes.string,
-    items: PropTypes.array,
-  } ),
+  menu: menuProps,
 };
 
 export default MenuDataProvider;
