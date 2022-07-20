@@ -16,7 +16,7 @@ const menuItemProps = PropTypes.shape( {
     id: PropTypes.oneOfType( [
       PropTypes.string,
       PropTypes.number,
-    ] ).isRequired,
+    ] ),
   } ),
   title: PropTypes.string.isRequired,
   target: PropTypes.oneOf( [ '_blank', '_parent', '_self', '_top' ] ),

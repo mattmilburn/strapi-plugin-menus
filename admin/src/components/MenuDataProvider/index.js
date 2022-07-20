@@ -52,7 +52,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
       ...defaultItem,
       order,
       id: uniqueId( 'create' ),
-      root_menu: { id: menu.id },
+      root_menu: { id: menu?.id },
       parent: parentId ? { id: parentId } : null,
     };
 
