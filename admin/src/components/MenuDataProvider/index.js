@@ -206,9 +206,6 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
 
 MenuDataProvider.defaultProps = {
   isCreatingEntry: false,
-  menu: {
-    id: null,
-  },
 };
 
 MenuDataProvider.propTypes = {

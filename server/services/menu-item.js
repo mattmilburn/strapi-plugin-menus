@@ -18,7 +18,7 @@ module.exports = createCoreService( UID_MENU_ITEM, ( { strapi } ) => ( {
     return menuItems;
   },
 
-  async bulkCreateOrUpdateMenuItems( items, menuId ) {
+  async bulkCreateOrUpdate( params, items, menuId ) {
     const itemsToUpdate = items.filter( item => Number.isInteger( item.id ) );
     const itemsToCreate = items.filter( item => `${item.id}`.includes( 'create' ) );
 
@@ -40,7 +40,8 @@ module.exports = createCoreService( UID_MENU_ITEM, ( { strapi } ) => ( {
     const createLoop = _items => {
       return _items.map( async item => {
         const sanitizedItem = sanitizeEntity( omit( item, 'id' ) );
-        const createdItem = await strapi.query( UID_MENU_ITEM ).create( {
+        const createdItem = await strapi.entityService.create( UID_MENU_ITEM, {
+          ...params,
           data: {
             ...sanitizedItem,
             root_menu: menuId,
@@ -76,19 +77,19 @@ module.exports = createCoreService( UID_MENU_ITEM, ( { strapi } ) => ( {
     const promisedItemsToUpdate = itemsToUpdate.map( async item => {
       const sanitizedItem = sanitizeEntity( omit( item, 'id' ) );
 
-      return await strapi.query( UID_MENU_ITEM ).update( {
-        where: { id: item.id },
+      return await strapi.entityService.update( UID_MENU_ITEM, item.id, {
+        ...params,
         data: sanitizedItem,
       } );
     } );
 
-    await Promise.all( [
+    return await Promise.all( [
       ...promisedItemsToCreate,
       ...promisedItemsToUpdate,
     ] );
   },
 
-  async bulkDeleteMenuItems( items ) {
+  async bulkDelete( items ) {
     // Maybe delete parent menu items after their children.
     let lastItemsToDelete = items.filter( item => {
       return ! item.parent || ! items.find( _item => item.parent.id === _item.id );

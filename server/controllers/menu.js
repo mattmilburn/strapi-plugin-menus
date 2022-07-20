@@ -1,13 +1,13 @@
 'use strict';
 
-const { get, isEmpty } = require( 'lodash' );
+const { get, isEmpty, isObject } = require( 'lodash' );
 const { prop, pick } = require( 'lodash/fp' );
 const { createCoreController } = require('@strapi/strapi').factories;
 const { ValidationError } = require( '@strapi/utils' ).errors;
 const { PUBLISHED_AT_ATTRIBUTE } = require('@strapi/utils').contentTypes.constants;
 
 const { UID_MENU, UID_MENU_ITEM } = require( '../constants' );
-const { getService } = require( '../utils' );
+const { getService, parseBody } = require( '../utils' );
 
 module.exports = createCoreController( UID_MENU, ( { strapi } ) =>  ( {
   async config( ctx ) {
@@ -64,26 +64,31 @@ module.exports = createCoreController( UID_MENU, ( { strapi } ) =>  ( {
   },
 
   async create( ctx ) {
-    if ( isEmpty( ctx.request.body ) ) {
-      throw new ValidationError( 'Request body cannot be empty' );
+    const { query } = ctx.request;
+    const { data, files } = parseBody( ctx );
+
+    if ( ! isObject( data ) ) {
+      throw new ValidationError( 'Missing "data" payload in the request body' );
     }
 
-    const { slug } = ctx.request.body;
-    const isAvailable = await getService( 'menu' ).checkAvailability( slug );
-
     // Validate slug availability.
+    const isAvailable = await getService( 'menu' ).checkAvailability( data.slug );
+
     if ( ! isAvailable ) {
-      const errorMessage = `The slug ${slug} is already taken`;
+      const errorMessage = `The slug ${data.slug} is already taken`;
       return ctx.badRequest( errorMessage, { slug: errorMessage } );
     }
 
-    /**
-     * @TODO - Use core service here to create menu. Then create menu items.
-     */
+    // Find and return sanitized and transformed entity.
+    const sanitizedInputData = await this.sanitizeInput( data, ctx );
+    const entity = await getService( 'menu' ).create( {
+      ...query,
+      data: sanitizedInputData,
+      files,
+    } );
+    const sanitizedEntity = await this.sanitizeOutput( entity, ctx );
 
-    const menu = await getService( 'menu' ).createMenu( ctx.request.body );
-
-    ctx.send( { menu } );
+    return this.transformResponse( sanitizedEntity );
   },
 
   async update( ctx ) {

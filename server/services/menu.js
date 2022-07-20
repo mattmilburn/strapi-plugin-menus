@@ -46,6 +46,26 @@ module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
     return result;
   },
 
+  async create( params ) {
+    const { data } = params;
+    const menuData = pick( data, [ 'title', 'slug' ], {} );
+    const menuItemsData = get( data, 'items', [] );
+
+    // Create new menu.
+    const entity = await super.create( { ...params, data: menuData } );
+    let entityItems = [];
+
+    // Maybe create menu items (should only happen when cloning).
+    if ( menuItemsData.length ) {
+      entityItems = await getService( 'menu-item' ).bulkCreateOrUpdate( params, menuItemsData, entity.id );
+    }
+
+    return {
+      ...entity,
+      items: entityItems,
+    };
+  },
+
   //////////////////////////////////////////////////////////////////////////////
 
   async checkAvailability( slug, id ) {
@@ -168,7 +188,7 @@ module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
 
     // Maybe create menu items (should only happen when cloning).
     if ( menuItemsData ) {
-      await getService( 'menu-item' ).bulkCreateOrUpdateMenuItems( menuItemsData, menu.id );
+      await getService( 'menu-item' ).bulkCreateOrUpdate( params, menuItemsData, menu.id );
     }
 
     return menu;
@@ -186,11 +206,11 @@ module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
 
     // First, delete menu items that were removed from the menu.
     if ( itemsToDelete.length ) {
-      await getService( 'menu-item' ).bulkDeleteMenuItems( itemsToDelete );
+      await getService( 'menu-item' ).bulkDelete( itemsToDelete );
     }
 
     // Next, create or update menu items before updating the menu.
-    await getService( 'menu-item' ).bulkCreateOrUpdateMenuItems( menuItemsData, id );
+    await getService( 'menu-item' ).bulkCreateOrUpdate( menuItemsData, id );
 
     // Finally, update the menu.
     const menu = await strapi.query( UID_MENU ).update( {
@@ -206,7 +226,7 @@ module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
     const itemsToDelete = await getService( 'menu-item' ).getMenuItemsByRootMenu( id );
 
     if ( itemsToDelete.length ) {
-      await getService( 'menu-item' ).bulkDeleteMenuItems( itemsToDelete );
+      await getService( 'menu-item' ).bulkDelete( itemsToDelete );
     }
 
     // Finally, delete the menu.
