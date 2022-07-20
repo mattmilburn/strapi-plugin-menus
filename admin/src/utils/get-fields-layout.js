@@ -81,7 +81,7 @@ const normalizeField = ( field, schema ) => {
   };
 };
 
-const normalizeItemFields = ( defaultLayout, customLayouts, schema ) => {
+const getFieldsLayout = ( defaultLayout, customLayouts, schema ) => {
   // Combine custom layouts with default layout.
   let layouts = {
     link: [
@@ -99,4 +99,4 @@ const normalizeItemFields = ( defaultLayout, customLayouts, schema ) => {
   return layouts;
 };
 
-export default normalizeItemFields;
+export default getFieldsLayout;
