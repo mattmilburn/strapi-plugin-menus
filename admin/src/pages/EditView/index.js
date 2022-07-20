@@ -24,8 +24,8 @@ import {
 } from '../../components';
 import {
   api,
+  getFieldsLayout,
   getTrad,
-  normalizeItemFields,
   pluginId,
   sanitizeEntity,
   sanitizeFormData,
@@ -53,7 +53,7 @@ const EditView = ( { history, location, match } ) => {
 
   // Merge default fields layout with custom field layouts.
   const menuItemLayout = useMemo( () => {
-    return normalizeItemFields( formLayout.menuItem, customLayouts, schema );
+    return getFieldsLayout( formLayout.menuItem, customLayouts, schema );
   }, [ customLayouts ] );
   const menuItemFields = Object.values( menuItemLayout ).flat();
 
@@ -103,6 +103,7 @@ const EditView = ( { history, location, match } ) => {
 
   const { status, data } = useQuery( queryKey, () => api.get( id, fetchParams ), {
     enabled: ! isCreating,
+    select: data => transformResponse( data ),
     onSuccess: () => {
       notifyStatus(
         formatMessage( {
@@ -122,8 +123,6 @@ const EditView = ( { history, location, match } ) => {
     },
   } );
 
-  const transformedData = data ? transformResponse( data ) : null;
-
   const submitMutation = useMutation( body => {
     // Maybe clone this menu with sanitized data.
     if ( isCloning ) {
@@ -134,8 +133,10 @@ const EditView = ( { history, location, match } ) => {
       } ) );
 
       const clonedBody = {
-        ...menuData,
-        items: menuItemsData,
+        data: {
+          ...menuData,
+          items: menuItemsData,
+        },
       };
 
       return api.postAction( clonedBody );
@@ -188,8 +189,10 @@ const EditView = ( { history, location, match } ) => {
       } );
 
       const res = await submitMutation.mutateAsync( {
-        ...sanitizedMenuData,
-        items: sanitizedMenuItemsData,
+        data: {
+          ...sanitizedMenuData,
+          items: sanitizedMenuItemsData,
+        },
       } );
 
       // If we just cloned a page, we need to redirect to the new edit page.
@@ -215,7 +218,7 @@ const EditView = ( { history, location, match } ) => {
     >
       <Formik
         onSubmit={ onSubmit }
-        initialValues={ transformedData ?? defaultValues }
+        initialValues={ data ?? defaultValues }
         validateOnChange={ false }
         validationSchema={ formSchema }
         enableReinitialize
@@ -253,7 +256,7 @@ const EditView = ( { history, location, match } ) => {
                   <Stack spacing={ 8 }>
                     <MenuDataProvider
                       isCreatingEntry={ isCreating }
-                      menu={ transformedData }
+                      menu={ data }
                     >
                       <Section>
                         <FormLayout fields={ formLayout.menu } />
