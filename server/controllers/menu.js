@@ -1,6 +1,6 @@
 'use strict';
 
-const { get, isEmpty, isObject } = require( 'lodash' );
+const { get, isObject } = require( 'lodash' );
 const { prop, pick } = require( 'lodash/fp' );
 const { createCoreController } = require('@strapi/strapi').factories;
 const { ValidationError } = require( '@strapi/utils' ).errors;
@@ -98,22 +98,5 @@ module.exports = createCoreController( UID_MENU, ( { strapi } ) =>  ( {
     }
 
     return await super.update( ctx );
-  },
-
-  async delete( ctx ) {
-    const { id } = ctx.request.params;
-    const menuToDelete = await getService( 'menu' ).getMenu( id );
-
-    if ( ! menuToDelete ) {
-      return ctx.notFound();
-    }
-
-    /**
-     * @TODO - Use core service here to delete menu. Then delete menu items.
-     */
-
-    await getService( 'menu' ).deleteMenu( id );
-
-    ctx.send( { ok: true } );
   },
 } ) );

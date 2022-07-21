@@ -117,23 +117,33 @@ module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
     } );
   },
 
+  async delete( id ) {
+    // First, delete menu items belonging to the menu that will be deleted.
+    const itemsToDelete = await getService( 'menu-item' ).findByRootMenu( id );
+
+    if ( itemsToDelete.length ) {
+      await getService( 'menu-item' ).bulkDelete( itemsToDelete );
+    }
+
+    // Finally, delete the menu.
+    return await super.delete( id );
+  },
+
   //////////////////////////////////////////////////////////////////////////////
 
   async checkAvailability( slug, id ) {
     const params = {
-      where: { slug },
+      filters: { slug },
     };
 
     // Optionally exclude by the ID so we don't check the menu against itself.
     if ( id ) {
-      params.filters = {
-        $not: { id },
-      };
+      params.filters.id = { $ne: id };
     }
 
-    const menu = await strapi.query( UID_MENU ).findOne( params );
+    const entity = await strapi.entityService.findMany( UID_MENU, params );
 
-    return ! menu;
+    return ! entity.length;
   },
 
   async getPopulation( name ) {
@@ -206,85 +216,5 @@ module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
     }, {} );
 
     return { populate };
-  },
-
-  async getMenu( value, field = 'id' ) {
-    const fieldsToPopulate = await this.getPopulation( 'menuItem' );
-
-    const menu = await strapi.query( UID_MENU ).findOne( {
-      where: {
-        [ field ]: value,
-      },
-      populate: {
-        items: {
-          populate: {
-            ...fieldsToPopulate,
-            parent: {
-              select: [ 'id' ],
-            },
-          },
-        },
-      },
-    } );
-
-    return menu;
-  },
-
-  async createMenu( data ) {
-    const menuData = pick( data, [ 'title', 'slug' ], {} );
-    const menuItemsData = get( data, 'items', [] );
-
-    // Create new menu.
-    const menu = await strapi.query( UID_MENU ).create( { data: menuData } );
-
-    // Maybe create menu items (should only happen when cloning).
-    if ( menuItemsData ) {
-      await getService( 'menu-item' ).bulkCreateOrUpdate( params, menuItemsData, menu.id );
-    }
-
-    return menu;
-  },
-
-  async updateMenu( id, data, prevData ) {
-    const menuData = pick( data, [ 'title', 'slug' ], {} );
-    const menuItemsData = get( data, 'items', [] );
-    const prevItemsData = get( prevData, 'items', [] );
-
-    // Compare new `items` to existing `items` to determine which can be deleted.
-    const itemsToDelete = prevItemsData.filter( item => {
-      return ! menuItemsData.find( _item => _item.id === item.id );
-    } );
-
-    // First, delete menu items that were removed from the menu.
-    if ( itemsToDelete.length ) {
-      await getService( 'menu-item' ).bulkDelete( itemsToDelete );
-    }
-
-    // Next, create or update menu items before updating the menu.
-    await getService( 'menu-item' ).bulkCreateOrUpdate( menuItemsData, id );
-
-    // Finally, update the menu.
-    const menu = await strapi.query( UID_MENU ).update( {
-      where: { id },
-      data: menuData,
-    } );
-
-    return menu;
-  },
-
-  async deleteMenu( id ) {
-    // First, delete menu items belonging to the menu that will be deleted.
-    const itemsToDelete = await getService( 'menu-item' ).getMenuItemsByRootMenu( id );
-
-    if ( itemsToDelete.length ) {
-      await getService( 'menu-item' ).bulkDelete( itemsToDelete );
-    }
-
-    // Finally, delete the menu.
-    const menu = await strapi.query( UID_MENU ).delete( {
-      where: { id },
-    } );
-
-    return menu;
   },
 } ) );
