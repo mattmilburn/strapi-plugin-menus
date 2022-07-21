@@ -1,6 +1,6 @@
 'use strict';
 
-const { get, pick } = require( 'lodash' );
+const { get, omit, pick } = require( 'lodash' );
 const { createCoreService } = require('@strapi/strapi').factories;
 
 const config = require( '../config' );
@@ -72,20 +72,12 @@ module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
 
     // Maybe create menu items (should only happen when cloning).
     if ( menuItemsData.length ) {
-      entityItems = await getService( 'menu-item' ).bulkCreateOrUpdate( menuItemsData, entity.id );
+      await getService( 'menu-item' ).bulkCreateOrUpdate( menuItemsData, entity.id );
     }
 
-    /**
-     * @TODO - Because we create the menu before creating the items, we should
-     * use `super.findOne` here to ensure `params` are used correctly.
-     */
-
-    return {
-      ...entity,
-      items: {
-        data: entityItems,
-      },
-    };
+    // Because we create the menu before creating the items, we use `super.findOne`
+    // here to ensure `params` are used consistently throughout the request.
+    return await super.findOne( entity.id, omit( params, 'data' ) );
   },
 
   async update( id, params ) {

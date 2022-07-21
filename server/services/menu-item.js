@@ -9,7 +9,7 @@ const { sanitizeEntity } = require( '../utils' );
 module.exports = createCoreService( UID_MENU_ITEM, ( { strapi } ) => ( {
   async bulkCreateOrUpdate( items, menuId ) {
     const itemsToUpdate = items.filter( item => Number.isInteger( item.id ) );
-    const itemsToCreate = items.filter( item => `${item.id}`.includes( 'create' ) );
+    const itemsToCreate = items.filter( item => ! item.id || `${item.id}`.includes( 'create' ) );
 
     // Maybe create root menu items before others.
     const firstRootItemsToCreate = itemsToCreate.filter( item => ! item.parent );
@@ -60,7 +60,7 @@ module.exports = createCoreService( UID_MENU_ITEM, ( { strapi } ) => ( {
     };
 
     // Create arrays of promises that will handle create/update operations in order.
-    const promisedItemsToCreate = createLoop( firstItemsToCreate );
+    const promisedItemsToCreate = flattenDeep( createLoop( firstItemsToCreate ) );
 
     const promisedItemsToUpdate = itemsToUpdate.map( async item => {
       const sanitizedItem = sanitizeEntity( item );
@@ -105,8 +105,7 @@ module.exports = createCoreService( UID_MENU_ITEM, ( { strapi } ) => ( {
       } );
     };
 
-    let itemsToDelete = deleteLoop( lastItemsToDelete );
-    itemsToDelete = flattenDeep( itemsToDelete ).reverse();
+    const itemsToDelete = flattenDeep( deleteLoop( lastItemsToDelete ) ).reverse();
 
     return await strapi.entityService.deleteMany( UID_MENU_ITEM, {
       filters: {
@@ -125,9 +124,9 @@ module.exports = createCoreService( UID_MENU_ITEM, ( { strapi } ) => ( {
     return menuItems;
   },
 
-  async getPopulation( name ) {
+  async getPopulation() {
     const { layouts } = await getService( 'plugin' ).getConfig();
-    const customLayouts = get( layouts, name, {} );
+    const customLayouts = get( layouts, 'menuItem', {} );
     const fields = Object.values( customLayouts ).flat();
 
     const population = fields.reduce( ( acc, { input } ) => {
