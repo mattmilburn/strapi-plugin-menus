@@ -9,7 +9,6 @@ const {
   getNestedParams,
   getService,
   hasParentPopulation,
-  sanitizeEntity,
   serializeNestedMenu,
 } = require( '../utils' );
 

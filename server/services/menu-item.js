@@ -1,6 +1,6 @@
 'use strict';
 
-const { flattenDeep, omit } = require( 'lodash' );
+const { flattenDeep } = require( 'lodash' );
 const { createCoreService } = require('@strapi/strapi').factories;
 
 const { UID_MENU_ITEM } = require( '../constants' );
@@ -28,7 +28,7 @@ module.exports = createCoreService( UID_MENU_ITEM, ( { strapi } ) => ( {
     // promises that chain together additional promises to create descendants.
     const createLoop = _items => {
       return _items.map( async item => {
-        const sanitizedItem = sanitizeEntity( omit( item, 'id' ) );
+        const sanitizedItem = sanitizeEntity( item );
         const createdItem = await strapi.entityService.create( UID_MENU_ITEM, {
           data: {
             ...sanitizedItem,
@@ -63,7 +63,7 @@ module.exports = createCoreService( UID_MENU_ITEM, ( { strapi } ) => ( {
     const promisedItemsToCreate = createLoop( firstItemsToCreate );
 
     const promisedItemsToUpdate = itemsToUpdate.map( async item => {
-      const sanitizedItem = sanitizeEntity( omit( item, 'id' ) );
+      const sanitizedItem = sanitizeEntity( item );
 
       return await strapi.entityService.update( UID_MENU_ITEM, item.id, {
         data: sanitizedItem,
