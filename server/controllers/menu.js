@@ -63,6 +63,8 @@ module.exports = createCoreController( UID_MENU, ( { strapi } ) =>  ( {
     ctx.send( entities.map( pick( pickFields ) ) );
   },
 
+  //////////////////////////////////////////////////////////////////////////////
+
   async create( ctx ) {
     const { data } = parseBody( ctx );
 

@@ -14,6 +14,23 @@ const {
 } = require( '../utils' );
 
 module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
+  async checkAvailability( slug, id ) {
+    const params = {
+      filters: { slug },
+    };
+
+    // Optionally exclude by the ID so we don't check the menu against itself.
+    if ( id ) {
+      params.filters.id = { $ne: id };
+    }
+
+    const entity = await strapi.entityService.findMany( UID_MENU, params );
+
+    return ! entity.length;
+  },
+
+  //////////////////////////////////////////////////////////////////////////////
+
   async find( params = {} ) {
     const isNested = Object.keys( params ).includes( 'nested' );
     const findParams = isNested ? getNestedParams( params ) : params;
@@ -106,7 +123,7 @@ module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
      * @TODO - Should menus and menu items only update if they've actually changed?
      */
 
-    // Finally, update the menu itself.
+    // Finally, update the menu.
     return await super.update( id, {
       ...params,
       data: menuData,
@@ -127,94 +144,5 @@ module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
 
     // Finally, delete the menu.
     return await super.delete( id );
-  },
-
-  //////////////////////////////////////////////////////////////////////////////
-
-  async checkAvailability( slug, id ) {
-    const params = {
-      filters: { slug },
-    };
-
-    // Optionally exclude by the ID so we don't check the menu against itself.
-    if ( id ) {
-      params.filters.id = { $ne: id };
-    }
-
-    const entity = await strapi.entityService.findMany( UID_MENU, params );
-
-    return ! entity.length;
-  },
-
-  async getPopulation( name ) {
-    const { layouts } = await getService( 'plugin' ).getConfig();
-    const customLayouts = get( layouts, name, {} );
-    const fields = Object.values( customLayouts ).flat();
-
-    const population = fields.reduce( ( acc, { input } ) => {
-      if ( ! input ) {
-        return acc;
-      }
-
-      // Shallow populate media relations.
-      if ( input.type === 'media' ) {
-        return {
-          ...acc,
-          [ input.name ]: true,
-        };
-      }
-
-      // Maybe deep populate media relations.
-      if ( input.type === 'relation' ) {
-        const relationPopulation = getService( 'menu' ).getRelationPopulation( input.name );
-
-        return {
-          ...acc,
-          [ input.name ]: relationPopulation,
-        };
-      }
-
-      return acc;
-    }, {} );
-
-    return population;
-  },
-
-  getRelationPopulation( field ) {
-    const menuItemModel = strapi.getModel( UID_MENU_ITEM );
-    const attr = menuItemModel.attributes[ field ];
-
-    if ( ! attr ) {
-      return true;
-    }
-
-    const targetModel = strapi.getModel( attr.target );
-
-    if ( ! targetModel ) {
-      return true;
-    }
-
-    const attrs = sanitizeEntity( targetModel.attributes );
-
-    // Get list of relational field names.
-    const relations = Object.keys( attrs ).filter( key => {
-      const { type } = attrs[ key ];
-
-      return type === 'media' || type === 'relation';
-    } );
-
-    if ( ! relations.length ) {
-      return true;
-    }
-
-    // Build population object.
-    const populate = relations.reduce( ( acc, relation ) => {
-      return {
-        ...acc,
-        [ relation ]: true,
-      };
-    }, {} );
-
-    return { populate };
   },
 } ) );
