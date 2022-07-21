@@ -23,8 +23,15 @@ const IndexView = ( { history } ) => {
   const { lockApp, unlockApp } = useOverlayBlocker();
   const queryClient = useQueryClient();
 
+  /**
+   * @TODO - Refactor fetch params to work with pagination features.
+   */
   const fetchParams = {
     populate: '*',
+    pagination: {
+      start: 0,
+      limit: -1,
+    },
   };
 
   const { status, data } = useQuery( QUERY_KEY, () => api.get( null, fetchParams ), {
