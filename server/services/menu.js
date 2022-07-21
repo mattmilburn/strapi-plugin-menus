@@ -9,13 +9,12 @@ const {
   getNestedParams,
   getService,
   hasParentPopulation,
-  isTruthy,
   sanitizeEntity,
   serializeNestedMenu,
 } = require( '../utils' );
 
 module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
-  async find( params ) {
+  async find( params = {} ) {
     const isNested = Object.keys( params ).includes( 'nested' );
     const findParams = isNested ? getNestedParams( params ) : params;
     const { results, pagination } = await super.find( findParams );
@@ -33,7 +32,7 @@ module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
     return { results, pagination };
   },
 
-  async findOne( entityId, params ) {
+  async findOne( entityId, params = {} ) {
     const isNested = Object.keys( params ).includes( 'nested' );
     const findParams = isNested ? getNestedParams( params ) : params;
     const result = await super.findOne( entityId, findParams );
@@ -57,13 +56,65 @@ module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
 
     // Maybe create menu items (should only happen when cloning).
     if ( menuItemsData.length ) {
-      entityItems = await getService( 'menu-item' ).bulkCreateOrUpdate( params, menuItemsData, entity.id );
+      entityItems = await getService( 'menu-item' ).bulkCreateOrUpdate( menuItemsData, entity.id );
     }
+
+    /**
+     * @TODO - Because we create the menu before creating the items, we should
+     * use `super.findOne` here to ensure `params` are used correctly.
+     */
 
     return {
       ...entity,
-      items: entityItems,
+      items: {
+        data: entityItems,
+      },
     };
+  },
+
+  async update( id, params ) {
+    const { data } = params;
+
+    // Get the menu we are about to update so we can compare it to new data.
+    const entityToUpdate = await getService( 'menu' ).findOne( id, {
+      populate: [
+        'items',
+        'items.parent',
+      ],
+    } );
+
+    const menuData = pick( data, [ 'title', 'slug' ], {} );
+    const menuItemsData = get( data, 'items', [] );
+    const prevItemsData = get( entityToUpdate, 'items', [] );
+
+    // Compare new menu items to existing items to determine which can be deleted.
+    const itemsToDelete = prevItemsData.filter( item => {
+      return ! menuItemsData.find( _item => _item.id === item.id );
+    } );
+
+    // First, delete menu items that were removed from the menu.
+    if ( itemsToDelete.length ) {
+      await getService( 'menu-item' ).bulkDelete( itemsToDelete );
+    }
+
+    // Next, create or update menu items.
+    if ( menuItemsData.length ) {
+      await getService( 'menu-item' ).bulkCreateOrUpdate( menuItemsData, id );
+    }
+
+    /**
+     * @TODO - Should menus and menu items only update if they've actually changed?
+     */
+
+    // Finally, update the menu itself.
+    return await super.update( id, {
+      ...params,
+      data: menuData,
+      populate: [
+        'items',
+        'items.parent',
+      ],
+    } );
   },
 
   //////////////////////////////////////////////////////////////////////////////

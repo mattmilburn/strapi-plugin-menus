@@ -64,8 +64,7 @@ module.exports = createCoreController( UID_MENU, ( { strapi } ) =>  ( {
   },
 
   async create( ctx ) {
-    const { query } = ctx.request;
-    const { data, files } = parseBody( ctx );
+    const { data } = parseBody( ctx );
 
     if ( ! isObject( data ) ) {
       throw new ValidationError( 'Missing "data" payload in the request body' );
@@ -79,47 +78,26 @@ module.exports = createCoreController( UID_MENU, ( { strapi } ) =>  ( {
       return ctx.badRequest( errorMessage, { slug: errorMessage } );
     }
 
-    // Find and return sanitized and transformed entity.
-    const sanitizedInputData = await this.sanitizeInput( data, ctx );
-    const entity = await getService( 'menu' ).create( {
-      ...query,
-      data: sanitizedInputData,
-      files,
-    } );
-    const sanitizedEntity = await this.sanitizeOutput( entity, ctx );
-
-    return this.transformResponse( sanitizedEntity );
+    return await super.create( ctx );
   },
 
   async update( ctx ) {
-    if ( isEmpty( ctx.request.body ) ) {
-      throw new ValidationError( 'Request body cannot be empty' );
+    const { id } = ctx.params;
+    const { data } = parseBody( ctx );
+
+    if ( ! isObject( data ) ) {
+      throw new ValidationError( 'Missing "data" payload in the request body' );
     }
-
-    // Get the entity we are about to update so we can compare it to new data.
-    const { id } = ctx.request.params;
-    const menuToUpdate = await getService( 'menu' ).getMenu( id );
-
-    if ( ! menuToUpdate ) {
-      return ctx.notFound();
-    }
-
-    const { slug } = ctx.request.body;
-    const isAvailable = await getService( 'menu' ).checkAvailability( slug, id );
 
     // Validate slug availability.
+    const isAvailable = await getService( 'menu' ).checkAvailability( data.slug, id );
+
     if ( ! isAvailable ) {
-      const errorMessage = `The slug ${slug} is already taken`;
+      const errorMessage = `The slug ${data.slug} is already taken`;
       return ctx.badRequest( errorMessage, { slug: errorMessage } );
     }
 
-    /**
-     * @TODO - Use core service here to update menu. Then update menu items.
-     */
-
-    const menu = await getService( 'menu' ).updateMenu( id, ctx.request.body, menuToUpdate );
-
-    ctx.send( { menu } );
+    return await super.update( ctx );
   },
 
   async delete( ctx ) {

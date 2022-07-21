@@ -12,13 +12,12 @@ module.exports = createCoreService( UID_MENU_ITEM, ( { strapi } ) => ( {
       where: {
         root_menu: { id: menuId },
       },
-      populate: true,
     } );
 
     return menuItems;
   },
 
-  async bulkCreateOrUpdate( params, items, menuId ) {
+  async bulkCreateOrUpdate( items, menuId ) {
     const itemsToUpdate = items.filter( item => Number.isInteger( item.id ) );
     const itemsToCreate = items.filter( item => `${item.id}`.includes( 'create' ) );
 
@@ -41,7 +40,6 @@ module.exports = createCoreService( UID_MENU_ITEM, ( { strapi } ) => ( {
       return _items.map( async item => {
         const sanitizedItem = sanitizeEntity( omit( item, 'id' ) );
         const createdItem = await strapi.entityService.create( UID_MENU_ITEM, {
-          ...params,
           data: {
             ...sanitizedItem,
             root_menu: menuId,
@@ -78,7 +76,6 @@ module.exports = createCoreService( UID_MENU_ITEM, ( { strapi } ) => ( {
       const sanitizedItem = sanitizeEntity( omit( item, 'id' ) );
 
       return await strapi.entityService.update( UID_MENU_ITEM, item.id, {
-        ...params,
         data: sanitizedItem,
       } );
     } );
@@ -121,8 +118,8 @@ module.exports = createCoreService( UID_MENU_ITEM, ( { strapi } ) => ( {
     let itemsToDelete = deleteLoop( lastItemsToDelete );
     itemsToDelete = flattenDeep( itemsToDelete ).reverse();
 
-    await strapi.query( UID_MENU_ITEM ).deleteMany( {
-      where: {
+    return await strapi.entityService.deleteMany( UID_MENU_ITEM, {
+      filters: {
         id: itemsToDelete,
       },
     } );
