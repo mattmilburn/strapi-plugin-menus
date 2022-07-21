@@ -7,9 +7,9 @@ const { UID_MENU_ITEM } = require( '../constants' );
 const { sanitizeEntity } = require( '../utils' );
 
 module.exports = createCoreService( UID_MENU_ITEM, ( { strapi } ) => ( {
-  async getMenuItemsByRootMenu( menuId ) {
-    const menuItems = await strapi.query( UID_MENU_ITEM ).findMany( {
-      where: {
+  async findByRootMenu( menuId ) {
+    const menuItems = await strapi.entityService.findMany( UID_MENU_ITEM, {
+      filters: {
         root_menu: { id: menuId },
       },
     } );
