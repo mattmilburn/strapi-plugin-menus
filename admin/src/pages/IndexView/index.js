@@ -189,7 +189,7 @@ const IndexView = ( { history } ) => {
               onConfirmDelete={ onConfirmDelete }
             >
               <MenuRows
-                rows={ data.data }
+                rows={ data.data ?? [] }
                 onClickClone={ id => history.push( `/plugins/${pluginId}/clone/${id}` ) }
                 onClickEdit={ id => history.push( `/plugins/${pluginId}/edit/${id}` ) }
               />
