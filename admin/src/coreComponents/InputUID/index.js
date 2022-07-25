@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 // import { useCMEditViewDataManager } from '@strapi/helper-plugin'; // CUSTOM MOD [1].
+import { useMenuData } from '../../hooks'; // CUSTOM MOD [1].
 import { useIntl } from 'react-intl';
 import get from 'lodash/get';
 import { TextInput } from '@strapi/design-system/TextInput';
@@ -9,7 +10,6 @@ import Refresh from '@strapi/icons/Refresh';
 import CheckCircle from '@strapi/icons/CheckCircle';
 import ExclamationMarkCircle from '@strapi/icons/ExclamationMarkCircle';
 import Loader from '@strapi/icons/Loader';
-import { useMenuData } from '../../hooks'; // CUSTOM MOD [1].
 import { axiosInstance } from '../../utils'; // CUSTOM MOD [2].
 // import { getRequestUrl } from '../../utils'; // CUSTOM MOD [3].
 import useDebounce from './useDebounce';
@@ -84,7 +84,6 @@ const InputUID = ({
       onChange({ target: { name, value: data, type: 'text' } }, shouldSetInitialValue);
       setIsLoading(false);
     } catch (err) {
-      console.error({ err });
       setIsLoading(false);
     }
   };
@@ -109,7 +108,6 @@ const InputUID = ({
 
       setIsLoading(false);
     } catch (err) {
-      console.error({ err });
       setIsLoading(false);
     }
   };
@@ -126,8 +124,7 @@ const InputUID = ({
     if (
       debouncedValue &&
       debouncedValue.trim().match(UID_REGEX) &&
-      debouncedValue !== initialValue &&
-      ! value
+      debouncedValue !== initialValue
     ) {
       checkAvailability();
     }
@@ -187,12 +184,10 @@ const InputUID = ({
     onChange(e);
   };
 
-  const formattedError = error ? formatMessage({ id: error, defaultMessage: error }) : undefined;
-
   return (
     <TextInput
       disabled={disabled}
-      error={formattedError}
+      error={error}
       endAction={
         <EndActionWrapper>
           {availability && availability.isAvailable && !regenerateLabel && (
