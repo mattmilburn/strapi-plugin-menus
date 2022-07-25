@@ -10,16 +10,16 @@
     "kind": "plugin"
   },
   "peerDependencies": {
-    "@strapi/design-system": "^1.1.0",
-    "@strapi/helper-plugin": "^4.1.10",
-    "@strapi/icons": "^1.1.0",
-    "@strapi/strapi": "^4.1.10",
-    "@strapi/utils": "^4.1.10",
+    "@strapi/design-system": "^1.2.0",
+    "@strapi/helper-plugin": "^4.2.3",
+    "@strapi/icons": "^1.2.0",
+    "@strapi/strapi": "^4.2.3",
+    "@strapi/utils": "^4.2.3",
     "formik": "^2.2.9"
   },
   "dependencies": {
-    "axios": "^0.26.1",
-    "lodash": "^4.17.21",
+    "axios": "^0.27.2",
+    "lodash": "4.17.21",
     "prop-types": "^15.8.1",
     "qs": "^6.10.3",
     "react": "^17.0.2",
