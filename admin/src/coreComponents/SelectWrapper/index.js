@@ -1,22 +1,23 @@
 import React, { useCallback, useState, useEffect, useMemo, memo } from 'react';
 import PropTypes from 'prop-types';
-import {
-  // FormattedMessage,
-  useIntl,
-} from 'react-intl';
+import { useIntl } from 'react-intl';
 import { useLocation } from 'react-router-dom';
-import { Link } from '@strapi/design-system/Link';
-import { Stack } from '@strapi/design-system/Stack';
 import { useTheme } from 'styled-components';
 import findIndex from 'lodash/findIndex';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
 import set from 'lodash/set';
-import { NotAllowedInput, useQueryParams } from '@strapi/helper-plugin'; // CUSTOM MOD [1].
+import {
+  NotAllowedInput,
+  // useCMEditViewDataManager, // CUSTOM MOD [1].
+  useQueryParams,
+  Link,
+} from '@strapi/helper-plugin';
 import { useMenuData } from '../../hooks'; // CUSTOM MOD [1].
 import { stringify } from 'qs';
 import axios from 'axios';
+import { Stack } from '@strapi/design-system/Stack';
 // import { axiosInstance } from '../../../core/utils'; // CUSTOM MOD [2].
 import { axiosInstance, getTrad } from '../../utils'; // CUSTOM MOD [2].
 import Label from './Label';
@@ -82,8 +83,7 @@ function SelectWrapper({
     moveRelation,
     handleChange: onChange,
     onRemoveRelation,
-} = useMenuData(); // CUSTOM MOD [1].
-
+  } = useMenuData(); // CUSTOM MOD [1].
   const { pathname } = useLocation();
   const theme = useTheme();
 
@@ -378,9 +378,5 @@ SelectWrapper.propTypes = {
 
 const Memoized = memo(SelectWrapper);
 
-// export default connect( // CUSTOM MOD [5].
-//   Memoized,
-//   select
-// );
-
+// export default connect(Memoized, select); // CUSTOM MOD [5].
 export default Memoized; // CUSTOM MOD [5].
