@@ -21,6 +21,7 @@
 * Easily manage menus with either a flat or nested structure.
 * Customize the `title`, `url`, and link `target` of menu items.
 * Extend the schema and UI with custom attributes and form layouts for menu items.
+* Compatible with the [Strapi Transformer plugin](https://github.com/ComfortablyCoding/strapi-plugin-transformer) for cleaner API responses.
 
 ## <a id="installation"></a>💎 Installation
 ```bash
@@ -528,132 +529,198 @@ The right column will reveal the edit UI for that item, where the `title` is the
 </div>
 
 ## <a id="api-usage"></a>⚡ API Usage
-**Don't forget** to enable the public `find` and `findOne` methods for `Menus` in the Users and Permissions settings.
+Fetching menus data is the same as fetching any other data using Strapi's REST API features.
 
-| endpoint | description |
+> **Don't forget** to enable the public methods for `Menu` and `MenuItem` in the Users and Permissions settings, like `find` and `findOne`.
+
+<img style="width: 960px; height: auto;" src="public/screenshot-public-api.png" alt="Screenshot for public API actions" />
+
+### Endpoints
+| request | endpoint | description |
+| - | - | - |
+| `GET` | `/api/menus` | Fetch all menus. |
+| `GET` | `/api/menus/:id` | Fetch one menu. |
+| `POST` | `/api/menus/:id` | Create a menu. |
+| `PUT` | `/api/menus/:id` | Update a menu. |
+| `DELETE` | `/api/menus/:id` | Delete a menu. |
+
+### Params
+| name | description |
 | - | - |
-| `/api/menus` | Return all menus. |
-| `/api/menus/:slug` | Return one menu based on the `slug` param, which is more intuitive than the `id` in this case. |
-| `?nested` | Query string param that will serialize menu items into a nested format, otherwise they are returned as a flat list. |
+| `nested` | Serialize menu items into a nested format, otherwise they are returned as a flat list. |
 
-#### Example
-Fetch a menu with the slug "main" with the `nested` param included.
+#### Basic example
+Fetch a menu with the ID 3. Nothing is populated by default.
 
 ```js
-await fetch( '/api/menus/main?nested' );
+await fetch( '/api/menus/3' );
 ```
 
-#### Response
+##### Response
 
 ```json
 {
-  "menu": {
-    "id": 55,
-    "title": "Main",
-    "slug": "main",
-    "createdAt": "2022-03-01T01:51:19.115Z",
-    "updatedAt": "2022-03-01T01:55:16.153Z",
-    "items": [
-      {
-        "id": 199,
-        "title": "Home",
-        "url": "/",
-        "order": 0,
-        "createdAt": "2022-03-01T01:51:29.237Z",
-        "updatedAt": "2022-03-01T01:55:16.134Z",
-        "target": null,
-        "parent": null,
-        "children": []
-      },
-      {
-        "id": 201,
-        "title": "About",
-        "url": "/about",
-        "order": 1,
-        "createdAt": "2022-03-01T01:54:10.198Z",
-        "updatedAt": "2022-03-01T01:55:16.134Z",
-        "target": null,
-        "parent": null,
-        "children": []
-      },
-      {
-        "id": 200,
-        "title": "Products",
-        "url": "/products",
-        "order": 2,
-        "createdAt": "2022-03-01T01:54:10.198Z",
-        "updatedAt": "2022-03-01T01:55:16.134Z",
-        "target": null,
-        "parent": null,
-        "children": [
+  "data": {
+    "id": 3,
+    "attributes": {
+      "title": "Main Menu",
+      "slug": "main-menu",
+      "createdAt": "2022-07-24T01:51:19.115Z",
+      "updatedAt": "2022-07-24T01:55:16.153Z"
+    }
+  },
+  "meta": {}
+}
+```
+
+#### Example with population
+Fetch a menu with the ID 3 with `populate` params included.
+
+```js
+await fetch( '/api/menus/3?populate=*' );
+```
+
+##### Response
+
+```json
+{
+  "data": {
+    "id": 3,
+    "attributes": {
+      "title": "Main Menu",
+      "slug": "main-menu",
+      "createdAt": "2022-07-24T01:51:19.115Z",
+      "updatedAt": "2022-07-24T01:55:16.153Z",
+      "items": {
+        "data": [
           {
-            "id": 204,
-            "title": "Games",
-            "url": "/products/games",
-            "order": 0,
-            "createdAt": "2022-03-01T01:54:10.206Z",
-            "updatedAt": "2022-03-01T01:55:16.134Z",
-            "target": null,
-            "parent": {
-              "id": 200
-            },
-            "children": []
+            "id": 10,
+            "attributes": {
+              "order": 0,
+              "title": "Parent Page",
+              "url": "/parent-page",
+              "target": null,
+              "createdAt": "2022-07-24T03:33:03.416Z",
+              "updatedAt": "2022-07-24T19:49:38.949Z"
+            }
           },
           {
-            "id": 205,
-            "title": "Toys",
-            "url": "/products/toys",
-            "order": 1,
-            "createdAt": "2022-03-01T01:54:10.206Z",
-            "updatedAt": "2022-03-01T01:55:16.134Z",
-            "target": null,
-            "parent": {
-              "id": 200
-            },
-            "children": []
-          }
-        ]
-      },
-      {
-        "id": 206,
-        "title": "Contact",
-        "url": "",
-        "order": 3,
-        "createdAt": "2022-03-01T01:55:16.134Z",
-        "updatedAt": "2022-03-01T01:55:16.134Z",
-        "target": null,
-        "parent": null,
-        "children": [
-          {
-            "id": 207,
-            "title": "Email",
-            "url": "mailto:email@example.com",
-            "order": 0,
-            "createdAt": "2022-03-01T01:55:16.144Z",
-            "updatedAt": "2022-03-01T01:55:16.144Z",
-            "target": "_blank",
-            "parent": {
-              "id": 206
-            },
-            "children": []
+            "id": 11,
+            "attributes": {
+              "order": 0,
+              "title": "Child Page",
+              "url": "/child-page",
+              "target": null,
+              "createdAt": "2022-07-24T03:33:03.416Z",
+              "updatedAt": "2022-07-24T19:49:38.949Z"
+            }
           },
           {
-            "id": 208,
-            "title": "Github",
-            "url": "https://github.com",
-            "order": 1,
-            "createdAt": "2022-03-01T01:55:16.144Z",
-            "updatedAt": "2022-03-01T01:55:16.144Z",
-            "target": "_blank",
-            "parent": {
-              "id": 206
-            },
-            "children": []
+            "id": 12,
+            "attributes": {
+              "order": 0,
+              "title": "Grandchild Page",
+              "url": "/grandchild-page",
+              "target": null,
+              "createdAt": "2022-07-24T03:33:03.416Z",
+              "updatedAt": "2022-07-24T19:49:38.949Z"
+            }
+          },
+          {
+            "id": 13,
+            "attributes": {
+              "order": 0,
+              "title": "Another Page",
+              "url": "/another-page",
+              "target": null,
+              "createdAt": "2022-07-24T03:33:03.416Z",
+              "updatedAt": "2022-07-24T19:49:38.949Z",
+              "children": []
+            }
           }
         ]
       }
-    ]
-  }
+    }
+  },
+  "meta": {}
+}
+```
+
+#### Example with population and nested params
+Fetch a menu with the ID 3 with the `nested` param included.
+
+```js
+await fetch( '/api/menus/3?nested&populate=*' );
+```
+
+##### Response
+
+```json
+{
+  "data": {
+    "id": 3,
+    "attributes": {
+      "title": "Main Menu",
+      "slug": "main-menu",
+      "createdAt": "2022-07-24T01:51:19.115Z",
+      "updatedAt": "2022-07-24T01:55:16.153Z",
+      "items": {
+        "data": [
+          {
+            "id": 10,
+            "attributes": {
+              "order": 0,
+              "title": "Parent Page",
+              "url": "/parent-page",
+              "target": null,
+              "createdAt": "2022-07-24T03:33:03.416Z",
+              "updatedAt": "2022-07-24T19:49:38.949Z",
+              "children": [
+                {
+                  "id": 11,
+                  "attributes": {
+                    "order": 0,
+                    "title": "Child Page",
+                    "url": "/child-page",
+                    "target": null,
+                    "createdAt": "2022-07-24T03:33:03.416Z",
+                    "updatedAt": "2022-07-24T19:49:38.949Z",
+                    "children": [
+                      {
+                        "id": 12,
+                        "attributes": {
+                          "order": 0,
+                          "title": "Grandchild Page",
+                          "url": "/grandchild-page",
+                          "target": null,
+                          "createdAt": "2022-07-24T03:33:03.416Z",
+                          "updatedAt": "2022-07-24T19:49:38.949Z",
+                          "children": []
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": 13,
+            "attributes": {
+              "order": 0,
+              "title": "Another Page",
+              "url": "/another-page",
+              "target": null,
+              "createdAt": "2022-07-24T03:33:03.416Z",
+              "updatedAt": "2022-07-24T19:49:38.949Z",
+              "children": []
+            }
+          }
+        ]
+      }
+    }
+  },
+  "meta": {}
 }
 ```
 
@@ -672,7 +739,7 @@ yarn develop
 Custom fields require both the **form layout** extension as well as the **schema** extension. Please make sure both of these are configured as described in the [Extending](#extending) section.
 
 ## <a id="roadmap"></a>🚧 Roadmap
-* Extra GraphQL support
+* Locale support
 * RBAC support
 * Populate `url` by selecting from list of relations
 * More translations
