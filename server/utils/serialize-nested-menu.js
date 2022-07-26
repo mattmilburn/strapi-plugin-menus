@@ -1,34 +1,82 @@
 'use strict';
 
-const findChildren = require( './find-children' );
-const sortByOrder = require( './sort-by-order' );
-const removeParentData = require( './remove-parent-data' );
+const { get, has, omit } = require( 'lodash' );
 
-const serializeNestedMenu = ( menu, keepParentData ) => {
-  // Do nothing if there are no items to serialize.
-  if ( ! menu.items || ! menu.items.length ) {
-    return menu;
+const sortByOrder = require( './sort-by-order' );
+
+const getDescendants = ( items, parentId ) => {
+  const results = [];
+  const children = items.filter( item => get( item, 'attributes.parent.data.id' ) === parentId );
+
+  children.forEach( child => {
+    results.push( {
+      ...child,
+      attributes: {
+        ...child.attributes,
+        children: {
+          data: getDescendants( items, child.id ),
+        },
+      },
+    } );
+  } );
+
+  return sortByOrder( results );
+};
+
+const removeParentData = items => items.reduce( ( acc, item ) => {
+  let sanitizedItem = omit( item, 'attributes.parent' );
+  sanitizedItem.attributes.children.data = removeParentData( item.attributes.children.data );
+
+  return [
+    ...acc,
+    sanitizedItem,
+  ];
+}, [] );
+
+const serializeNestedMenu = ( data, keepParentData ) => {
+  if ( Array.isArray( data ) ) {
+    return data.map( _data => serializeNestedMenu( _data, keepParentData ) );
   }
 
-  const rootItems = menu.items.filter( item => ! item.parent );
+  const items = get( data, 'data.attributes.items.data', [] );
+
+  // Do nothing if there are no items to serialize.
+  if ( ! items.length ) {
+    return data;
+  }
+
+  const rootItems = items.filter( item => ! has( item, 'attributes.parent.data.id' ) );
 
   // Assign ordered and nested items to root items.
   const nestedItems = rootItems.reduce( ( acc, item ) => {
-    const descendants = findChildren( menu.items, item.id );
+    const descendants = getDescendants( items, item.id );
 
     const rootItem = {
       ...item,
-      children: descendants,
+      attributes: {
+        ...item.attributes,
+        children: {
+          data: descendants,
+        },
+      },
     };
 
     return [ ...acc, rootItem ];
   }, [] );
 
-  const items = keepParentData ? nestedItems : removeParentData( nestedItems );
+  const sanitizedItems = ! keepParentData ? removeParentData( nestedItems ) : nestedItems;
 
   return {
-    ...menu,
-    items: sortByOrder( items ),
+    ...data,
+    data: {
+      ...data.data,
+      attributes: {
+        ...data.data.attributes,
+        items: {
+          data: sortByOrder( sanitizedItems ),
+        },
+      },
+    },
   };
 };
 
