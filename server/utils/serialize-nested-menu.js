@@ -34,8 +34,8 @@ const removeParentData = items => items.reduce( ( acc, item ) => {
 }, [] );
 
 const serializeNestedMenu = ( data, keepParentData ) => {
-  if ( Array.isArray( data ) ) {
-    return data.map( _data => serializeNestedMenu( _data, keepParentData ) );
+  if ( Array.isArray( get( data, 'data' ) ) ) {
+    return data.data.map( _data => serializeNestedMenu( _data, keepParentData ) );
   }
 
   const items = get( data, 'data.attributes.items.data', [] );
@@ -49,14 +49,12 @@ const serializeNestedMenu = ( data, keepParentData ) => {
 
   // Assign ordered and nested items to root items.
   const nestedItems = rootItems.reduce( ( acc, item ) => {
-    const descendants = getDescendants( items, item.id );
-
     const rootItem = {
       ...item,
       attributes: {
         ...item.attributes,
         children: {
-          data: descendants,
+          data: getDescendants( items, item.id ),
         },
       },
     };

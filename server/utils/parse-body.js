@@ -7,9 +7,9 @@ const parseBody = ctx => {
     return parseMultipartData( ctx );
   }
 
-  const { data } = ctx.request.body ?? {};
+  const { data, files } = ctx.request.body ?? {};
 
-  return { data };
+  return { data, files };
 };
 
 

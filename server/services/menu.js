@@ -32,16 +32,17 @@ module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
 
     // Create new menu.
     const entity = await super.create( { ...params, data: menuData } );
-    let entityItems = [];
 
-    // Maybe create menu items (should only happen when cloning).
+    // Create or update menu items.
     if ( menuItemsData.length ) {
       await getService( 'menu-item' ).bulkCreateOrUpdate( menuItemsData, entity.id );
     }
 
-    // Because we create the menu before creating the items, we use `super.findOne`
+    const findParams = this.getFetchParams( omit( params, [ 'data', 'files' ] ) );
+
+    // Because we create the menu before creating the items, we use `findOne`
     // here to ensure `params` are used consistently throughout the request.
-    return await super.findOne( entity.id, omit( params, 'data' ) );
+    return strapi.entityService.findOne( UID_MENU, entity.id, findParams );
   },
 
   async update( id, params ) {
@@ -76,17 +77,12 @@ module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
 
     /**
      * @TODO - Should menus and menu items only update if they've actually changed?
-     * @TODO - How is `populate` being handled here?
      */
 
     // Finally, update the menu.
     return await super.update( id, {
       ...params,
       data: menuData,
-      populate: [
-        'items',
-        'items.parent',
-      ],
     } );
   },
 
