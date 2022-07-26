@@ -7,7 +7,13 @@ const { ValidationError } = require( '@strapi/utils' ).errors;
 const { PUBLISHED_AT_ATTRIBUTE } = require('@strapi/utils').contentTypes.constants;
 
 const { UID_MENU, UID_MENU_ITEM } = require( '../constants' );
-const { getService, parseBody } = require( '../utils' );
+const {
+  getNestedParams,
+  getService,
+  hasParentPopulation,
+  parseBody,
+  serializeNestedMenu,
+} = require( '../utils' );
 
 module.exports = createCoreController( UID_MENU, ( { strapi } ) =>  ( {
   async config( ctx ) {
@@ -64,6 +70,45 @@ module.exports = createCoreController( UID_MENU, ( { strapi } ) =>  ( {
   },
 
   //////////////////////////////////////////////////////////////////////////////
+
+  async find( ctx ) {
+    const { query } = ctx;
+
+    const isNested = Object.keys( query ).includes( 'nested' );
+    const params = isNested ? getNestedParams( query ) : query;
+    const keepParentData = hasParentPopulation( query );
+
+    const { results, pagination } = await getService( 'menu' ).find( params );
+    const sanitizedResults = await this.sanitizeOutput( results, ctx );
+    const transformedResults = this.transformResponse( sanitizedResults, { pagination } );
+
+    // Maybe return results in a nested format.
+    if ( isNested ) {
+      return serializeNestedMenu( transformedResults, keepParentData );
+    }
+
+    return transformedResults;
+  },
+
+  async findOne( ctx ) {
+    const { id } = ctx.params;
+    const { query } = ctx;
+
+    const isNested = Object.keys( query ).includes( 'nested' );
+    const params = isNested ? getNestedParams( query ) : query;
+    const keepParentData = hasParentPopulation( query );
+
+    const entity = await getService( 'menu' ).findOne( id, params );
+    const sanitizedEntity = await this.sanitizeOutput( entity, ctx );
+    const transformedEntity = this.transformResponse( sanitizedEntity );
+
+    // Maybe return results in a nested format.
+    if ( isNested ) {
+      return serializeNestedMenu( transformedEntity, keepParentData );
+    }
+
+    return transformedEntity;
+  },
 
   async create( ctx ) {
     const { data } = parseBody( ctx );

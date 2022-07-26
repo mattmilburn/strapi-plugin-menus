@@ -4,13 +4,8 @@ const { get, omit, pick } = require( 'lodash' );
 const { createCoreService } = require('@strapi/strapi').factories;
 
 const config = require( '../config' );
-const { UID_MENU, UID_MENU_ITEM } = require( '../constants' );
-const {
-  getNestedParams,
-  getService,
-  hasParentPopulation,
-  serializeNestedMenu,
-} = require( '../utils' );
+const { UID_MENU } = require( '../constants' );
+const { getService } = require( '../utils' );
 
 module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
   async checkAvailability( slug, id ) {
@@ -29,37 +24,6 @@ module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
   },
 
   //////////////////////////////////////////////////////////////////////////////
-
-  async find( params = {} ) {
-    const isNested = Object.keys( params ).includes( 'nested' );
-    const findParams = isNested ? getNestedParams( params ) : params;
-    const { results, pagination } = await super.find( findParams );
-
-    // Maybe return data in nested format.
-    if ( isNested ) {
-      return {
-        results: results.map( result => {
-          return serializeNestedMenu( result, hasParentPopulation( params ) );
-        } ),
-        pagination,
-      };
-    }
-
-    return { results, pagination };
-  },
-
-  async findOne( entityId, params = {} ) {
-    const isNested = Object.keys( params ).includes( 'nested' );
-    const findParams = isNested ? getNestedParams( params ) : params;
-    const result = await super.findOne( entityId, findParams );
-
-    // Maybe return data in nested format.
-    if ( isNested ) {
-      return serializeNestedMenu( result, hasParentPopulation( params ) );
-    }
-
-    return result;
-  },
 
   async create( params ) {
     const { data } = params;
@@ -112,6 +76,7 @@ module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
 
     /**
      * @TODO - Should menus and menu items only update if they've actually changed?
+     * @TODO - How is `populate` being handled here?
      */
 
     // Finally, update the menu.
