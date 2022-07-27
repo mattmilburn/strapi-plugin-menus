@@ -14,6 +14,7 @@
 * [User Guide](#user-guide)
 * [API Usage](#api-usage)
 * [Troubleshooting](#troubleshooting)
+* [Migration](#migration)
 * [Roadmap](#roadmap)
 
 ## <a id="features"></a>✨ Features
@@ -737,6 +738,9 @@ yarn develop
 
 #### Custom `MenuItem` fields don't save or appear in the database table schema.
 Custom fields require both the **form layout** extension as well as the **schema** extension. Please make sure both of these are configured as described in the [Extending](#extending) section.
+
+## <a id="migration"></a>🚌 Migration
+Follow the [migration guides](MIGRATION.md) to keep your menus plugin up-to-date.
 
 ## <a id="roadmap"></a>🚧 Roadmap
 * Locale support
