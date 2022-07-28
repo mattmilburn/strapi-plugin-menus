@@ -126,11 +126,24 @@ const EditView = ( { history, location, match } ) => {
   const submitMutation = useMutation( body => {
     // Maybe clone this menu with sanitized data.
     if ( isCloning ) {
-      const menuData = pick( body, [ 'title', 'slug' ], {} );
-      const menuItemsData = body.items.map( item => ( {
-        ...sanitizeEntity( item ),
-        id: uniqueId( 'create' ),
+      const menuData = pick( body.data, [ 'title', 'slug' ], {} );
+      const menuItemIdMap = body.data.items.map( item => ( {
+        id: item.id,
+        createId: uniqueId( 'create' ),
       } ) );
+      const menuItemsData = body.data.items.map( item => {
+        const createMap = menuItemIdMap.find( _item => _item.id === item.id );
+        const parentMap = menuItemIdMap.find( _item => _item.id === item.parent?.id );
+
+        const createId = createMap ? createMap.createId : null;
+        const parent = parentMap ? { id: parentMap.createId } : null;
+
+        return {
+          ...sanitizeEntity( item ),
+          id: createId,
+          parent,
+        };
+      } );
 
       const clonedBody = {
         data: {
