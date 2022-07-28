@@ -33,12 +33,8 @@ const removeParentData = items => items.reduce( ( acc, item ) => {
   ];
 }, [] );
 
-const serializeNestedMenu = ( data, keepParentData ) => {
-  if ( Array.isArray( get( data, 'data' ) ) ) {
-    return data.data.map( _data => serializeNestedMenu( _data, keepParentData ) );
-  }
-
-  const items = get( data, 'data.attributes.items.data', [] );
+const serializeEntity = ( data, keepParentData ) => {
+  const items = get( data, 'attributes.items.data', [] );
 
   // Do nothing if there are no items to serialize.
   if ( ! items.length ) {
@@ -66,15 +62,28 @@ const serializeNestedMenu = ( data, keepParentData ) => {
 
   return {
     ...data,
-    data: {
-      ...data.data,
-      attributes: {
-        ...data.data.attributes,
-        items: {
-          data: sortByOrder( sanitizedItems ),
-        },
+    attributes: {
+      ...data.attributes,
+      items: {
+        data: sortByOrder( sanitizedItems ),
       },
     },
+  };
+};
+
+const serializeNestedMenu = ( res, keepParentData ) => {
+  const data = get( res, 'data' );
+  let sanitizedData;
+
+  if ( Array.isArray( data ) ) {
+    sanitizedData = data.map( _data => serializeEntity( _data, keepParentData ) );
+  } else {
+    sanitizedData = serializeEntity( data, keepParentData );
+  }
+
+  return {
+    ...res,
+    data: sanitizedData,
   };
 };
 
