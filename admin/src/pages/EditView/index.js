@@ -90,7 +90,7 @@ const EditView = ( { history, location, match } ) => {
     const ignoreFields = [ 'parent', 'root_menu', 'createdBy', 'updatedBy' ];
     const prop = schema.menuItem[ key ];
 
-    return prop.type === 'relation' && ! ignoreFields.includes( key );
+    return ( prop.type === 'media' || prop.type === 'relation' ) && ! ignoreFields.includes( key );
   } );
 
   const fetchParams = {
