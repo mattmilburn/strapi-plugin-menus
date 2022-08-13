@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { Box, Stack, Typography } from '@strapi/design-system';
@@ -39,7 +39,12 @@ const EditMenuItem = ( { data, fields } ) => {
   }
 
   return (
-    <Box padding={ 6 } background="neutral0" borderRadius="4px" shadow="filterShadow">
+    <Box
+      background="neutral0"
+      borderRadius="4px"
+      padding={ 6 }
+      shadow="filterShadow"
+    >
       <Typography variant="delta">
         { formatMessage( {
           id: getTrad( 'edit.tabs.title' ),
