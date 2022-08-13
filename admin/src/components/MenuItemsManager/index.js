@@ -10,7 +10,7 @@ import { Plus, PlusCircle } from '@strapi/icons';
 
 import { EditMenuItem, TreeMenu, TreeMenuItem } from '../';
 import { HEADER_HEIGHT } from '../../constants';
-import { useMenuData } from '../../hooks';
+import { useMenuData, useStickyPosition } from '../../hooks';
 import { getTrad } from '../../utils';
 
 import { AddButton } from './styled';
@@ -18,8 +18,8 @@ import { AddButton } from './styled';
 const MenuItemsManager = ( { fields } ) => {
   const { formatMessage } = useIntl();
   const [ activeLevel, setActiveLevel ] = useState( null );
-  const [ isSticky, setSticky ] = useState( false );
   const stickyRef = useRef( null );
+  const isSticky = useStickyPosition( stickyRef );
   const {
     activeMenuItem,
     addMenuItem,
@@ -31,32 +31,6 @@ const MenuItemsManager = ( { fields } ) => {
     moveMenuItem,
     setActiveMenuItem,
   } = useMenuData();
-
-  useEffect( () => {
-    const onScroll = () => {
-      if ( ! stickyRef.current ) {
-        return;
-      }
-
-      const destination = stickyRef.current.parentNode.getBoundingClientRect().top;
-      const isStickyPos = stickyRef.current.style.position === 'fixed';
-
-      if ( ! isStickyPos && destination <= HEADER_HEIGHT ) {
-        setSticky( true );
-      }
-
-      if ( isStickyPos && destination > HEADER_HEIGHT ) {
-        setSticky( false );
-      }
-    };
-
-    // Run this function immediately.
-    onScroll();
-
-    window.addEventListener( 'scroll', onScroll );
-
-    return () => window.removeEventListener( 'scroll', onScroll );
-  }, [] );
 
   const addItemLabel = formatMessage( {
     id: getTrad( 'ui.add.menuItem' ),
