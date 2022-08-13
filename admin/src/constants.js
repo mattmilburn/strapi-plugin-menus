@@ -1,5 +1,7 @@
 import pluginId from './utils/plugin-id';
 
+export const HEADER_HEIGHT = 96;
+
 export const RESOLVE_CONFIG = `${pluginId}/resolve-config`;
 
 export const TIME_HHMM_REGEX = new RegExp(
