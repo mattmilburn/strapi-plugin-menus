@@ -3,7 +3,6 @@
 const { get, omit, pick } = require( 'lodash' );
 const { createCoreService } = require('@strapi/strapi').factories;
 
-const config = require( '../config' );
 const { UID_MENU } = require( '../constants' );
 const { getService } = require( '../utils' );
 
