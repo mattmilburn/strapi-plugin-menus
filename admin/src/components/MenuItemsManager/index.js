@@ -18,6 +18,7 @@ import { AddButton } from './styled';
 const MenuItemsManager = ( { fields } ) => {
   const { formatMessage } = useIntl();
   const [ activeLevel, setActiveLevel ] = useState( null );
+  const [ stickyWidth, setStickyWidth ] = useState( null );
   const stickyRef = useRef( null );
   const isSticky = useStickyPosition( stickyRef );
   const {
@@ -31,6 +32,20 @@ const MenuItemsManager = ( { fields } ) => {
     moveMenuItem,
     setActiveMenuItem,
   } = useMenuData();
+
+  useEffect( () => {
+    const onResize = () => {
+      setStickyWidth( stickyRef.current.parentNode.getBoundingClientRect().width );
+    };
+
+    if ( isSticky ) {
+      window.addEventListener( 'resize', onResize );
+    } else {
+      window.removeEventListener( 'resize', onResize );
+    }
+
+    return () => window.removeEventListener( 'resize', onResize );
+  }, [ isSticky ] );
 
   const addItemLabel = formatMessage( {
     id: getTrad( 'ui.add.menuItem' ),
@@ -111,10 +126,11 @@ const MenuItemsManager = ( { fields } ) => {
       </GridItem>
       <GridItem col={ 6 } s={ 12 }>
         { activeMenuItem && (
-          <div ref={ stickyRef } style={ {
-            position: isSticky ? 'fixed' : 'relative',
-            top: isSticky ? HEADER_HEIGHT : 0,
-          } }>
+          <div ref={ stickyRef } style={ isSticky ? {
+            width: stickyWidth ? `${stickyWidth}px` : 'auto',
+            position: 'fixed',
+            top: HEADER_HEIGHT,
+          } : {} }>
             <EditMenuItem
               data={ activeMenuItem }
               fields={ fields }
