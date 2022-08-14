@@ -12,6 +12,7 @@ export const Label = styled.div`
 `;
 
 export const Wrapper = styled( Box )`
+  color: ${({ theme }) => theme.colors.neutral800};
   outline: none;
   cursor: pointer;
   position: relative;
