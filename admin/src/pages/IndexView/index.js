@@ -181,7 +181,7 @@ const IndexView = ( { history } ) => {
         <Box paddingBottom={ 10 }>
           { !! data?.data?.length ? (
             <DynamicTable
-              contentType="Menus"
+              contentType="menus"
               isLoading={ isLoading }
               headers={ tableHeaders }
               rows={ data.data }
@@ -189,7 +189,7 @@ const IndexView = ( { history } ) => {
               onConfirmDelete={ onConfirmDelete }
             >
               <MenuRows
-                rows={ data.data ?? [] }
+                data={ data.data ?? [] }
                 onClickClone={ id => history.push( `/plugins/${pluginId}/clone/${id}` ) }
                 onClickEdit={ id => history.push( `/plugins/${pluginId}/edit/${id}` ) }
               />

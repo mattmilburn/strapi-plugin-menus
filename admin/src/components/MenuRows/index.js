@@ -2,15 +2,28 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { get } from 'lodash';
-import { onRowClick, stopPropagation } from '@strapi/helper-plugin';
+import { onRowClick, stopPropagation, useQueryParams } from '@strapi/helper-plugin';
 import { Badge, Box, Flex, IconButton, Typography } from '@strapi/design-system';
 import { Tbody, Tr, Td } from '@strapi/design-system/Table';
 import { Duplicate, Pencil, Trash } from '@strapi/icons';
 
 import { getTrad } from '../../utils';
 
-const MenuRows = ( { rows, onClickClone, onClickDelete, onClickEdit } ) => {
+const MenuRows = ( { data, onClickClone, onClickDelete, onClickEdit } ) => {
   const { formatMessage } = useIntl();
+  const [ { query } ] = useQueryParams();
+  let rows = [ ...data ];
+
+  // Maybe sort rows.
+  if ( query?.sort) {
+    const [ sortKey, sortOrder ] = query.sort.split( ':' );
+
+    rows = data.sort( ( a, b ) => {
+      const compare = a.attributes[ sortKey ].localeCompare( b.attributes[ sortKey ] );
+
+      return sortOrder === 'ASC' ? compare : -compare;
+    } );
+  }
 
   return (
     <Tbody>
@@ -80,7 +93,7 @@ MenuRows.defaultProps = {
 };
 
 MenuRows.propTypes = {
-  rows: PropTypes.arrayOf(
+  data: PropTypes.arrayOf(
     PropTypes.shape( {
       id: PropTypes.number.isRequired,
       attributes: PropTypes.shape( {
