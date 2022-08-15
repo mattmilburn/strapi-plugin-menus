@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { get } from 'lodash';
@@ -27,7 +27,7 @@ const IndexView = ( { history } ) => {
   const [ { query } ] = useQueryParams();
 
   const pageSize = get( query, 'pageSize', 10 );
-  const page = get( query, 'page', 0 ) * pageSize;
+  const page = ( get( query, 'page', 1 ) * pageSize ) - pageSize;
 
   const fetchParams = {
     populate: '*',
@@ -37,7 +37,7 @@ const IndexView = ( { history } ) => {
     },
   };
 
-  const { status, data } = useQuery( QUERY_KEY, () => api.get( null, fetchParams ), {
+  const { data, refetch, status } = useQuery( QUERY_KEY, () => api.get( null, fetchParams ), {
     onSuccess: () => {
       notifyStatus(
         formatMessage( {
@@ -56,6 +56,8 @@ const IndexView = ( { history } ) => {
       } );
     },
   } );
+
+  useEffect( () => refetch(), [ page, pageSize ] );
 
   const deleteMutation = useMutation( id => api.deleteAction( id ), {
     onSuccess: async () => {
