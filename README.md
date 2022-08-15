@@ -739,6 +739,9 @@ yarn develop
 #### Custom `MenuItem` fields don't save or appear in the database table schema.
 Custom fields require both the **form layout** extension as well as the **schema** extension. Please make sure both of these are configured as described in the [Extending](#extending) section.
 
+#### Some users cannot view menus, as if they do not have permissions.
+Currently, this plugin does not even support RBAC (role-based access controls). If it appears as if a users does not have permissions to view menus, try to update that user's profile in Strapi or even change their password. This should kick something into place that fixes that user's permissions.
+
 ## <a id="migration"></a>🚌 Migration
 Follow the [migration guides](MIGRATION.md) to keep your menus plugin up-to-date.
 
