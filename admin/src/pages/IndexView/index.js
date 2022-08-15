@@ -1,18 +1,20 @@
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
 import { useIntl } from 'react-intl';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { get } from 'lodash';
 import {
   DynamicTable,
   EmptyStateLayout,
   useNotification,
   useOverlayBlocker,
+  useQueryParams,
 } from '@strapi/helper-plugin';
 import { Box, Button, useNotifyAT } from '@strapi/design-system';
 import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
 import { Plus } from '@strapi/icons';
 
 import { api, getTrad, pluginId, pluginName } from '../../utils';
-import { Layout, MenuRows } from '../../components';
+import { Layout, MenuRows, PaginationFooter } from '../../components';
 
 const QUERY_KEY = 'menus-index';
 
@@ -22,15 +24,16 @@ const IndexView = ( { history } ) => {
   const toggleNotification = useNotification();
   const { lockApp, unlockApp } = useOverlayBlocker();
   const queryClient = useQueryClient();
+  const [ { query } ] = useQueryParams();
 
-  /**
-   * @TODO - Refactor fetch params to work with pagination features.
-   */
+  const pageSize = get( query, 'pageSize', 10 );
+  const page = get( query, 'page', 0 ) * pageSize;
+
   const fetchParams = {
     populate: '*',
     pagination: {
-      start: 0,
-      limit: -1,
+      start: page,
+      limit: pageSize,
     },
   };
 
@@ -180,20 +183,23 @@ const IndexView = ( { history } ) => {
       <ContentLayout>
         <Box paddingBottom={ 10 }>
           { !! data?.data?.length ? (
-            <DynamicTable
-              contentType="menus"
-              isLoading={ isLoading }
-              headers={ tableHeaders }
-              rows={ data.data }
-              action={ <PrimaryAction size="S" variant="secondary" /> }
-              onConfirmDelete={ onConfirmDelete }
-            >
-              <MenuRows
-                data={ data.data ?? [] }
-                onClickClone={ id => history.push( `/plugins/${pluginId}/clone/${id}` ) }
-                onClickEdit={ id => history.push( `/plugins/${pluginId}/edit/${id}` ) }
-              />
-            </DynamicTable>
+            <>
+              <DynamicTable
+                contentType="menus"
+                isLoading={ isLoading }
+                headers={ tableHeaders }
+                rows={ data.data }
+                action={ <PrimaryAction size="S" variant="secondary" /> }
+                onConfirmDelete={ onConfirmDelete }
+              >
+                <MenuRows
+                  data={ data.data ?? [] }
+                  onClickClone={ id => history.push( `/plugins/${pluginId}/clone/${id}` ) }
+                  onClickEdit={ id => history.push( `/plugins/${pluginId}/edit/${id}` ) }
+                />
+              </DynamicTable>
+              <PaginationFooter pagination={ data?.meta?.pagination } />
+            </>
           ) : (
             <EmptyStateLayout
               content={ {
