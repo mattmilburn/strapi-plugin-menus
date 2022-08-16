@@ -33,13 +33,15 @@ const MenuItemsManager = ( { fields } ) => {
     setActiveMenuItem,
   } = useMenuData();
 
-  useEffect( () => {
-    const onResize = () => {
-      setStickyWidth( stickyRef.current.parentNode.getBoundingClientRect().width );
-    };
+  const onResize = () => {
+    setStickyWidth( stickyRef.current.parentNode.getBoundingClientRect().width );
+  };
 
+  useEffect( () => {
     if ( isSticky ) {
       window.addEventListener( 'resize', onResize );
+
+      onResize();
     } else {
       window.removeEventListener( 'resize', onResize );
     }
