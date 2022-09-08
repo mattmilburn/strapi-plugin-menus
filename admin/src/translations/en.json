@@ -42,5 +42,7 @@
   "form.label.url": "URL",
   "form.label.target": "Target",
   "form.label.items": "Items",
-  "form.placeholder.untitled": "Untitled"
+  "form.placeholder.untitled": "Untitled",
+
+  "error.slug.taken": "The slug {slug} is already taken"
 }
