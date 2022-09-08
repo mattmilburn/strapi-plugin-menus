@@ -2,7 +2,7 @@ import { prefixPluginTranslations } from '@strapi/helper-plugin';
 
 import { Initializer, PluginIcon } from './components';
 import reducers from './reducers';
-import { pluginId, pluginName } from './utils';
+import { getTrad, pluginId, pluginName } from './utils';
 
 export default {
   register( app ) {
@@ -12,7 +12,7 @@ export default {
       to: `/plugins/${pluginId}`,
       icon: PluginIcon,
       intlLabel: {
-        id: 'plugin.name',
+        id: getTrad('plugin.name'),
         defaultMessage: pluginName,
       },
       Component: async () => {
