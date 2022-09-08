@@ -1,6 +1,7 @@
 {
   "plugin.name": "Menus",
 
+  "ui.add.menu": "Add submenu",
   "ui.add.menuItem": "Add menu item",
   "ui.cancel": "Cancel",
   "ui.clone": "Clone",
@@ -38,6 +39,8 @@
   "form.label.option._top": "_top",
   "form.label.slug": "Slug",
   "form.label.title": "Title",
+  "form.label.url": "URL",
+  "form.label.target": "Target",
   "form.label.items": "Items",
   "form.placeholder.untitled": "Untitled"
 }
