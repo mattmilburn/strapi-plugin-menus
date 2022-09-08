@@ -123,7 +123,11 @@ module.exports = createCoreController( UID_MENU, ( { strapi } ) =>  ( {
 
     if ( ! isAvailable ) {
       const errorMessage = `The slug ${data.slug} is already taken`;
-      return ctx.badRequest( errorMessage, { slug: errorMessage } );
+      return ctx.badRequest( errorMessage, { slug: {
+        id: 'menus.error.slug.taken',
+        defaultMessage: errorMessage,
+        values: { slug: data.slug }
+      } } );
     }
 
     // Set vars related to nesting data.
@@ -163,7 +167,11 @@ module.exports = createCoreController( UID_MENU, ( { strapi } ) =>  ( {
 
     if ( ! isAvailable ) {
       const errorMessage = `The slug ${data.slug} is already taken`;
-      return ctx.badRequest( errorMessage, { slug: errorMessage } );
+      return ctx.badRequest( errorMessage, { slug: {
+        id: 'menus.error.slug.taken',
+        defaultMessage: errorMessage,
+        values: { slug: data.slug }
+      } } );
     }
 
     // Set vars related to nesting data.

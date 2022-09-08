@@ -29,9 +29,13 @@ const FormLayout = ( { fields, gap } ) => {
   const getFieldError = ( name, label ) => {
     const msg = get( errors, name, null );
 
-    // Ensure that repeatable items remove the array bracket notation from the error.
     if ( msg ) {
-      return msg.replace( name, label );
+      // Ensure that repeatable items remove the array bracket notation from the error.
+      if ( typeof msg === 'string' ) {
+        return msg.replace( name, label );
+      } else {
+        return msg;
+      }
     }
   };
 
