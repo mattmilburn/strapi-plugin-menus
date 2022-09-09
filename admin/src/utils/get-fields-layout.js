@@ -56,9 +56,12 @@ const normalizeField = ( field, schema ) => {
   // We don't want the `label` prop for the rendered input component.
   let input = omit( field.input, 'label' );
 
-  // Replace `label` prop in custom config with formatted object.
   if ( label ) {
+    // Replace `label` prop in custom config with formatted object.
     input.intlLabel = formatString( name, 'label', label );
+  } else {
+    // GenericInput throws errors when intlLabel is not set
+    input.intlLabel = name;
   }
 
   // Replace `placeholder` prop in custom config with formatted object.
