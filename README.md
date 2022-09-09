@@ -123,6 +123,8 @@ In `./config/plugins.js`, we will configure the `layouts` prop to allow our cust
 
 New tabs in the edit panel are configured with each key in the `layouts.menuItem` object. The example below will add our custom field into the "Link" tab and it will occupy the remaining 6 columns of spacing in that panel.
 
+`./config/plugin.js`
+
 ```js
 module.exports = {
   menus: {
@@ -135,6 +137,8 @@ module.exports = {
                 label: 'Custom Field Label',
                 name: 'custom_field',
                 type: 'text',
+                description: 'My fancy description',
+                placeholder: 'Some placeholder'
               },
               grid: {
                 col: 6,
@@ -146,6 +150,26 @@ module.exports = {
     },
   },
 };
+```
+
+### 3. (optional) Add translations
+The values of `label`, `placeholder` and `description` fields are used as **defaultMessages** during translation. You can easily add translations for multiple languages, for example by editing your admin plugin configuration file:
+
+`./src/admin/app.js`
+
+```js
+const config = {
+  locales: ["en"],
+  translations: {
+    en: {
+      "menus.customFields.my_custom_text.label": "Translated Label",
+      "menus.customFields.my_custom_text.placeholder": "Translated Placeholder",
+      "menus.customFields.my_custom_text.description": "Translated Description",
+    }
+  }
+};
+
+...
 ```
 
 ### Field config and grid layout
@@ -199,6 +223,7 @@ For `select` input types, the `enum` values associated with the attribute will b
   },
 ],
 ```
+The labels of `select` input options can be translated with keys like `menus.customFields.<field_name>.options.<option_value>`
 
 You may also omit the `input` prop and just add some white space with the `grid` prop.
 
