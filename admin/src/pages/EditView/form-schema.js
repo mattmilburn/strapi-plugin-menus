@@ -7,17 +7,18 @@ import {
   URL_MAILTO_REGEX,
   URL_TEL_REGEX,
 } from '../../constants';
+import { getTrad } from '../../utils';
 
 const itemSchema = yup.object().shape( {
   order: yup
     .number( translatedErrors.number )
-    .required(),
+    .required( translatedErrors.required ),
   title: yup
     .string( translatedErrors.string )
-    .required(),
+    .required( translatedErrors.required ),
   url: yup
     .string( translatedErrors.string )
-    .test( value => !! (
+    .test( 'is-url', getTrad('error.url.invalid'), value => !! (
       ! value ||
       URL_ABSOLUTE_REGEX.test( value ) ||
       URL_RELATIVE_REGEX.test( value ) ||
@@ -34,11 +35,11 @@ const schema = yup.object().shape( {
   title: yup
     .string( translatedErrors.string )
     .nullable()
-    .required(),
+    .required( translatedErrors.required ),
   slug: yup
     .string( translatedErrors.string )
     .nullable()
-    .required(),
+    .required( translatedErrors.required ),
   items: yup
     .array()
     .of( itemSchema ),
