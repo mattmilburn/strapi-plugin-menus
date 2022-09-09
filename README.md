@@ -162,9 +162,9 @@ const config = {
   locales: ["en"],
   translations: {
     en: {
-      "menus.customFields.my_custom_text.label": "Translated Label",
-      "menus.customFields.my_custom_text.placeholder": "Translated Placeholder",
-      "menus.customFields.my_custom_text.description": "Translated Description",
+      "menus.customFields.custom_field.label": "Translated Label",
+      "menus.customFields.custom_field.placeholder": "Translated Placeholder",
+      "menus.customFields.custom_field.description": "Translated Description",
     }
   }
 };

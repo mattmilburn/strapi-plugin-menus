@@ -78,7 +78,7 @@ const menuItem = [
         value: option,
         metadatas: {
           intlLabel: {
-            id: getTrad(`form.label.option.${option}`),
+            id: getTrad( `form.label.option.${option}` ),
             defaultMessage: option,
           },
         },
