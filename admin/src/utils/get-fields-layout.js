@@ -1,12 +1,12 @@
 import { get, omit } from 'lodash';
 import getTrad from './get-trad';
 
-const formatString = (fieldname, context, defaultMessage) => ( {
-  id: getTrad(`customFields.${fieldname}.${context}`),
+const formatString = ( fieldname, context, defaultMessage ) => ( {
+  id: getTrad( `customFields.${fieldname}.${context}` ),
   defaultMessage: defaultMessage,
 } );
 
-const formatOption = (fieldname, option) => {
+const formatOption = ( fieldname, option ) => {
   const isString = typeof option === 'string';
   const isCustom = ! isString && !! option?.label && !! option?.value;
   let label, value;
@@ -33,7 +33,7 @@ const formatOption = (fieldname, option) => {
     value,
     metadatas: {
       intlLabel: {
-        id: getTrad(`customFields.${fieldname}.options.${value}`),
+        id: getTrad( `customFields.${fieldname}.options.${value}` ),
         defaultMessage: label,
       },
     },

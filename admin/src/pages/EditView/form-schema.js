@@ -18,7 +18,7 @@ const itemSchema = yup.object().shape( {
     .required( translatedErrors.required ),
   url: yup
     .string( translatedErrors.string )
-    .test( 'is-url', getTrad('error.url.invalid'), value => !! (
+    .test( 'is-url', getTrad( 'error.url.invalid' ), value => !! (
       ! value ||
       URL_ABSOLUTE_REGEX.test( value ) ||
       URL_RELATIVE_REGEX.test( value ) ||

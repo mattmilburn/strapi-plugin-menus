@@ -12,7 +12,7 @@ export default {
       to: `/plugins/${pluginId}`,
       icon: PluginIcon,
       intlLabel: {
-        id: getTrad('plugin.name'),
+        id: getTrad( 'plugin.name' ),
         defaultMessage: pluginName,
       },
       Component: async () => {

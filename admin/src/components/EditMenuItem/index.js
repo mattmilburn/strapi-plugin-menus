@@ -63,7 +63,7 @@ const EditMenuItem = ( { data, fields } ) => {
           { Object.keys( fields ).map( ( key, i ) => (
             <Tab variant="simple" key={ i } hasError={ hasTabError( key ) }>
               { formatMessage( {
-                id: getTrad(`edit.tabs.title.${key}`),
+                id: getTrad( `edit.tabs.title.${key}` ),
                 defaultMessage: camelToTitle( key ),
               } ) }
             </Tab>
