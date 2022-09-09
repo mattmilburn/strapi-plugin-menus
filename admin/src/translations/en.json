@@ -44,5 +44,6 @@
   "form.label.items": "Items",
   "form.placeholder.untitled": "Untitled",
 
-  "error.slug.taken": "The slug {slug} is already taken"
+  "error.slug.taken": "The slug {slug} is already taken",
+  "error.url.invalid": "This is an invalid URL"
 }
