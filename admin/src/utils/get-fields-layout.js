@@ -1,11 +1,12 @@
 import { get, omit } from 'lodash';
+import getTrad from './get-trad';
 
-const formatString = str => ( {
-  id: str,
-  defaultMessage: str,
+const formatString = (fieldname, context, defaultMessage) => ( {
+  id: getTrad(`customFields.${fieldname}.${context}`),
+  defaultMessage: defaultMessage,
 } );
 
-const formatOption = option => {
+const formatOption = (fieldname, option) => {
   const isString = typeof option === 'string';
   const isCustom = ! isString && !! option?.label && !! option?.value;
   let label, value;
@@ -32,7 +33,7 @@ const formatOption = option => {
     value,
     metadatas: {
       intlLabel: {
-        id: label,
+        id: getTrad(`customFields.${fieldname}.options.${value}`),
         defaultMessage: label,
       },
     },
@@ -57,22 +58,22 @@ const normalizeField = ( field, schema ) => {
 
   // Replace `label` prop in custom config with formatted object.
   if ( label ) {
-    input.intlLabel = formatString( label );
+    input.intlLabel = formatString( name, 'label', label );
   }
 
   // Replace `placeholder` prop in custom config with formatted object.
   if ( typeof placeholder === 'string' ) {
-    input.placeholder = formatString( placeholder );
+    input.placeholder = formatString( name, 'placeholder', placeholder );
   }
 
   // Replace `description` prop in custom config with formatted object.
   if ( typeof description === 'string' ) {
-    input.description = formatString( description );
+    input.description = formatString( name, 'description', description );
   }
 
   // Replace `options` props in custom config with `metadatas`, `key`, and `value` object.
   if ( type === 'select' ) {
-    input.options = options.map( formatOption );
+    input.options = options.map( option => formatOption( name, option) );
   }
 
   return {
