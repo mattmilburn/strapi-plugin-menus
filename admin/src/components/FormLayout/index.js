@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useIntl } from 'react-intl';
 import { get } from 'lodash';
 
 import { GenericInput, useLibrary } from '@strapi/helper-plugin';
@@ -17,6 +18,7 @@ const FormLayout = ( { fields, gap } ) => {
     modifiedData,
     schema,
   } = useMenuData();
+  const { formatMessage } = useIntl();
 
   const getFieldName = name => {
     if ( name.indexOf( '.' ) !== -1 ) {
@@ -79,6 +81,7 @@ const FormLayout = ( { fields, gap } ) => {
               <SelectWrapper
                 { ...input }
                 { ...relationData }
+                description={ input?.description ? formatMessage( input.description ) : null }
                 isCreatingEntry={ isCreatingEntry }
                 value={ fieldValue }
               />
