@@ -1,12 +1,12 @@
 import { get, omit } from 'lodash';
 import getTrad from './get-trad';
 
-const formatString = ( fieldname, context, defaultMessage ) => ( {
-  id: getTrad( `customFields.${fieldname}.${context}` ),
+const formatString = ( name, context, defaultMessage ) => ( {
+  id: getTrad( `customFields.${name}.${context}` ),
   defaultMessage: defaultMessage,
 } );
 
-const formatOption = ( fieldname, option ) => {
+const formatOption = ( name, option ) => {
   const isString = typeof option === 'string';
   const isCustom = ! isString && !! option?.label && !! option?.value;
   let label, value;
@@ -33,7 +33,7 @@ const formatOption = ( fieldname, option ) => {
     value,
     metadatas: {
       intlLabel: {
-        id: getTrad( `customFields.${fieldname}.options.${value}` ),
+        id: getTrad( `customFields.${name}.options.${value}` ),
         defaultMessage: label,
       },
     },
@@ -57,9 +57,9 @@ const normalizeField = ( field, schema ) => {
   let input = omit( field.input, 'label' );
 
   // Ignore label field when intlLabel is already set (default fields)
-  if( !input.intlLabel ) {
+  if( ! input.intlLabel ) {
     // Replace `label` prop in custom config with formatted object.
-    input.intlLabel = formatString( name, 'label', label || name );
+    input.intlLabel = formatString( name, 'label', label ?? name );
   }
 
   // Replace `placeholder` prop in custom config with formatted object.

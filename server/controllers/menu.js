@@ -126,7 +126,7 @@ module.exports = createCoreController( UID_MENU, ( { strapi } ) =>  ( {
       return ctx.badRequest( errorMessage, { slug: {
         id: 'menus.error.slug.taken',
         defaultMessage: errorMessage,
-        values: { slug: data.slug }
+        values: { slug: data.slug },
       } } );
     }
 
@@ -170,7 +170,7 @@ module.exports = createCoreController( UID_MENU, ( { strapi } ) =>  ( {
       return ctx.badRequest( errorMessage, { slug: {
         id: 'menus.error.slug.taken',
         defaultMessage: errorMessage,
-        values: { slug: data.slug }
+        values: { slug: data.slug },
       } } );
     }
 
