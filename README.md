@@ -123,8 +123,6 @@ In `./config/plugins.js`, we will configure the `layouts` prop to allow our cust
 
 New tabs in the edit panel are configured with each key in the `layouts.menuItem` object. The example below will add our custom field into the "Link" tab and it will occupy the remaining 6 columns of spacing in that panel.
 
-`./config/plugin.js`
-
 ```js
 module.exports = {
   menus: {
@@ -137,8 +135,8 @@ module.exports = {
                 label: 'Custom Field Label',
                 name: 'custom_field',
                 type: 'text',
-                description: 'My fancy description',
-                placeholder: 'Some placeholder'
+                description: 'Custom field description',
+                placeholder: 'Type something...'
               },
               grid: {
                 col: 6,
@@ -150,26 +148,6 @@ module.exports = {
     },
   },
 };
-```
-
-### 3. (optional) Add translations
-The values of `label`, `placeholder` and `description` fields are used as **defaultMessages** during translation. You can easily add translations for multiple languages, for example by editing your admin plugin configuration file:
-
-`./src/admin/app.js`
-
-```js
-const config = {
-  locales: ["en"],
-  translations: {
-    en: {
-      "menus.customFields.custom_field.label": "Translated Label",
-      "menus.customFields.custom_field.placeholder": "Translated Placeholder",
-      "menus.customFields.custom_field.description": "Translated Description",
-    }
-  }
-};
-
-...
 ```
 
 ### Field config and grid layout
@@ -223,7 +201,6 @@ For `select` input types, the `enum` values associated with the attribute will b
   },
 ],
 ```
-The labels of `select` input options can be translated with keys like `menus.customFields.<field_name>.options.<option_value>`
 
 You may also omit the `input` prop and just add some white space with the `grid` prop.
 
@@ -233,6 +210,28 @@ You may also omit the `input` prop and just add some white space with the `grid`
     col: 6,
   },
 },
+```
+
+### Translations
+
+You may optionally provide a translation config object instead of a string value for `label`, `description`, and `placeholder` props. This also applies to `label` values in select menu `options`. However, this does not enable translations by itself.
+
+You must also include the custom field translations in your `./src/admin/app.js` file as you see in the example below.
+
+```js
+export default {
+  config: {
+    locales: [ 'en' ],
+    translations: {
+      en: {
+        'menus.customFields.field_name.label': 'Translated Label',
+        'menus.customFields.field_name.placeholder': 'Translated Placeholder',
+        'menus.customFields.field_name.description': 'Translated Description',
+      },
+    },
+  },
+  // etc.
+};
 ```
 
 ### Supported field types
@@ -771,7 +770,8 @@ Currently, this plugin does not even support RBAC (role-based access controls). 
 Follow the [migration guides](MIGRATION.md) to keep your menus plugin up-to-date.
 
 ## <a id="roadmap"></a>🚧 Roadmap
-* Locale support
+* Localization support
 * RBAC support
-* Populate `url` by selecting from list of relations
+* Drag and drop items
+* Populate `url` via relation
 * More translations
