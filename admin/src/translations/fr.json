@@ -1,6 +1,7 @@
 {
   "plugin.name": "Menus",
 
+  "ui.add.menu": "Ajouter un sous-menu",
   "ui.add.menuItem": "Ajouter un élément de menu",
   "ui.cancel": "Annuler",
   "ui.clone": "Dupliquer",
@@ -32,12 +33,17 @@
   "index.header.subtitle": "Éditer la structure des menus et des éléments de menus",
   "index.state.empty": "Aucun menu trouvé",
 
+  "form.label.items": "Éléments",
   "form.label.option._blank": "_blank",
   "form.label.option._parent": "_parent",
   "form.label.option._self": "_self",
   "form.label.option._top": "_top",
   "form.label.slug": "Slug",
+  "form.label.target": "Cible",
   "form.label.title": "Titre",
-  "form.label.items": "Éléments",
-  "form.placeholder.untitled": "Sans titre"
+  "form.label.url": "URL",
+  "form.placeholder.untitled": "Sans titre",
+
+  "error.slug.taken": "Le slug {slug} est déjà pris",
+  "error.url.invalid": "Ceci est un format d'URL invalide"
 }
