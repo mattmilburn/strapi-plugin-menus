@@ -6,9 +6,7 @@ import { pluginId } from '../../utils';
 
 const Initializer = ( { setPlugin } ) => {
   const { isLoading } = usePluginConfig();
-  const ref = useRef();
-
-  ref.current = setPlugin;
+  const ref = useRef( setPlugin );
 
   useEffect( () => {
     if ( ! isLoading ) {
