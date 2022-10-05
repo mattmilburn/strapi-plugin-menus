@@ -10,6 +10,7 @@ import { InputUID, SelectWrapper } from '../../coreComponents';
 import { useMenuData } from '../../hooks';
 
 const FormLayout = ( { fields, gap } ) => {
+  const { formatMessage } = useIntl();
   const { fields: strapiFields } = useLibrary();
   const {
     errors,
@@ -18,7 +19,6 @@ const FormLayout = ( { fields, gap } ) => {
     modifiedData,
     schema,
   } = useMenuData();
-  const { formatMessage } = useIntl();
 
   const getFieldName = name => {
     if ( name.indexOf( '.' ) !== -1 ) {
@@ -31,14 +31,12 @@ const FormLayout = ( { fields, gap } ) => {
   const getFieldError = ( name, label ) => {
     const msg = get( errors, name, null );
 
-    if ( msg ) {
-      // Ensure that repeatable items remove the array bracket notation from the error.
-      if ( typeof msg === 'string' ) {
-        return msg.replace( name, label );
-      } else {
-        return msg;
-      }
+    // Ensure that repeatable items remove the array bracket notation from the error.
+    if ( typeof msg === 'string' ) {
+      return msg.replace( name, label );
     }
+
+    return msg;
   };
 
   return (

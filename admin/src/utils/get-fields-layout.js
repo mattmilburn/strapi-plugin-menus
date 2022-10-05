@@ -3,7 +3,7 @@ import getTrad from './get-trad';
 
 const formatString = ( name, context, defaultMessage ) => ( {
   id: getTrad( `customFields.${name}.${context}` ),
-  defaultMessage: defaultMessage,
+  defaultMessage,
 } );
 
 const formatOption = ( name, option ) => {
@@ -53,12 +53,13 @@ const normalizeField = ( field, schema ) => {
   const defaultOptions = get( schema, `menuItem.${name}.enum`, [] );
   const options = get( field, 'input.options', defaultOptions );
 
-  // We don't want the `label` prop for the rendered input component.
+  // We don't want the `label` prop for the rendered input component, because we
+  // will use `intlLabel` instead.
   let input = omit( field.input, 'label' );
 
-  // Ignore label field when intlLabel is already set (default fields)
-  if( ! input.intlLabel ) {
-    // Replace `label` prop in custom config with formatted object.
+  // Replace `label` prop in custom config with formatted object, unless `intlLabel`
+  // is already set.
+  if ( ! input?.intlLabel ) {
     input.intlLabel = formatString( name, 'label', label ?? name );
   }
 
