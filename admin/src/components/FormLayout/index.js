@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import { get } from 'lodash';
+import get from 'lodash/get';
 
 import { GenericInput, useCustomFields, useLibrary } from '@strapi/helper-plugin';
 import { Grid, GridItem } from '@strapi/design-system/Grid';

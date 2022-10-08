@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import { get } from 'lodash';
+import get from 'lodash/get';
 import { onRowClick, stopPropagation, useQueryParams } from '@strapi/helper-plugin';
 import { Badge, Box, Flex, IconButton, Typography } from '@strapi/design-system';
 import { Tbody, Tr, Td } from '@strapi/design-system/Table';

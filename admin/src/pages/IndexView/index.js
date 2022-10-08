@@ -1,7 +1,7 @@
 import React, { memo, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { get } from 'lodash';
+import get from 'lodash/get';
 import {
   DynamicTable,
   EmptyStateLayout,

@@ -1,4 +1,5 @@
-import { has, head } from 'lodash';
+import has from 'lodash/has';
+import head from 'lodash/head';
 
 const transformResponse = data => {
   if ( has( data, 'data' ) ) {
