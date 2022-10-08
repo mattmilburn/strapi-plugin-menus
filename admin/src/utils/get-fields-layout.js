@@ -1,4 +1,5 @@
-import { get, omit } from 'lodash';
+import get from 'lodash/get';
+import omit from 'lodash/omit';
 import getTrad from './get-trad';
 
 const formatString = ( name, context, defaultMessage ) => ( {

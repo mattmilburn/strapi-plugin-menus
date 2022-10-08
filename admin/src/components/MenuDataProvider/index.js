@@ -2,7 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFormikContext } from 'formik';
-import { get, uniqueId } from 'lodash';
+import get from 'lodash/get';
+import uniqueId from 'lodash/uniqueId';
 
 import { MenuDataContext } from '../../contexts';
 import { menuProps, pluginId } from '../../utils';
