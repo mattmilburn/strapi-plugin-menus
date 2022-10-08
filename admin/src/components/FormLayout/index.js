@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { get } from 'lodash';
 
-import { GenericInput, useLibrary } from '@strapi/helper-plugin';
+import { GenericInput, useCustomFields, useLibrary } from '@strapi/helper-plugin';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 
 import { InputUID, SelectWrapper } from '../../coreComponents';
@@ -11,6 +11,7 @@ import { useMenuData } from '../../hooks';
 
 const FormLayout = ( { fields, gap } ) => {
   const { formatMessage } = useIntl();
+  const customFields = useCustomFields();
   const { fields: strapiFields } = useLibrary();
   const {
     errors,
@@ -66,7 +67,7 @@ const FormLayout = ( { fields, gap } ) => {
         const fieldError = getFieldError( input.name, fieldName );
         let fieldValue = get( modifiedData, input.name ) ?? defaultValue;
 
-        if ( input.type === 'number') {
+        if ( input.type === 'number' ) {
           fieldValue = Number( fieldValue );
         }
 
@@ -86,6 +87,23 @@ const FormLayout = ( { fields, gap } ) => {
                 description={ input?.description ? formatMessage( input.description ) : null }
                 isCreatingEntry={ isCreatingEntry }
                 value={ fieldValue }
+              />
+            </GridItem>
+          );
+        }
+
+        if ( input.type === 'customField' ) {
+          const customField = customFields.get( input.customField );
+          const CustomFieldInput = React.lazy( customField.components.Input );
+
+          return (
+            <GridItem key={ input.name } { ...grid }>
+              <CustomFieldInput
+                { ...input }
+                attribute={ schema.menuItem[ fieldName ] }
+                value={ fieldValue }
+                error={ fieldError }
+                onChange={ handleChange }
               />
             </GridItem>
           );
