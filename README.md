@@ -22,6 +22,7 @@
 * Easily manage menus with either a flat or nested structure.
 * Customize the `title`, `url`, and link `target` of menu items.
 * Extend the schema and UI with custom attributes and form layouts for menu items.
+* Supports custom fields.
 * Compatible with the [Strapi Transformer plugin](https://github.com/ComfortablyCoding/strapi-plugin-transformer) for cleaner API responses.
 
 ## <a id="installation"></a>💎 Installation
@@ -33,7 +34,7 @@ yarn add strapi-plugin-menus@latest
 | property | type (default) | description |
 | - | - | - |
 | maxDepth | number (`null`) | Limits how deep menu items can be nested. |
-| layouts | object (`{}`) | Provide form layout configuration for custom fields. |
+| layouts | object (`{}`) | Provide form layout configuration for custom attributes. |
 
 ### `maxDepth`
 Limits how deep menus can be nested. By default, there is no limit.
@@ -53,7 +54,7 @@ module.exports = {
 ```
 
 ### `layouts`
-Provide form layout configuration for custom fields. The example below is quite simple. See the [Extending section](#extending) for more details on how to use this feature.
+Provide form layout configuration for custom attributes. The example below is quite simple. See the [Extending section](#extending) for more details on how to use this feature.
 
 #### Example
 
@@ -68,8 +69,8 @@ module.exports = {
           link: [
             {
               input: {
-                label: 'Custom Field Label',
-                name: 'custom_field',
+                label: 'Example Field Label',
+                name: 'example_field',
                 type: 'text',
               },
               grid: {
@@ -101,7 +102,7 @@ module.exports = plugin => {
   // Define custom attributes for `MenuItem` the same way they would be defined
   // on any other schema.
   const customAttrs = {
-    custom_field: {
+    example_field: {
       type: 'string',
     },
   };
@@ -119,9 +120,9 @@ module.exports = plugin => {
 ### 2. Configure `layouts` for custom attributes
 Next, we need to extend the form layout to include the new attributes we defined on the schema.
 
-In `./config/plugins.js`, we will configure the `layouts` prop to allow our custom fields to render in the UI. By default, the menu item edit panel has one tab labeled "Link". We can add fields to the "Link" tab by defining `layouts.menuItem.link` as an array of field config objects.
+In `./config/plugins.js`, we will configure the `layouts` prop to allow our custom attributes to render in the UI. By default, the menu item edit panel has one tab labeled "Link". We can add fields to the "Link" tab by defining `layouts.menuItem.link` as an array of field config objects.
 
-New tabs in the edit panel are configured with each key in the `layouts.menuItem` object. The example below will add our custom field into the "Link" tab and it will occupy the remaining 6 columns of spacing in that panel.
+New tabs in the edit panel are configured with each key in the `layouts.menuItem` object. The example below will add our custom attribute into the "Link" tab and it will occupy the remaining 6 columns of spacing in that panel.
 
 ```js
 module.exports = {
@@ -132,10 +133,10 @@ module.exports = {
           link: [ // This is the "link" tab in the menu item edit panel.
             {
               input: {
-                label: 'Custom Field Label',
-                name: 'custom_field',
+                label: 'Example Field Label',
+                name: 'example_field',
                 type: 'text',
-                description: 'Custom field description',
+                description: 'Example field description',
                 placeholder: 'Type something...'
               },
               grid: {
@@ -200,6 +201,19 @@ For `select` input types, the `enum` values associated with the attribute will b
     value: 'optionValue',
   },
 ],
+```
+
+For `customField` input types, you must include the `customField` prop with the custom field UID.
+
+```js
+{
+  input: {
+    label: 'Example Custom Field',
+    name: 'example_field',
+    type: 'customField',
+    customField: 'plugin::custom-fields.example',
+  },
+},
 ```
 
 You may also omit the `input` prop and just add some white space with the `grid` prop.
@@ -760,8 +774,8 @@ yarn build
 yarn develop
 ```
 
-#### Custom `MenuItem` fields don't save or appear in the database table schema.
-Custom fields require both the **form layout** extension as well as the **schema** extension. Please make sure both of these are configured as described in the [Extending](#extending) section.
+#### Custom `MenuItem` attributes don't save or appear in the database table schema.
+Custom attributes require both the **form layout** extension as well as the **schema** extension. Please make sure both of these are configured as described in the [Extending](#extending) section.
 
 #### Some users cannot view menus, as if they do not have permissions.
 Currently, this plugin does not even support RBAC (role-based access controls). If it appears as if a users does not have permissions to view menus, try to update that user's profile in Strapi or even change their password. This should kick something into place that fixes that user's permissions.
