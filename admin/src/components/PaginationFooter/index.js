@@ -28,7 +28,7 @@ PaginationFooter.propTypes = {
   pagination: PropTypes.shape( {
     limit: PropTypes.number,
     start: PropTypes.number,
-    total: PropTypes.number.isRequired,
+    total: PropTypes.number,
   } ),
 };
 
