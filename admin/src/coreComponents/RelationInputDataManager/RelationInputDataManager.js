@@ -9,7 +9,7 @@ import { useCMEditViewDataManager, NotAllowedInput } from '@strapi/helper-plugin
 
 import { RelationInput } from '../RelationInput';
 
-import { useRelation } from '../../hooks/useRelation';
+import useRelation from './useRelation'; // CUSTOM MOD [6].
 
 import { getTrad } from '../../utils';
 

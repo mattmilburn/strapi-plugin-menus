@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import get from 'lodash/get';
-import { useCMEditViewDataManager } from '@strapi/helper-plugin';
+// import { useCMEditViewDataManager } from '@strapi/helper-plugin'; // CUSTOM MOD [1].
+import { useMenuData } from '../../../hooks'; // CUSTOM MOD [1].
 
 import { getRequestUrl } from '../../../utils';
 
@@ -11,14 +12,19 @@ function useSelect({
   name,
   queryInfos,
 }) {
-  const {
-    isCreatingEntry,
-    createActionAllowedFields,
-    readActionAllowedFields,
-    updateActionAllowedFields,
-    slug,
-    initialData,
-  } = useCMEditViewDataManager();
+  // const {
+  //   isCreatingEntry,
+  //   createActionAllowedFields,
+  //   readActionAllowedFields,
+  //   updateActionAllowedFields,
+  //   slug,
+  //   initialData,
+  // } = useCMEditViewDataManager(); // CUSTOM MOD [1].
+  const { isCreatingEntry, initialData } = useMenuData(); // CUSTOM MOD [1].
+  const createActionAllowedFields = true; // CUSTOM MOD [7].
+  const readActionAllowedFields = true; // CUSTOM MOD [7].
+  const updateActionAllowedFields = true; // CUSTOM MOD [7].
+  const slug = 'plugin::menus.menu-item'; // CUSTOM MOD [8].
 
   const isFieldAllowed = useMemo(() => {
     if (isUserAllowedToEditField === true) {

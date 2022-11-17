@@ -21,7 +21,7 @@ import { RelationItem } from './components/RelationItem';
 import { RelationList } from './components/RelationList';
 import { Option } from './components/Option';
 import { RELATION_ITEM_HEIGHT } from './constants';
-import { usePrev } from '../../hooks';
+import usePrev from './usePrev'; // CUSTOM MOD [5].
 
 const LinkEllipsis = styled(Link)`
   white-space: nowrap;
