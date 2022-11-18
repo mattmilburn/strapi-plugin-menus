@@ -1,6 +1,8 @@
 'use strict';
 
-const { get, has, omit } = require( 'lodash' );
+const get = require( 'lodash/get' );
+const has = require( 'lodash/has' );
+const omit = require( 'lodash/omit' );
 
 const sortByOrder = require( './sort-by-order' );
 

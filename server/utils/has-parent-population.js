@@ -1,6 +1,7 @@
 'use strict';
 
-const { get, has } = require( 'lodash' );
+const get = require( 'lodash/get' );
+const has = require( 'lodash/has' );
 
 const hasParentPopulation = params => {
   const populate = get( params, 'populate' );

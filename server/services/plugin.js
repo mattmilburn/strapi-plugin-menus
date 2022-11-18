@@ -1,6 +1,7 @@
 'use strict';
 
-const { get, without } = require( 'lodash' );
+const get = require( 'lodash/get' );
+const without = require( 'lodash/without' );
 
 const config = require( '../config' );
 const { UID_MENU, UID_MENU_ITEM } = require( '../constants' );
