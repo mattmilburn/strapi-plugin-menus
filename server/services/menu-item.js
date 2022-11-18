@@ -1,6 +1,7 @@
 'use strict';
 
-const { flattenDeep, omit } = require( 'lodash' );
+const flattenDeep = require( 'lodash/flattenDeep' );
+const omit = require( 'lodash/omit' );
 const { createCoreService } = require('@strapi/strapi').factories;
 
 const { UID_MENU_ITEM } = require( '../constants' );

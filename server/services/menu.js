@@ -1,6 +1,8 @@
 'use strict';
 
-const { get, omit, pick } = require( 'lodash' );
+const get = require( 'lodash/get' );
+const omit = require( 'lodash/omit' );
+const pick = require( 'lodash/pick' );
 const { createCoreService } = require('@strapi/strapi').factories;
 
 const { UID_MENU } = require( '../constants' );

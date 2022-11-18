@@ -1,6 +1,7 @@
 'use strict';
 
-const { get, isObject } = require( 'lodash' );
+const get = require( 'lodash/get' );
+const isObject = require( 'lodash/isObject' );
 const { prop, pick } = require( 'lodash/fp' );
 const { createCoreController } = require('@strapi/strapi').factories;
 const { ValidationError } = require( '@strapi/utils' ).errors;

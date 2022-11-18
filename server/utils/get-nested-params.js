@@ -1,6 +1,8 @@
 'use strict';
 
-const { get, has, uniq } = require( 'lodash' );
+const get = require( 'lodash/get' );
+const has = require( 'lodash/has' );
+const uniq = require( 'lodash/uniq' );
 
 const getNestedParams = params => {
   const populateParent = [ 'items', 'items.parent' ];

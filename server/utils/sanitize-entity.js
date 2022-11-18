@@ -1,6 +1,6 @@
 'use strict';
 
-const { omit } = require( 'lodash' );
+const omit = require( 'lodash/omit' );
 
 const sanitizeEntity = entity => omit( entity, [
   'id',
