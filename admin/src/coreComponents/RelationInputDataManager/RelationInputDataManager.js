@@ -5,11 +5,12 @@ import { useIntl } from 'react-intl';
 import get from 'lodash/get';
 import pick from 'lodash/pick';
 
-import { useCMEditViewDataManager, NotAllowedInput } from '@strapi/helper-plugin';
+import { NotAllowedInput } from '@strapi/helper-plugin'; // CUSTOM MOD [1].
+import { useMenuData } from '../../hooks'; // CUSTOM MOD [1].
 
 import { RelationInput } from '../RelationInput';
 
-import useRelation from './useRelation'; // CUSTOM MOD [6].
+import { useRelation } from './useRelation'; // CUSTOM MOD [6].
 
 import { getTrad } from '../../utils';
 
@@ -38,7 +39,8 @@ export const RelationInputDataManager = ({
 }) => {
   const { formatMessage } = useIntl();
   const { connectRelation, disconnectRelation, loadRelation, modifiedData, slug, initialData } =
-    useCMEditViewDataManager();
+    // useCMEditViewDataManager(); // CUSTOM MOD [1].
+    useMenuData(); // CUSTOM MOD [1].
 
   const relationsFromModifiedData = get(modifiedData, name) ?? [];
 

@@ -6,7 +6,7 @@ import get from 'lodash/get';
 import { GenericInput, useCustomFields, useLibrary } from '@strapi/helper-plugin';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 
-import { InputUID, SelectWrapper } from '../../coreComponents';
+import { InputUID, RelationInputDataManager } from '../../coreComponents';
 import { useMenuData } from '../../hooks';
 
 const FormLayout = ( { fields, gap } ) => {
@@ -72,21 +72,45 @@ const FormLayout = ( { fields, gap } ) => {
         }
 
         if ( input.type === 'relation' ) {
-          const relationData = schema.menuItem[ fieldName ]?.metadata;
+          const relationSchema = schema.menuItem[ fieldName ];
+          console.log( input, relationSchema );
 
-          if ( ! relationData ) {
+          if ( ! relationSchema ) {
             console.warn( `Missing metadata for ${fieldName} relation field.` );
             return null;
           }
 
           return (
             <GridItem key={ input.name } { ...grid }>
-              <SelectWrapper
-                { ...input }
-                { ...relationData }
-                description={ input?.description ? formatMessage( input.description ) : null }
-                isCreatingEntry={ isCreatingEntry }
+              <RelationInputDataManager
+                // { ...metadatas }
+                // { ...fieldSchema }
+                name={ fieldName }
                 value={ fieldValue }
+                error={ fieldError }
+                intlLabel={ input?.intlLabel }
+                description={ input?.description }
+                placeholder={ input?.placeholder }
+                isCreatingEntry={ isCreatingEntry }
+                isFieldReadable={ true }
+                isUserAllowedToEditField={ true }
+                isUserAllowedToReadField={ true }
+                mainField={ {
+                  name: 'title',
+                  schema: {
+                    type: 'string',
+                  },
+                } }
+                queryInfos={ {
+                  endpoints: {
+                    relation: relationSchema.target,
+                    search: '',
+                  },
+                  shouldDisplayRelationLink: true,
+                } }
+                relationType={ relationSchema.relation }
+                size={ grid.col }
+                targetModel={ relationSchema.target }
               />
             </GridItem>
           );
