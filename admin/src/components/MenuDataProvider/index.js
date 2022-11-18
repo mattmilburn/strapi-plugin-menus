@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFormikContext } from 'formik';
@@ -80,6 +80,15 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     setFieldValue( name, newRelations );
   };
 
+  const connectRelation = useCallback( ( { name, value, toOneRelation } ) => {
+    dispatch( {
+      type: 'CONNECT_RELATION',
+      keys: name.split( '.' ),
+      value,
+      toOneRelation,
+    } );
+  }, [] );
+
   const deleteMenuItem = id => {
     // Determine all items to delete, which includes it's descendants.
     const itemToDelete = values.items.find( item => item.id === id );
@@ -114,6 +123,22 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
       setActiveMenuItem( null );
     }
   };
+
+  const disconnectRelation = useCallback( ( { name, id } ) => {
+    dispatch( {
+      type: 'DISCONNECT_RELATION',
+      keys: name.split( '.' ),
+      id,
+    } );
+  }, [] );
+
+  const loadRelation = useCallback( ( { target: { name, value } } ) => {
+    dispatch( {
+      type: 'LOAD_RELATION',
+      keys: name.split( '.' ),
+      value,
+    } );
+  }, [] );
 
   const moveMenuItem = ( id, direction ) => {
     const itemA = values.items.find( _item => _item.id === id );
@@ -186,12 +211,15 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
       activeMenuItem,
       addMenuItem,
       addRelation,
+      connectRelation,
       deleteMenuItem,
+      disconnectRelation,
       errors,
       handleChange,
       initialData: initialValues,
       isCreatingEntry,
       items,
+      loadRelation,
       maxDepth,
       modifiedData: values,
       moveMenuItem,

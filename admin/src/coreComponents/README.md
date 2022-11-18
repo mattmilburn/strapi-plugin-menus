@@ -14,9 +14,9 @@ As Strapi updates, these components may also need to be updated in this plugin. 
 
 | Num | Component | Filename | Description |
 |-|-|-|-|
-| 1 | InputUID<br>RelationInputDataManager | index.js<br>utils/select.js | The `useMenuData` hook will be used in place of `useCMEditViewDataManager`. |
+| 1 | InputUID<br>RelationInputDataManager<br>RelationInputDataManager | index.js<br>utils/select.js<br>RelationInputDataManager.js | The `useMenuData` hook will be used in place of `useCMEditViewDataManager`. |
 | 2 | InputUID<br>RelationInputDataManager | index.js<br>useRelation.js | The path to `axiosInstance` is updated to use the instance provided in the plugin. |
-| 3 | InputUID | index.js | The `getRequestUrl` util will not be used. Instead, we use explicit paths for `/content-manager/uid/` routes. |
+| 3 | InputUID<br>RelationInputDataManager<br>RelationInputDataManager | index.js<br>getRelationLink.js<br>utils/select.js | The `getRequestUrl` util will not be used. Instead, we use explicit paths for `/content-manager/` routes. |
 | 4 | InputUID | index.js | The `createdAtName` var will be explicitly defined as `createdAt` instead of deriving from `layout` data. |
 | 5 | RelationInput | RelationInput.js | The `usePrev`  hook was cloned into this component directory and the import path updated. |
 | 6 | RelationInputDataManager | RelationInputDataManager.js | The `useRelation`  hook was cloned into this component directory and the import path updated. |

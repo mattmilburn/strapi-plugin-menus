@@ -3,7 +3,7 @@ import get from 'lodash/get';
 // import { useCMEditViewDataManager } from '@strapi/helper-plugin'; // CUSTOM MOD [1].
 import { useMenuData } from '../../../hooks'; // CUSTOM MOD [1].
 
-import { getRequestUrl } from '../../../utils';
+// import { getRequestUrl } from '../../../utils'; // CUSTOM MOD [3].
 
 function useSelect({
   componentUid,
@@ -70,20 +70,24 @@ function useSelect({
       // if no componentId exists in initialData it means that the user just created it
       // there then are no relations to request
       return componentId
-        ? getRequestUrl(`relations/${componentUid}/${componentId}/${fieldNameKeys.at(-1)}`)
+        // ? getRequestUrl(`relations/${componentUid}/${componentId}/${fieldNameKeys.at(-1)}`) // CUSTOM MOD [3].
+        ? `/content-manager/relations/${componentUid}/${componentId}/${fieldNameKeys.at(-1)}` // CUSTOM MOD [3].
         : null;
     }
 
-    return getRequestUrl(`relations/${slug}/${initialData.id}/${name.split('.').at(-1)}`);
+    // return getRequestUrl(`relations/${slug}/${initialData.id}/${name.split('.').at(-1)}`); // CUSTOM MOD [3].
+    return `/content-manager/relations/${slug}/${initialData.id}/${name.split('.').at(-1)}`; // CUSTOM MOD [3].
   }, [isCreatingEntry, componentUid, slug, initialData.id, name, componentId, fieldNameKeys]);
 
   // /content-manager/relations/[model]/[field-name]
   const relationSearchEndpoint = useMemo(() => {
     if (componentUid) {
-      return getRequestUrl(`relations/${componentUid}/${name.split('.').at(-1)}`);
+      // return getRequestUrl(`relations/${componentUid}/${name.split('.').at(-1)}`); // CUSTOM MOD [3].
+      return `/content-manager/relations/${componentUid}/${name.split('.').at(-1)}`; // CUSTOM MOD [3].
     }
 
-    return getRequestUrl(`relations/${slug}/${name.split('.').at(-1)}`);
+    // return getRequestUrl(`relations/${slug}/${name.split('.').at(-1)}`); // CUSTOM MOD [3].
+    return `/content-manager/relations/${slug}/${name.split('.').at(-1)}`; // CUSTOM MOD [3].
   }, [componentUid, slug, name]);
 
   return {
