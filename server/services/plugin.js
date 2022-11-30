@@ -1,7 +1,6 @@
 'use strict';
 
 const get = require( 'lodash/get' );
-const without = require( 'lodash/without' );
 
 const config = require( '../config' );
 const { UID_MENU, UID_MENU_ITEM } = require( '../constants' );
@@ -21,16 +20,24 @@ module.exports = ( { strapi } ) => ( {
     const menuItemConfig = await contentTypes.findConfiguration( menuItemModel );
 
     // Determine custom relation fields, if any.
-    const editItemRelations = get( menuItemConfig, 'layouts.editRelations', [] );
-    const customItemRelations = without( editItemRelations, 'parent', 'root_menu' );
+    const omitRelations = [ 'parent', 'root_menu', 'createdBy', 'updatedBy' ];
+    const relationFields = Object.keys( menuItemModel.attributes ).filter( key => {
+      const attr = menuItemModel.attributes[ key ];
+
+      if ( attr && attr.type === 'relation' && ! omitRelations.includes( key ) ) {
+        return true;
+      }
+
+      return false;
+    } );
 
     // For the `MenuItem` schema, we're going to append extra metadata for custom
     // relations to more easily provide their necessary config on the frontend.
-    const menuItemAttributes = await customItemRelations.reduce( async ( prevPromise, name ) => {
+    const menuItemAttributes = await relationFields.reduce( async ( prevPromise, name ) => {
       const acc = await prevPromise;
       const attr = acc[ name ];
 
-      if ( ! attr || ! attr.target ) {
+      if ( ! attr || attr.type !== 'relation' || ! attr.target ) {
         return acc;
       }
 
@@ -54,11 +61,12 @@ module.exports = ( { strapi } ) => ( {
           },
         },
         queryInfos: {
-          containsKey: '',
-          defaultParams: {},
-          endPoint: `/menus/relations/${name}`,
+          // endPoint: `/menus/relations/${name}`,
+          endpoints: {
+            relation: attr.target,
+            search: '',
+          },
           shouldDisplayRelationLink: true,
-          paramsToKeep: [],
         },
       };
 
@@ -69,7 +77,9 @@ module.exports = ( { strapi } ) => ( {
           metadata,
         }
       };
-    }, Promise.resolve( menuItemModel.attributes ) );
+    }, menuItemModel.attributes );
+
+    console.log( 'MENU ITEM ATTRS', menuItemAttributes );
 
     return {
       menu: menuModel.attributes,
