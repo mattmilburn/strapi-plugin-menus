@@ -3,8 +3,15 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
 import { stopPropagation } from '@strapi/helper-plugin';
-import { Button, Flex, IconButton, Typography } from '@strapi/design-system';
-import { ChevronDown, ChevronUp, Plus, PlusCircle, Trash } from '@strapi/icons';
+import { Button } from '@strapi/design-system/Button';
+import { Flex } from '@strapi/design-system/Flex';
+import { IconButton } from '@strapi/design-system/IconButton';
+import { Typography } from '@strapi/design-system/Typography';
+import ChevronDown from '@strapi/icons/ChevronDown';
+import ChevronUp from '@strapi/icons/ChevronUp';
+import Plus from '@strapi/icons/Plus';
+import PlusCircle from '@strapi/icons/PlusCircle';
+import Trash from '@strapi/icons/Trash';
 
 import { getBoxProps, getTrad, menuItemProps } from '../../utils';
 import { Toolbar } from '../';
