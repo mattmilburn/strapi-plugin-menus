@@ -9,9 +9,11 @@ import {
   useOverlayBlocker,
   useQueryParams,
 } from '@strapi/helper-plugin';
-import { Box, Button, useNotifyAT } from '@strapi/design-system';
+import { useNotifyAT } from '@strapi/design-system';
+import { Box } from '@strapi/design-system/Box';
+import { Button } from '@strapi/design-system/Button';
 import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
-import { Plus } from '@strapi/icons';
+import Plus from '@strapi/icons/Plus';
 
 import { api, getTrad, pluginId, pluginName } from '../../utils';
 import { Layout, MenuRows, PaginationFooter } from '../../components';

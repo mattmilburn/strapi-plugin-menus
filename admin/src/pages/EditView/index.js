@@ -8,9 +8,14 @@ import uniq from 'lodash/uniq';
 import uniqueId from 'lodash/uniqueId';
 import { Formik } from 'formik';
 import { Form, useNotification, useOverlayBlocker } from '@strapi/helper-plugin';
-import { Box, Button, Link, Stack, useNotifyAT } from '@strapi/design-system';
+import { useNotifyAT } from '@strapi/design-system';
+import { Box } from '@strapi/design-system/Box';
+import { Button } from '@strapi/design-system/Button';
+import { Link } from '@strapi/design-system/Link';
+import { Stack } from '@strapi/design-system/Stack';
 import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
-import { ArrowLeft, Check } from '@strapi/icons';
+import ArrowLeft from '@strapi/icons/ArrowLeft';
+import Check from '@strapi/icons/Check';
 
 const defaultValues = {
   title: '',

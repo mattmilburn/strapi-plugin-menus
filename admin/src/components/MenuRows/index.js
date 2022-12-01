@@ -3,9 +3,15 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import get from 'lodash/get';
 import { onRowClick, stopPropagation, useQueryParams } from '@strapi/helper-plugin';
-import { Badge, Box, Flex, IconButton, Typography } from '@strapi/design-system';
+import { Badge } from '@strapi/design-system/Badge';
+import { Box } from '@strapi/design-system/Box';
+import { Flex } from '@strapi/design-system/Flex';
+import { IconButton } from '@strapi/design-system/IconButton';
+import { Typography } from '@strapi/design-system/Typography';
 import { Tbody, Tr, Td } from '@strapi/design-system/Table';
-import { Duplicate, Pencil, Trash } from '@strapi/icons';
+import Duplicate from '@strapi/icons/Duplicate';
+import Pencil from '@strapi/icons/Pencil';
+import Trash from '@strapi/icons/Trash';
 
 import { getTrad } from '../../utils';
 

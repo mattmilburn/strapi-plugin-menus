@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { LoadingIndicatorPage, SettingsPageTitle } from '@strapi/helper-plugin';
-import { Main } from '@strapi/design-system';
+import { Main } from '@strapi/design-system/Main';
 
 const Layout = ( { children, isLoading, title } ) => {
   return isLoading ? (

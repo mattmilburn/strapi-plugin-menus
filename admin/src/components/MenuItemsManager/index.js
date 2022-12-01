@@ -4,9 +4,11 @@ import { useIntl } from 'react-intl';
 
 import FlipMove from 'react-flip-move';
 import { EmptyStateLayout } from '@strapi/helper-plugin';
-import { Button, Flex } from '@strapi/design-system';
+import { Button } from '@strapi/design-system/Button';
+import { Flex } from '@strapi/design-system/Flex';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
-import { Plus, PlusCircle } from '@strapi/icons';
+import Plus from '@strapi/icons/Plus';
+import PlusCircle from '@strapi/icons/PlusCircle';
 
 import { EditMenuItem, TreeMenu, TreeMenuItem } from '../';
 import { HEADER_HEIGHT } from '../../constants';

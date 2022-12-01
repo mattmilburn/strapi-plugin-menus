@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { Button, Typography } from '@strapi/design-system';
+import { Button } from '@strapi/design-system/Button';
+import { Typography } from '@strapi/design-system/Typography';
 
 export const AddButton = styled(Button)`
   margin-left: 6px;
