@@ -61,11 +61,6 @@ module.exports = ( { strapi } ) => ( {
           },
         },
         queryInfos: {
-          // endPoint: `/menus/relations/${name}`,
-          endpoints: {
-            relation: attr.target,
-            search: '',
-          },
           shouldDisplayRelationLink: true,
         },
       };
@@ -78,8 +73,6 @@ module.exports = ( { strapi } ) => ( {
         }
       };
     }, menuItemModel.attributes );
-
-    console.log( 'MENU ITEM ATTRS', menuItemAttributes );
 
     return {
       menu: menuModel.attributes,

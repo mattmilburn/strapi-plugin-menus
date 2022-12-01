@@ -72,10 +72,9 @@ const FormLayout = ( { fields, gap } ) => {
         }
 
         if ( input.type === 'relation' ) {
-          const relationSchema = schema.menuItem[ fieldName ];
-          console.log( input, relationSchema );
+          const metadata = schema.menuItem[ fieldName ]?.metadata;
 
-          if ( ! relationSchema ) {
+          if ( ! metadata ) {
             console.warn( `Missing metadata for ${fieldName} relation field.` );
             return null;
           }
@@ -83,34 +82,19 @@ const FormLayout = ( { fields, gap } ) => {
           return (
             <GridItem key={ input.name } { ...grid }>
               <RelationInputDataManager
-                // { ...metadatas }
-                // { ...fieldSchema }
+                { ...input }
+                { ...metadata }
                 name={ fieldName }
                 value={ fieldValue }
                 error={ fieldError }
                 intlLabel={ input?.intlLabel }
                 description={ input?.description }
                 placeholder={ input?.placeholder }
+                size={ grid.col }
                 isCreatingEntry={ isCreatingEntry }
                 isFieldReadable={ true }
                 isUserAllowedToEditField={ true }
                 isUserAllowedToReadField={ true }
-                mainField={ {
-                  name: 'title',
-                  schema: {
-                    type: 'string',
-                  },
-                } }
-                queryInfos={ {
-                  endpoints: {
-                    relation: relationSchema.target,
-                    search: '',
-                  },
-                  shouldDisplayRelationLink: true,
-                } }
-                relationType={ relationSchema.relation }
-                size={ grid.col }
-                targetModel={ relationSchema.target }
               />
             </GridItem>
           );
