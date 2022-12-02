@@ -35,7 +35,7 @@ export const TextValidation = styled(Flex)`
     width: ${12 / 16}rem;
     path {
       fill: ${({ theme, notAvailable }) =>
-        !notAvailable ? theme.colors.success600 : theme.colors.danger600};
+    !notAvailable ? theme.colors.success600 : theme.colors.danger600};
     }
   }
 `;

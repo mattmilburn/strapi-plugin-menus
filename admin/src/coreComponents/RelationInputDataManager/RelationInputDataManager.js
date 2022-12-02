@@ -176,9 +176,9 @@ export const RelationInputDataManager = ({
       labelLoadMore={
         !isCreatingEntry
           ? formatMessage({
-              id: getTrad('relation.loadMore'),
-              defaultMessage: 'Load More',
-            })
+            id: getTrad('relation.loadMore'),
+            defaultMessage: 'Load More',
+          })
           : null
       }
       labelDisconnectRelation={formatMessage({

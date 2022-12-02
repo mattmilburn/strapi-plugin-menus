@@ -1,35 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from "react";
 
-import { HEADER_HEIGHT } from '../constants';
+import {HEADER_HEIGHT} from "../constants";
 
-const useStickyPosition = ref => {
-  const [ isSticky, setSticky ] = useState( false );
+const useStickyPosition = (ref) => {
+  const [isSticky, setSticky] = useState(false);
 
-  useEffect( () => {
+  useEffect(() => {
     const onScroll = () => {
-      if ( ! ref.current ) {
+      if (!ref.current) {
         return;
       }
 
       const destination = ref.current.parentNode.getBoundingClientRect().top;
-      const isStickyPos = ref.current.style.position === 'fixed';
+      const isStickyPos = ref.current.style.position === "fixed";
 
-      if ( ! isStickyPos && destination <= HEADER_HEIGHT ) {
-        setSticky( true );
+      if (!isStickyPos && destination <= HEADER_HEIGHT) {
+        setSticky(true);
       }
 
-      if ( isStickyPos && destination > HEADER_HEIGHT ) {
-        setSticky( false );
+      if (isStickyPos && destination > HEADER_HEIGHT) {
+        setSticky(false);
       }
     };
 
     // Run this function immediately.
     onScroll();
 
-    window.addEventListener( 'scroll', onScroll );
+    window.addEventListener("scroll", onScroll);
 
-    return () => window.removeEventListener( 'scroll', onScroll );
-  }, [] );
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [ref]);
 
   return isSticky;
 };

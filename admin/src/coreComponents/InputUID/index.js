@@ -1,25 +1,25 @@
-import React, { useEffect, useState, useRef } from 'react';
-import PropTypes from 'prop-types';
+import React, {useEffect, useState, useRef} from "react";
+import PropTypes from "prop-types";
 // import { useCMEditViewDataManager } from '@strapi/helper-plugin'; // CUSTOM MOD [1].
-import { useMenuData } from '../../hooks'; // CUSTOM MOD [1].
-import { useIntl } from 'react-intl';
-import get from 'lodash/get';
-import { TextInput } from '@strapi/design-system/TextInput';
-import { Typography } from '@strapi/design-system/Typography';
-import Refresh from '@strapi/icons/Refresh';
-import CheckCircle from '@strapi/icons/CheckCircle';
-import ExclamationMarkCircle from '@strapi/icons/ExclamationMarkCircle';
-import Loader from '@strapi/icons/Loader';
-import { axiosInstance } from '../../utils'; // CUSTOM MOD [2].
+import {useMenuData} from "../../hooks"; // CUSTOM MOD [1].
+import {useIntl} from "react-intl";
+import get from "lodash/get";
+import {TextInput} from "@strapi/design-system/TextInput";
+import {Typography} from "@strapi/design-system/Typography";
+import Refresh from "@strapi/icons/Refresh";
+import CheckCircle from "@strapi/icons/CheckCircle";
+import ExclamationMarkCircle from "@strapi/icons/ExclamationMarkCircle";
+import Loader from "@strapi/icons/Loader";
+import {axiosInstance} from "../../utils"; // CUSTOM MOD [2].
 // import { getRequestUrl } from '../../utils'; // CUSTOM MOD [3].
-import useDebounce from './useDebounce';
-import UID_REGEX from './regex';
+import useDebounce from "./useDebounce";
+import UID_REGEX from "./regex";
 import {
   EndActionWrapper,
   FieldActionWrapper,
   TextValidation,
   LoadingWrapper,
-} from './endActionStyle';
+} from "./endActionStyle";
 
 const InputUID = ({
   attribute,
@@ -36,52 +36,58 @@ const InputUID = ({
   required,
 }) => {
   // const { modifiedData, initialData, layout } = useCMEditViewDataManager(); // CUSTOM MOD [1].
-  const { initialData, modifiedData } = useMenuData(); // CUSTOM MOD [1].
+  const {initialData, modifiedData} = useMenuData(); // CUSTOM MOD [1].
   const [isLoading, setIsLoading] = useState(false);
   const [availability, setAvailability] = useState(null);
   const debouncedValue = useDebounce(value, 300);
   const generateUid = useRef();
   const initialValue = initialData[name];
-  const { formatMessage } = useIntl();
-  const createdAtName = 'createdAt'; // get(layout, ['options', 'timestamps', 0]); // CUSTOM MOD [4].
+  const {formatMessage} = useIntl();
+  const createdAtName = "createdAt"; // get(layout, ['options', 'timestamps', 0]); // CUSTOM MOD [4].
   const isCreation = !initialData[createdAtName];
-  const debouncedTargetFieldValue = useDebounce(modifiedData[attribute.targetField], 300);
+  const debouncedTargetFieldValue = useDebounce(
+    modifiedData[attribute.targetField],
+    300
+  );
   const [isCustomized, setIsCustomized] = useState(false);
   const [regenerateLabel, setRegenerateLabel] = useState(null);
 
   const label = intlLabel.id
     ? formatMessage(
-        { id: intlLabel.id, defaultMessage: intlLabel.defaultMessage },
-        { ...intlLabel.values }
-      )
+      {id: intlLabel.id, defaultMessage: intlLabel.defaultMessage},
+      {...intlLabel.values}
+    )
     : name;
 
   const hint = description
     ? formatMessage(
-        { id: description.id, defaultMessage: description.defaultMessage },
-        { ...description.values }
-      )
-    : '';
+      {id: description.id, defaultMessage: description.defaultMessage},
+      {...description.values}
+    )
+    : "";
 
   const formattedPlaceholder = placeholder
     ? formatMessage(
-        { id: placeholder.id, defaultMessage: placeholder.defaultMessage },
-        { ...placeholder.values }
-      )
-    : '';
+      {id: placeholder.id, defaultMessage: placeholder.defaultMessage},
+      {...placeholder.values}
+    )
+    : "";
 
   generateUid.current = async (shouldSetInitialValue = false) => {
     setIsLoading(true);
-    const requestURL = '/content-manager/uid/generate'; // CUSTOM MOD [3].
+    const requestURL = "/content-manager/uid/generate"; // CUSTOM MOD [3].
     try {
       const {
-        data: { data },
+        data: {data},
       } = await axiosInstance.post(requestURL, {
         contentTypeUID,
         field: name,
         data: modifiedData,
       });
-      onChange({ target: { name, value: data, type: 'text' } }, shouldSetInitialValue);
+      onChange(
+        {target: {name, value: data, type: "text"}},
+        shouldSetInitialValue
+      );
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
@@ -91,17 +97,17 @@ const InputUID = ({
   const checkAvailability = async () => {
     setIsLoading(true);
 
-    const requestURL = '/content-manager/uid/check-availability'; // CUSTOM MOD [3].
+    const requestURL = "/content-manager/uid/check-availability"; // CUSTOM MOD [3].
 
     if (!value) {
       return;
     }
 
     try {
-      const { data } = await axiosInstance.post(requestURL, {
+      const {data} = await axiosInstance.post(requestURL, {
         contentTypeUID,
         field: name,
-        value: value ? value.trim() : '',
+        value: value ? value.trim() : "",
       });
 
       setAvailability(data);
@@ -166,8 +172,8 @@ const InputUID = ({
   const handleGenerateMouseEnter = () => {
     setRegenerateLabel(
       formatMessage({
-        id: 'content-manager.components.uid.regenerate',
-        defaultMessage: 'Regenerate',
+        id: "content-manager.components.uid.regenerate",
+        defaultMessage: "Regenerate",
       })
     );
   };
@@ -195,19 +201,22 @@ const InputUID = ({
               <CheckCircle />
               <Typography textColor="success600" variant="pi">
                 {formatMessage({
-                  id: 'content-manager.components.uid.available',
-                  defaultMessage: 'Available',
+                  id: "content-manager.components.uid.available",
+                  defaultMessage: "Available",
                 })}
               </Typography>
             </TextValidation>
           )}
           {availability && !availability.isAvailable && !regenerateLabel && (
-            <TextValidation notAvailable alignItems="center" justifyContent="flex-end">
+            <TextValidation
+              notAvailable
+              alignItems="center"
+              justifyContent="flex-end">
               <ExclamationMarkCircle />
               <Typography textColor="danger600" variant="pi">
                 {formatMessage({
-                  id: 'content-manager.components.uid.unavailable',
-                  defaultMessage: 'Unavailable',
+                  id: "content-manager.components.uid.unavailable",
+                  defaultMessage: "Unavailable",
                 })}
               </Typography>
             </TextValidation>
@@ -223,8 +232,7 @@ const InputUID = ({
             onClick={() => generateUid.current()}
             label="regenerate"
             onMouseEnter={handleGenerateMouseEnter}
-            onMouseLeave={handleGenerateMouseLeave}
-          >
+            onMouseLeave={handleGenerateMouseLeave}>
             {isLoading ? (
               <LoadingWrapper>
                 <Loader />
@@ -241,7 +249,7 @@ const InputUID = ({
       name={name}
       onChange={handleChange}
       placeholder={formattedPlaceholder}
-      value={value || ''}
+      value={value || ""}
       required={required}
     />
   );
@@ -283,7 +291,7 @@ InputUID.defaultProps = {
   error: undefined,
   labelAction: undefined,
   placeholder: undefined,
-  value: '',
+  value: "",
   required: false,
 };
 

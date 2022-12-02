@@ -1,0 +1,40 @@
+{
+  "parser": "@babel/eslint-parser",
+  "extends": [
+    "eslint:recommended",
+    "plugin:react-hooks/recommended",
+    "prettier"
+  ],
+  "env": {
+    "commonjs": true,
+    "es6": true,
+    "node": true,
+    "browser": true
+  },
+  "parserOptions": {
+    "requireConfigFile": false,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true,
+      "jsx": true
+    },
+    "babelOptions": {
+      "parserOpts": {
+        "plugins": ["jsx"]
+      }
+    },
+    "sourceType": "module"
+  },
+  "globals": {
+    "strapi": true
+  },
+  "plugins": ["react-hooks", "eslint-plugin-import", "eslint-plugin-prettier"],
+  "rules": {
+    "indent": [0],
+    "linebreak-style": ["error", "windows"],
+    "no-console": 0,
+    "quotes": [0],
+    "semi": ["error", "always"],
+    "import/no-cycle": ["error"],
+    "no-unused-vars": [0]
+  }
+}
