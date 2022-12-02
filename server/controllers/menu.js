@@ -1,13 +1,10 @@
 'use strict';
 
-const get = require( 'lodash/get' );
 const isObject = require( 'lodash/isObject' );
-const { prop, pick } = require( 'lodash/fp' );
 const { createCoreController } = require('@strapi/strapi').factories;
 const { ValidationError } = require( '@strapi/utils' ).errors;
-const { PUBLISHED_AT_ATTRIBUTE } = require('@strapi/utils').contentTypes.constants;
 
-const { UID_MENU, UID_MENU_ITEM } = require( '../constants' );
+const { UID_MENU } = require( '../constants' );
 const {
   getNestedParams,
   getService,
@@ -27,50 +24,6 @@ module.exports = createCoreController( UID_MENU, ( { strapi } ) =>  ( {
       schema,
     } );
   },
-
-  async findRelations( ctx ) {
-    const { targetField } = ctx.params;
-    const { query } = ctx.request;
-    const contentManager = strapi.plugin( 'content-manager' );
-    const contentTypes = contentManager.service( 'content-types' );
-    const entityManager = contentManager.service( 'entity-manager' );
-
-    if ( ! targetField ) {
-      return ctx.badRequest();
-    }
-
-    const modelDef = strapi.getModel( UID_MENU_ITEM );
-
-    if ( ! modelDef ) {
-      return ctx.notFound( 'model.notFound' );
-    }
-
-    const attribute = modelDef.attributes[ targetField ];
-
-    if ( ! attribute || attribute.type !== 'relation' ) {
-      return ctx.badRequest( 'targetField.invalid' );
-    }
-
-    const target = strapi.getModel( attribute.target );
-
-    if ( ! target ) {
-      return ctx.notFound( 'target.notFound' );
-    }
-
-    const entities = await entityManager.find( query, target.uid, [] );
-
-    if ( ! entities ) {
-      return ctx.notFound();
-    }
-
-    const modelConfig = await contentTypes.findConfiguration( modelDef );
-    const field = prop( `metadatas.${targetField}.edit.mainField`, modelConfig ) || 'id';
-    const pickFields = [ field, 'id', target.primaryKey, PUBLISHED_AT_ATTRIBUTE ];
-
-    ctx.send( entities.map( pick( pickFields ) ) );
-  },
-
-  //////////////////////////////////////////////////////////////////////////////
 
   async find( ctx ) {
     const { query } = ctx;
