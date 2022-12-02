@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useFormikContext } from 'formik';
 import get from 'lodash/get';
+import set from 'lodash/set';
+import uniqBy from 'lodash/uniqBy';
 import uniqueId from 'lodash/uniqueId';
 
 import { MenuDataContext } from '../../contexts';
@@ -15,7 +17,6 @@ import {
 } from './utils';
 
 const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
-  const dispatch = useDispatch();
   const [ activeMenuItem, setActiveMenuItem ] = useState( null );
   const { config, schema } = useSelector( state => state[ `${pluginId}_config` ] );
   const { maxDepth } = config;
@@ -65,29 +66,16 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     setActiveMenuItem( newItem );
   };
 
-  const addRelation = ( { target: { name, value } } ) => {
-    if ( ! Array.isArray( value ) || ! value.length ) {
-      return;
+  const connectRelation = ( { name, value, toOneRelation } ) => {
+    if ( toOneRelation ) {
+      setFieldValue( name, [ value ] );
+    } else {
+      const modifiedDataRelations = get( values, name, [] );
+      const newRelations = [ ...modifiedDataRelations, value ];
+
+      setFieldValue( name, newRelations );
     }
-
-    const currentRelations = get( values, name, [] );
-    const newRelation = value[ 0 ].value;
-    const newRelations = [
-      ...currentRelations,
-      newRelation,
-    ];
-
-    setFieldValue( name, newRelations );
   };
-
-  const connectRelation = useCallback( ( { name, value, toOneRelation } ) => {
-    dispatch( {
-      type: 'CONNECT_RELATION',
-      keys: name.split( '.' ),
-      value,
-      toOneRelation,
-    } );
-  }, [] );
 
   const deleteMenuItem = id => {
     // Determine all items to delete, which includes it's descendants.
@@ -124,21 +112,12 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     }
   };
 
-  const disconnectRelation = useCallback( ( { name, id } ) => {
-    dispatch( {
-      type: 'DISCONNECT_RELATION',
-      keys: name.split( '.' ),
-      id,
-    } );
-  }, [] );
+  const loadRelation = ( { target: { name, value } } ) => {
+    const modifiedDataRelations = get( values, name, [] );
+    const newRelations = uniqBy( [ ...value, ...modifiedDataRelations ], 'id' );
 
-  const loadRelation = useCallback( ( { target: { name, value } } ) => {
-    dispatch( {
-      type: 'LOAD_RELATION',
-      keys: name.split( '.' ),
-      value,
-    } );
-  }, [] );
+    setFieldValue( name, newRelations );
+  };
 
   const moveMenuItem = ( id, direction ) => {
     const itemA = values.items.find( _item => _item.id === id );
@@ -175,18 +154,11 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     setActiveMenuItem( orderedItemA );
   };
 
-  const moveRelation = () => {
-    // This is a no-op in Strapi but we're keeping in place in case it gets used in the future.
-  };
+  const disconnectRelation = ( { name, id } ) => {
+    const modifiedDataRelations = get( values, name, [] );
+    const newRelations = modifiedDataRelations.filter( relation => relation.id !== id );
 
-  const onRemoveRelation = keys => {
-    const [ itemPath, fieldName, relationIndex ] = keys.split( '.' );
-    const fieldPath = `${itemPath}.${fieldName}`;
-    const indexToRemove = parseInt( relationIndex );
-    const currentRelations = get( values, fieldPath, [] );
-    const newRelations = currentRelations.filter( ( r, i ) => i !== indexToRemove );
-
-    setFieldValue( fieldPath, newRelations );
+    setFieldValue( name, newRelations );
   };
 
   useEffect( () => {
@@ -210,7 +182,6 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     <MenuDataContext.Provider value={ {
       activeMenuItem,
       addMenuItem,
-      addRelation,
       connectRelation,
       deleteMenuItem,
       disconnectRelation,
@@ -223,8 +194,6 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
       maxDepth,
       modifiedData: values,
       moveMenuItem,
-      moveRelation,
-      onRemoveRelation,
       schema,
       setActiveMenuItem,
     } }>
