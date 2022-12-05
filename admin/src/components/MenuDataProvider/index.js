@@ -17,7 +17,6 @@ import {
 } from './utils';
 
 const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
-  const [ activeMenuItem, setActiveMenuItem ] = useState( null );
   const { config, schema } = useSelector( state => state[ `${pluginId}_config` ] );
   const { maxDepth } = config;
   const {
@@ -28,6 +27,8 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     setValues,
     values,
   } = useFormikContext();
+  const [ initialData, setInitialData ] = useState( initialValues );
+  const [ activeMenuItem, setActiveMenuItem ] = useState( null );
 
   const items = useMemo( () => {
     if ( ! values?.items ) {
@@ -45,7 +46,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     return sortByOrder( nestedItems );
   }, [ values?.items ] );
 
-  const addMenuItem = parentId => {
+  const addMenuItem = useCallback( parentId => {
     const order = getChildren( parentId, values.items ).length;
 
     // Using the `create` prefix with the ID will help us know which items need
@@ -64,9 +65,9 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     } );
 
     setActiveMenuItem( newItem );
-  };
+  }, [] );
 
-  const connectRelation = ( { name, value, toOneRelation } ) => {
+  const connectRelation = useCallback( ( { name, value, toOneRelation } ) => {
     if ( toOneRelation ) {
       setFieldValue( name, [ value ] );
     } else {
@@ -75,9 +76,9 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
 
       setFieldValue( name, newRelations );
     }
-  };
+  }, [] );
 
-  const deleteMenuItem = id => {
+  const deleteMenuItem = useCallback( id => {
     // Determine all items to delete, which includes it's descendants.
     const itemToDelete = values.items.find( item => item.id === id );
     const descendantsToDelete = getDescendants( id, values.items );
@@ -110,16 +111,24 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     if ( activeMenuItem?.id === id ) {
       setActiveMenuItem( null );
     }
-  };
+  }, [] );
 
-  const loadRelation = ( { target: { name, value } } ) => {
+  const loadRelation = useCallback( ( { target: { name, value } } ) => {
+    const initialDataRelations = get( initialData, name, [] );
     const modifiedDataRelations = get( values, name, [] );
     const newRelations = uniqBy( [ ...value, ...modifiedDataRelations ], 'id' );
+    const newInitialRelations = uniqBy( [ ...value, ...initialDataRelations ], 'id' );
 
+    // @TODO - Set value for `initialData` the same way `setFieldValue` would work.
+    console.log( initialDataRelations, newInitialRelations );
+
+    // We set the value in `initialData` as well so it stays in sync with
+    // `modifiedData` to allow the correct dirty UI state to render.
+    setInitialData( newInitialRelations );
     setFieldValue( name, newRelations );
-  };
+  }, [] );
 
-  const moveMenuItem = ( id, direction ) => {
+  const moveMenuItem = useCallback( ( id, direction ) => {
     const itemA = values.items.find( _item => _item.id === id );
     const siblings = getChildren( itemA?.parent?.id, values.items );
     const orderA = itemA.order;
@@ -152,14 +161,14 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     } );
 
     setActiveMenuItem( orderedItemA );
-  };
+  }, [] );
 
-  const disconnectRelation = ( { name, id } ) => {
+  const disconnectRelation = useCallback( ( { name, id } ) => {
     const modifiedDataRelations = get( values, name, [] );
     const newRelations = modifiedDataRelations.filter( relation => relation.id !== id );
 
     setFieldValue( name, newRelations );
-  };
+  }, [] );
 
   useEffect( () => {
     if ( ! activeMenuItem || ! `${activeMenuItem.id}`.includes( 'create' ) ) {
@@ -187,7 +196,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
       disconnectRelation,
       errors,
       handleChange,
-      initialData: initialValues,
+      initialData,
       isCreatingEntry,
       items,
       loadRelation,
