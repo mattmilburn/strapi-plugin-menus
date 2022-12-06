@@ -68,6 +68,8 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
   }, [] );
 
   const connectRelation = useCallback( ( { name, value, toOneRelation } ) => {
+    console.log( 'CONNECT', name, value );
+
     if ( toOneRelation ) {
       setFieldValue( name, [ value ] );
     } else {
@@ -114,18 +116,18 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
   }, [] );
 
   const loadRelation = useCallback( ( { target: { name, value } } ) => {
-    const initialDataRelations = get( initialData, name, [] );
-    const modifiedDataRelations = get( values, name, [] );
-    const newRelations = uniqBy( [ ...value, ...modifiedDataRelations ], 'id' );
+    const initialDataRelations = get( initialData, name ) ?? [];
+    const modifiedDataRelations = get( values, name ) ?? [];
     const newInitialRelations = uniqBy( [ ...value, ...initialDataRelations ], 'id' );
+    const newRelations = uniqBy( [ ...value, ...modifiedDataRelations ], 'id' );
 
     // @TODO - Set value for `initialData` the same way `setFieldValue` would work.
-    console.log( initialDataRelations, newInitialRelations );
+    console.log( 'LOAD', name, value );
 
     // We set the value in `initialData` as well so it stays in sync with
     // `modifiedData` to allow the correct dirty UI state to render.
-    setInitialData( newInitialRelations );
-    setFieldValue( name, newRelations );
+    // setInitialData( newInitialRelations );
+    // setFieldValue( name, newRelations );
   }, [] );
 
   const moveMenuItem = useCallback( ( id, direction ) => {
@@ -164,6 +166,8 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
   }, [] );
 
   const disconnectRelation = useCallback( ( { name, id } ) => {
+    console.log( 'DISCONNECT', name, id );
+
     const modifiedDataRelations = get( values, name, [] );
     const newRelations = modifiedDataRelations.filter( relation => relation.id !== id );
 

@@ -84,7 +84,7 @@ const FormLayout = ( { fields, gap } ) => {
               <RelationInputDataManager
                 { ...input }
                 { ...metadata }
-                name={ fieldName }
+                name={ input.name } /* Use unsanitized field name here. */
                 value={ fieldValue }
                 error={ fieldError }
                 intlLabel={ input?.intlLabel }
