@@ -27,7 +27,6 @@ const transformResponse = data => {
         return;
       }
 
-      // Relations.
       if ( has( value, 'data' ) ) {
         data[ key ] = transformResponse( value.data );
       }

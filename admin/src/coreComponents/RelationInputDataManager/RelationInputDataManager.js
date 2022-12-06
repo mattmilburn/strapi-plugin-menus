@@ -42,11 +42,13 @@ export const RelationInputDataManager = ({
     // useCMEditViewDataManager(); // CUSTOM MOD [1].
     useMenuData(); // CUSTOM MOD [1].
 
+  const fieldName = name.split( '.' ).slice( 1 ).join( '' ); // CUSTOM MOD [11].
+  const relationsFromInitialData = get(initialData, name) ?? []; // CUSTOM MOD [11].
   const relationsFromModifiedData = get(modifiedData, name) ?? [];
 
-  const currentLastPage = Math.ceil(get(initialData, name, []).length / RELATIONS_TO_DISPLAY);
+  const currentLastPage = Math.ceil(relationsFromInitialData.length / RELATIONS_TO_DISPLAY); // CUSTOM MOD [11].
 
-  const { relations, search, searchFor } = useRelation(`${slug}-${name}-${initialData?.id ?? ''}`, {
+  const { relations, search, searchFor } = useRelation(`${slug}-${fieldName}-${initialData?.id ?? ''}`, {
     name,
     relation: {
       enabled: !!endpoints.relation,
@@ -120,7 +122,7 @@ export const RelationInputDataManager = ({
   const handleSearch = (term = '') => {
     const [connected, disconnected] = diffRelations(
       relationsFromModifiedData,
-      get(initialData, name)
+      get(initialData, name) ?? [] // CUSTOM MOD [11].
     );
 
     searchFor(term, {
