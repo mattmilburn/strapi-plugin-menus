@@ -130,13 +130,13 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     const newInitialRelations = uniqBy( [ ...value, ...initialDataRelations ], 'id' );
     const newRelations = uniqBy( [ ...value, ...modifiedDataRelations ], 'id' );
 
-    // @TODO - Set value for `initialData` the same way `setFieldValue` would work.
-    console.log( 'LOAD', name, value );
+    setFieldValue( name, newRelations );
 
     // We set the value in `initialData` as well so it stays in sync with
     // `modifiedData` to allow the correct dirty UI state to render.
-    // setInitialData( newInitialRelations );
-    // setFieldValue( name, newRelations );
+    let newInitialData = { ...initialData };
+    set( newInitialData, name, newInitialRelations );
+    setInitialData( newInitialData );
   }, [] );
 
   const moveMenuItem = useCallback( ( id, direction ) => {
