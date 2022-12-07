@@ -73,7 +73,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     if ( toOneRelation ) {
       setFieldValue( name, [ value ] );
     } else {
-      const modifiedDataRelations = get( values, name, [] );
+      const modifiedDataRelations = get( values, name ) ?? [];
       const newRelations = [ ...modifiedDataRelations, value ];
 
       setFieldValue( name, newRelations );
@@ -113,6 +113,15 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     if ( activeMenuItem?.id === id ) {
       setActiveMenuItem( null );
     }
+  }, [] );
+
+  const disconnectRelation = useCallback( ( { name, id } ) => {
+    console.log( 'DISCONNECT', name, id );
+
+    const modifiedDataRelations = get( values, name ) ?? [];
+    const newRelations = modifiedDataRelations.filter( relation => relation.id !== id );
+
+    setFieldValue( name, newRelations );
   }, [] );
 
   const loadRelation = useCallback( ( { target: { name, value } } ) => {
@@ -163,15 +172,6 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     } );
 
     setActiveMenuItem( orderedItemA );
-  }, [] );
-
-  const disconnectRelation = useCallback( ( { name, id } ) => {
-    console.log( 'DISCONNECT', name, id );
-
-    const modifiedDataRelations = get( values, name, [] );
-    const newRelations = modifiedDataRelations.filter( relation => relation.id !== id );
-
-    setFieldValue( name, newRelations );
   }, [] );
 
   useEffect( () => {
