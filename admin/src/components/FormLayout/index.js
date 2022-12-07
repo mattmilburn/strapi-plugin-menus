@@ -8,6 +8,7 @@ import { Grid, GridItem } from '@strapi/design-system/Grid';
 
 import { InputUID, RelationInputDataManager } from '../../coreComponents';
 import { useMenuData } from '../../hooks';
+import { getFieldError, getFieldName } from '../../utils';
 
 const FormLayout = ( { fields, gap } ) => {
   const { formatMessage } = useIntl();
@@ -20,25 +21,6 @@ const FormLayout = ( { fields, gap } ) => {
     modifiedData,
     schema,
   } = useMenuData();
-
-  const getFieldName = name => {
-    if ( name.indexOf( '.' ) !== -1 ) {
-      return name.split( '.' ).slice( 1 ).join( '' );
-    }
-
-    return name;
-  };
-
-  const getFieldError = ( name, label ) => {
-    const msg = get( errors, name, null );
-
-    // Ensure that repeatable items remove the array bracket notation from the error.
-    if ( typeof msg === 'string' ) {
-      return msg.replace( name, label );
-    }
-
-    return msg;
-  };
 
   return (
     <Grid gap={ gap }>
@@ -64,7 +46,7 @@ const FormLayout = ( { fields, gap } ) => {
         // Cannot use the default value param in the first `get` because we
         // actually want to use the `defaultValue` if we get `null`.
         const fieldName = getFieldName( input.name );
-        const fieldError = getFieldError( input.name, fieldName );
+        const fieldError = getFieldError( errors, input.name, fieldName );
         let fieldValue = get( modifiedData, input.name ) ?? defaultValue;
 
         if ( input.type === 'number' ) {

@@ -11,6 +11,6 @@ const getRequestUrl = ( path, params = {} ) => {
   }
 
   return `${url}${query}`;
-}
+};
 
 export default getRequestUrl;

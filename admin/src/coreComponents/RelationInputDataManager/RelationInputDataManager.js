@@ -12,7 +12,7 @@ import { RelationInput } from '../RelationInput';
 
 import { useRelation } from './useRelation'; // CUSTOM MOD [6].
 
-import { getTrad } from '../../utils';
+import { getFieldName, getTrad } from '../../utils'; // CUSTOM MOD [11].
 
 import { PUBLICATION_STATES, RELATIONS_TO_DISPLAY, SEARCH_RESULTS_TO_DISPLAY } from './constants';
 import { connect, select, normalizeSearchResults, diffRelations, normalizeRelation } from './utils';
@@ -42,7 +42,7 @@ export const RelationInputDataManager = ({
     // useCMEditViewDataManager(); // CUSTOM MOD [1].
     useMenuData(); // CUSTOM MOD [1].
 
-  const fieldName = name.split( '.' ).slice( 1 ).join( '' ); // CUSTOM MOD [11].
+  const fieldName = getFieldName(name); // CUSTOM MOD [11].
   const relationsFromInitialData = get(initialData, name) ?? []; // CUSTOM MOD [11].
   const relationsFromModifiedData = get(modifiedData, name) ?? [];
 
