@@ -8,7 +8,7 @@ import { Grid, GridItem } from '@strapi/design-system/Grid';
 
 import { InputUID, RelationInputDataManager } from '../../coreComponents';
 import { useMenuData } from '../../hooks';
-import { getFieldError, getFieldName } from '../../utils';
+import { getFieldError, getFieldName, getRelationValue } from '../../utils';
 
 const FormLayout = ( { fields, gap } ) => {
   const { formatMessage } = useIntl();
@@ -67,7 +67,6 @@ const FormLayout = ( { fields, gap } ) => {
                 { ...input }
                 { ...metadata }
                 name={ input.name } /* Use unsanitized field name here. */
-                value={ fieldValue }
                 error={ fieldError }
                 intlLabel={ input?.intlLabel }
                 description={ input?.description }
