@@ -1,6 +1,6 @@
 import omit from 'lodash/omit';
 
-const sanitizeEntity = entity => omit( entity, [
+const sanitizeEntity = entity => entity && omit( entity, [
   'created_at',
   'created_by',
   'createdAt',
