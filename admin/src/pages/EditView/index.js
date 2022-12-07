@@ -202,11 +202,12 @@ const EditView = ( { history, location, match } ) => {
 
     try {
       const sanitizedBody = sanitizeEntity( body );
-      const sanitizedMenuData = sanitizeFormData( sanitizedBody, formLayout.menu );
+      const sanitizedMenuData = sanitizeFormData( sanitizedBody, data, formLayout.menu );
       const sanitizedMenuItemsData = get( sanitizedBody, 'items', [] ).map( item => {
         const sanitizedItem = sanitizeEntity( item );
+        const prevItem = get( data, 'items', [] ).find( _item => _item.id === sanitizedItem.id );
 
-        return sanitizeFormData( sanitizedItem, menuItemFields );
+        return sanitizeFormData( sanitizedItem, prevItem, menuItemFields );
       } );
 
       const res = await submitMutation.mutateAsync( {
@@ -228,6 +229,8 @@ const EditView = ( { history, location, match } ) => {
       // Maybe set error details.
       if ( errorDetails ) {
         setErrors( errorDetails );
+      } else {
+        console.error( err );
       }
     }
   };

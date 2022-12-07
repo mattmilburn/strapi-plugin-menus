@@ -1,6 +1,6 @@
 import { TIME_HHMM_REGEX } from '../constants';
 
-const sanitizeFormData = ( data, layout ) => {
+const sanitizeFormData = ( data, prevData, layout ) => {
   const fieldTypes = layout.reduce( ( acc, field ) => {
     if ( ! field?.input ) {
       return acc;
@@ -37,6 +37,38 @@ const sanitizeFormData = ( data, layout ) => {
 
       case 'number':
         sanitizedValue = value !== null ? Number( value ) : null;
+        break;
+
+      case 'relation':
+        const prevValue = prevData[ key ] ?? [];
+        let connect = [];
+        let disconnect = [];
+
+        // Maybe connect relations.
+        if ( value?.length ) {
+          connect = value
+            .filter( relation => {
+              const match = prevValue.find( _relation => _relation.id === relation.id );
+
+              // Add if not found in previous data.
+              return ! match;
+            } )
+            .map( ( { id } ) => ( { id } ) );
+        }
+
+        // Maybe disconnect relations.
+        if ( prevValue?.length ) {
+          disconnect = prevValue
+            .filter( relation => {
+              const match = value.find( _relation => _relation.id === relation.id );
+
+              // Add if found in previous data, but not in next data.
+              return ! match;
+            } )
+            .map( ( { id } ) => ( { id } ) );
+        }
+
+        sanitizedValue = { connect, disconnect };
         break;
 
       case 'string':
