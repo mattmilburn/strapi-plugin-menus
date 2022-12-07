@@ -26,6 +26,7 @@ As Strapi updates, these components and files may also need to be updated in thi
 | 8 | RelationInputDataManager | utils/select.js | The `slug` value from `useCMEditViewDataManager` is hard-coded to `plugin::menus.menu-item`. |
 | 9 | Relations Controller | relations.js | The `getService` util will not be used. Instead we provide a custom one that points to the `content-manager` plugin. |
 | 10 | Relations Controller | relations.js | RBAC is not currently supported with this plugin so permission checks are commented out. |
-| 11 | RelationInputDataManager | RelationInputDataManager.js | Because menu items' fields are nested in the root menu `items` prop, we need extra handling for the field name vs field key and also need to ensure a default empty array instead of null. |
+| 11 | RelationInputDataManager | RelationInputDataManager.js | Because menu items' fields are nested in the root menu `items` prop, we need extra handling for the field name vs field key. |
+| 12 | RelationInputDataManager | RelationInputDataManager.js | Because menu items' fields are nested in the root menu `items` prop, we need extra handling for accessing values of relation fields. |
 
 Look for `CUSTOM MOD [n]` comments to identify exactly what lines were changed. The number in the comment corresponds to the table above.

@@ -8,7 +8,7 @@ import uniqBy from 'lodash/uniqBy';
 import uniqueId from 'lodash/uniqueId';
 
 import { MenuDataContext } from '../../contexts';
-import { menuProps, pluginId } from '../../utils';
+import { getRelationValue, menuProps, pluginId } from '../../utils';
 import {
   defaultItem,
   getChildren,
@@ -73,7 +73,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     if ( toOneRelation ) {
       setFieldValue( name, [ value ] );
     } else {
-      const modifiedDataRelations = get( values, name ) ?? [];
+      const modifiedDataRelations = getRelationValue( values, name );
       const newRelations = [ ...modifiedDataRelations, value ];
 
       setFieldValue( name, newRelations );
@@ -118,15 +118,15 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
   const disconnectRelation = useCallback( ( { name, id } ) => {
     console.log( 'DISCONNECT', name, id );
 
-    const modifiedDataRelations = get( values, name ) ?? [];
+    const modifiedDataRelations = getRelationValue( values, name );
     const newRelations = modifiedDataRelations.filter( relation => relation.id !== id );
 
     setFieldValue( name, newRelations );
   }, [] );
 
   const loadRelation = useCallback( ( { target: { name, value } } ) => {
-    const initialDataRelations = get( initialData, name ) ?? [];
-    const modifiedDataRelations = get( values, name ) ?? [];
+    const initialDataRelations = getRelationValue( initialData, name );
+    const modifiedDataRelations = getRelationValue( values, name );
     const newInitialRelations = uniqBy( [ ...value, ...initialDataRelations ], 'id' );
     const newRelations = uniqBy( [ ...value, ...modifiedDataRelations ], 'id' );
 

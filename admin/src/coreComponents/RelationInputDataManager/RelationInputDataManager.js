@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import React, { memo, useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import get from 'lodash/get';
+// import get from 'lodash/get'; // CUSTOM MOD [12].
 import pick from 'lodash/pick';
 
 import { NotAllowedInput } from '@strapi/helper-plugin'; // CUSTOM MOD [1].
@@ -12,7 +12,11 @@ import { RelationInput } from '../RelationInput';
 
 import { useRelation } from './useRelation'; // CUSTOM MOD [6].
 
-import { getFieldName, getTrad } from '../../utils'; // CUSTOM MOD [11].
+import {
+  getFieldName, // CUSTOM MOD [11].
+  getRelationValue, // CUSTOM MOD [12].
+  getTrad,
+} from '../../utils';
 
 import { PUBLICATION_STATES, RELATIONS_TO_DISPLAY, SEARCH_RESULTS_TO_DISPLAY } from './constants';
 import { connect, select, normalizeSearchResults, diffRelations, normalizeRelation } from './utils';
@@ -43,8 +47,8 @@ export const RelationInputDataManager = ({
     useMenuData(); // CUSTOM MOD [1].
 
   const fieldName = getFieldName(name); // CUSTOM MOD [11].
-  const relationsFromInitialData = get(initialData, name) ?? []; // CUSTOM MOD [11].
-  const relationsFromModifiedData = get(modifiedData, name) ?? [];
+  const relationsFromInitialData = getRelationValue(initialData, name); // CUSTOM MOD [12].
+  const relationsFromModifiedData = getRelationValue(modifiedData, name); // CUSTOM MOD [12].
 
   const currentLastPage = Math.ceil(relationsFromInitialData.length / RELATIONS_TO_DISPLAY); // CUSTOM MOD [11].
 
@@ -122,7 +126,7 @@ export const RelationInputDataManager = ({
   const handleSearch = (term = '') => {
     const [connected, disconnected] = diffRelations(
       relationsFromModifiedData,
-      get(initialData, name) ?? [] // CUSTOM MOD [11].
+      getRelationValue(initialData, name) // CUSTOM MOD [12].
     );
 
     searchFor(term, {
@@ -153,7 +157,7 @@ export const RelationInputDataManager = ({
    * actually subtract from the total number on the server (regardless of how many you fetched).
    */
   const browserRelationsCount = relationsFromModifiedData.length;
-  const serverRelationsCount = (get(initialData, name) ?? []).length;
+  const serverRelationsCount = getRelationValue(initialData, name).length; // CUSTOM MOD [12].
   const realServerRelationsCount = relations.data?.pages[0]?.pagination?.total ?? 0;
   /**
    * _IF_ theres no relations data and the browserCount is the same as serverCount you can therefore assume
