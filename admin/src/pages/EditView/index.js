@@ -94,18 +94,15 @@ const EditView = ( { history, location, match } ) => {
     queryKey = CLONE_QUERY_KEY.replace( '{id}', id );
   }
 
-  const fetchRelations = Object.keys( schema.menuItem ).filter( key => {
-    const ignoreFields = [ 'parent', 'root_menu', 'createdBy', 'updatedBy' ];
-    const prop = schema.menuItem[ key ];
-
-    return ( prop.type === 'media' || prop.type === 'relation' ) && ! ignoreFields.includes( key );
+  const mediaFields = Object.keys( schema.menuItem ).filter( key => {
+    return schema.menuItem[ key ].type === 'media';
   } );
 
   const fetchParams = {
     populate: uniq( [
       'items',
       'items.parent',
-      ...fetchRelations.map( relation => `items.${relation}` ),
+      ...mediaFields.map( field => `items.${field}` ),
     ] ),
   };
 
