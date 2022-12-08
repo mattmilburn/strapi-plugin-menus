@@ -125,6 +125,8 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
   }, [] );
 
   const loadRelation = useCallback( ( { target: { name, value } } ) => {
+    console.log( 'LOAD', name, value );
+
     const initialDataRelations = getRelationValue( initialData, name );
     const modifiedDataRelations = getRelationValue( values, name );
     const newInitialRelations = uniqBy( [ ...value, ...initialDataRelations ], 'id' );
