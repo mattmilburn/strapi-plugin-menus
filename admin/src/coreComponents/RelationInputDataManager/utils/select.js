@@ -20,11 +20,14 @@ function useSelect({
   //   slug,
   //   initialData,
   // } = useCMEditViewDataManager(); // CUSTOM MOD [1].
-  const { isCreatingEntry, initialData } = useMenuData(); // CUSTOM MOD [1].
+  const {
+    isCreatingEntry,
+    initialData,
+    modifiedData, // CUSTOM MOD [14].
+  } = useMenuData(); // CUSTOM MOD [1].
   const createActionAllowedFields = true; // CUSTOM MOD [7].
   const readActionAllowedFields = true; // CUSTOM MOD [7].
   const updateActionAllowedFields = true; // CUSTOM MOD [7].
-  const slug = 'plugin::menus.menu-item'; // CUSTOM MOD [8].
 
   const isFieldAllowed = useMemo(() => {
     if (isUserAllowedToEditField === true) {
@@ -53,11 +56,19 @@ function useSelect({
   }, [isCreatingEntry, isUserAllowedToReadField, name, readActionAllowedFields]);
 
   const fieldNameKeys = name.split('.');
+  const isItemType = name.indexOf( 'items' ) === 0; // CUSTOM MOD [14].
   let componentId;
+  let itemId; // CUSTOM MOD [14].
 
   if (componentUid) {
     componentId = get(initialData, fieldNameKeys.slice(0, -1))?.id;
   }
+
+  if (isItemType) { // CUSTOM MOD [14].
+    itemId = get( modifiedData, `${fieldNameKeys.at( 0 )}.id` );
+  }
+
+  const slug = itemId ? 'plugin::menus.menu-item' : 'plugin::menus.menu'; // CUSTOM MOD [8], CUSTOM MOD [14].
 
   // /content-manager/relations/[model]/[id]/[field-name]
   const relationFetchEndpoint = useMemo(() => {
@@ -71,6 +82,15 @@ function useSelect({
       // there then are no relations to request
       return componentId
         ? getRequestUrl(`relations/${componentUid}/${componentId}/${fieldNameKeys.at(-1)}`)
+        : null;
+    }
+
+    // Make explicit check for `items` prop so we use a menu item ID, not the menu ID. CUSTOM MOD [14].
+    if (isItemType) {
+      // We check against newly created items here by inspecting the data type because
+      // new menu items are temporarily given a "create_[n]" formatted id attribute.
+      return itemId && typeof itemId !== 'string'
+        ? getRequestUrl(`relations/${slug}/${itemId}/${name.split('.').at(-1)}`)
         : null;
     }
 
