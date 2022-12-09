@@ -132,7 +132,7 @@ export const useRelation = (cacheKey, { name, relation, search }) => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, onLoadRelationsCallback, name, data]);
+  }, [status, name, data]); // CUSTOM MOD [13].
 
   const searchRes = useInfiniteQuery(
     ['relation', cacheKey, 'search', JSON.stringify(searchParams)],
