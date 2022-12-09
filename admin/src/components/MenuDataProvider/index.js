@@ -46,7 +46,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     return sortByOrder( nestedItems );
   }, [ values?.items ] );
 
-  const addMenuItem = useCallback( parentId => {
+  const addMenuItem = parentId => {
     const order = getChildren( parentId, values.items ).length;
 
     // Using the `create` prefix with the ID will help us know which items need
@@ -65,7 +65,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     } );
 
     setActiveMenuItem( newItem );
-  }, [] );
+  };
 
   const connectRelation = useCallback( ( { name, value, toOneRelation } ) => {
     console.log( 'CONNECT', name, value );
@@ -80,7 +80,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     }
   }, [] );
 
-  const deleteMenuItem = useCallback( id => {
+  const deleteMenuItem = id => {
     // Determine all items to delete, which includes it's descendants.
     const itemToDelete = values.items.find( item => item.id === id );
     const descendantsToDelete = getDescendants( id, values.items );
@@ -113,7 +113,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     if ( activeMenuItem?.id === id ) {
       setActiveMenuItem( null );
     }
-  }, [] );
+  };
 
   const disconnectRelation = useCallback( ( { name, id } ) => {
     console.log( 'DISCONNECT', name, id );
@@ -141,7 +141,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     setInitialData( newInitialData );
   }, [] );
 
-  const moveMenuItem = useCallback( ( id, direction ) => {
+  const moveMenuItem = ( id, direction ) => {
     const itemA = values.items.find( _item => _item.id === id );
     const siblings = getChildren( itemA?.parent?.id, values.items );
     const orderA = itemA.order;
@@ -174,7 +174,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     } );
 
     setActiveMenuItem( orderedItemA );
-  }, [] );
+  };
 
   useEffect( () => {
     if ( ! activeMenuItem || ! `${activeMenuItem.id}`.includes( 'create' ) ) {
@@ -191,7 +191,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     if ( newActiveItem ) {
       setActiveMenuItem( newActiveItem );
     }
-  }, [ activeMenuItem, values ] );
+  }, [ activeMenuItem, values?.items ] );
 
   return (
     <MenuDataContext.Provider value={ {
