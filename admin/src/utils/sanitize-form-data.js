@@ -1,3 +1,5 @@
+import get from 'lodash/get';
+
 import { TIME_HHMM_REGEX } from '../constants';
 
 const sanitizeFormData = ( data, prevData, layout ) => {
@@ -40,7 +42,7 @@ const sanitizeFormData = ( data, prevData, layout ) => {
         break;
 
       case 'relation':
-        const prevValue = prevData[ key ] ?? [];
+        const prevValue = get( prevData, key ) ?? [];
         let connect = [];
         let disconnect = [];
 
