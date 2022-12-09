@@ -29,5 +29,6 @@ As Strapi updates, these components and files may also need to be updated in thi
 | 11 | RelationInputDataManager | RelationInputDataManager.js | Because menu items' fields are nested in the root menu `items` prop, we need extra handling for the field name vs field key. |
 | 12 | RelationInputDataManager | RelationInputDataManager.js | Because menu items' fields are nested in the root menu `items` prop, we need extra handling for accessing values of relation fields. |
 | 13 | RelationInputDataManager | useRelation.js | Because we are not using a reducer, we remove the `onLoad` dependency from `useEffect`. |
+| 14 | RelationInputDataManager | utils/select.js | Because menu items' fields are nested in the root menu `items` prop, we need extra handling when using the menu item `id` vs. the root menu `id`. |
 
 Look for `CUSTOM MOD [n]` comments to identify exactly what lines were changed. The number in the comment corresponds to the table above.
