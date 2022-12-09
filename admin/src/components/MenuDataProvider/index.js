@@ -67,7 +67,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     setActiveMenuItem( newItem );
   };
 
-  const connectRelation = useCallback( ( { name, value, toOneRelation } ) => {
+  const connectRelation = ( { name, value, toOneRelation } ) => {
     console.log( 'CONNECT', name, value );
 
     if ( toOneRelation ) {
@@ -78,7 +78,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
 
       setFieldValue( name, newRelations );
     }
-  }, [] );
+  };
 
   const deleteMenuItem = id => {
     // Determine all items to delete, which includes it's descendants.
@@ -115,16 +115,16 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     }
   };
 
-  const disconnectRelation = useCallback( ( { name, id } ) => {
+  const disconnectRelation = ( { name, id } ) => {
     console.log( 'DISCONNECT', name, id );
 
     const modifiedDataRelations = getRelationValue( values, name );
     const newRelations = modifiedDataRelations.filter( relation => relation.id !== id );
 
     setFieldValue( name, newRelations );
-  }, [] );
+  };
 
-  const loadRelation = useCallback( ( { target: { name, value } } ) => {
+  const loadRelation = ( { target: { name, value } } ) => {
     console.log( 'LOAD', name, value );
 
     const initialDataRelations = getRelationValue( initialData, name );
@@ -139,7 +139,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     let newInitialData = { ...initialData };
     set( newInitialData, name, newInitialRelations );
     setInitialData( newInitialData );
-  }, [] );
+  };
 
   const moveMenuItem = ( id, direction ) => {
     const itemA = values.items.find( _item => _item.id === id );
