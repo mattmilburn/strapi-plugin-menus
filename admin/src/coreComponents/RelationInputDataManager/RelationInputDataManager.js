@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import React, { memo, useMemo } from 'react';
 import { useIntl } from 'react-intl';
-// import get from 'lodash/get'; // CUSTOM MOD [12].
+import get from 'lodash/get';
 import pick from 'lodash/pick';
 
 import { NotAllowedInput } from '@strapi/helper-plugin'; // CUSTOM MOD [1].
@@ -42,17 +42,22 @@ export const RelationInputDataManager = ({
   targetModel,
 }) => {
   const { formatMessage } = useIntl();
-  const { connectRelation, disconnectRelation, loadRelation, modifiedData, slug, initialData } =
+  const { connectRelation, disconnectRelation, loadRelation, modifiedData, initialData } =
     // useCMEditViewDataManager(); // CUSTOM MOD [1].
     useMenuData(); // CUSTOM MOD [1].
 
-  const fieldName = getFieldName(name); // CUSTOM MOD [11].
   const relationsFromInitialData = getRelationValue(initialData, name); // CUSTOM MOD [12].
   const relationsFromModifiedData = getRelationValue(modifiedData, name); // CUSTOM MOD [12].
 
-  const currentLastPage = Math.ceil(relationsFromInitialData.length / RELATIONS_TO_DISPLAY); // CUSTOM MOD [11].
+  const currentLastPage = Math.ceil(relationsFromInitialData.length / RELATIONS_TO_DISPLAY);
 
-  const { relations, search, searchFor } = useRelation(`${slug}-${fieldName}-${initialData?.id ?? ''}`, {
+  const fieldName = getFieldName(name); // CUSTOM MOD [11].
+  const isItemType = name.indexOf( 'items' ) === 0; // CUSTOM MOD [14].
+  const itemId = isItemType ? get( modifiedData, `${name.split('.').at(0)}.id` ) : null; // CUSTOM MOD [14].
+  const relationId = itemId ?? initialData?.id ?? ''; // CUSTOM MOD [14].
+  const slug = itemId ? 'plugin::menus.menu-item' : 'plugin::menus.menu'; // CUSTOM MOD [14].
+
+  const { relations, search, searchFor } = useRelation(`${slug}-${fieldName}-${relationId}`, { // CUSTOM MOD [11], CUSTOM MOD [14].
     name,
     relation: {
       enabled: !!endpoints.relation,
