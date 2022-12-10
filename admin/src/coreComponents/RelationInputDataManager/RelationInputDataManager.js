@@ -80,7 +80,7 @@ export const RelationInputDataManager = ({
       pageParams: {
         ...defaultParams,
         // eslint-disable-next-line no-nested-ternary
-        entityId: isCreatingEntry ? undefined : isComponentRelation ? componentId : initialData.id,
+        entityId: isCreatingEntry ? undefined : relationId, // CUSTOM MOD [14].
         pageSize: SEARCH_RESULTS_TO_DISPLAY,
       },
     },
