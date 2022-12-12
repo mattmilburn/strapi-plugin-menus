@@ -73,7 +73,7 @@ module.exports = createCoreController( UID_MENU, ( { strapi } ) =>  ( {
     }
 
     // Validate slug availability.
-    const isAvailable = await getService( 'menu' ).checkAvailability( data.slug );
+    const isAvailable = await getService( 'uid' ).checkAvailability( data.slug );
 
     if ( ! isAvailable ) {
       const errorMessage = `The slug ${data.slug} is already taken`;
@@ -117,7 +117,7 @@ module.exports = createCoreController( UID_MENU, ( { strapi } ) =>  ( {
     }
 
     // Validate slug availability.
-    const isAvailable = await getService( 'menu' ).checkAvailability( data.slug, id );
+    const isAvailable = await getService( 'uid' ).checkAvailability( data.slug, id );
 
     if ( ! isAvailable ) {
       const errorMessage = `The slug ${data.slug} is already taken`;

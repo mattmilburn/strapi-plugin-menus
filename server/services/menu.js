@@ -9,23 +9,6 @@ const { UID_MENU } = require( '../constants' );
 const { getService } = require( '../utils' );
 
 module.exports = createCoreService( UID_MENU, ( { strapi } ) => ( {
-  async checkAvailability( slug, id ) {
-    const params = {
-      filters: { slug },
-    };
-
-    // Optionally exclude by the ID so we don't check the menu against itself.
-    if ( id ) {
-      params.filters.id = { $ne: id };
-    }
-
-    const entity = await strapi.entityService.findMany( UID_MENU, params );
-
-    return ! entity.length;
-  },
-
-  //////////////////////////////////////////////////////////////////////////////
-
   async create( params ) {
     const { data } = params;
     const menuData = pick( data, [ 'title', 'slug' ], {} );
