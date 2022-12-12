@@ -1,8 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
+import { Prompt } from 'react-router-dom';
 import { useFormikContext } from 'formik';
 import get from 'lodash/get';
+import isEqual from 'lodash/isEqual';
 import set from 'lodash/set';
 import uniqBy from 'lodash/uniqBy';
 import uniqueId from 'lodash/uniqueId';
@@ -17,6 +20,7 @@ import {
 } from './utils';
 
 const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
+  const { formatMessage } = useIntl();
   const { config, schema } = useSelector( state => state[ `${pluginId}_config` ] );
   const { maxDepth } = config;
   const {
@@ -213,6 +217,10 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
       setActiveMenuItem,
     } }>
       { children }
+      <Prompt
+        when={ ! isEqual( values, initialData ) }
+        message={ formatMessage( { id: 'global.prompt.unsaved' } ) }
+      />
     </MenuDataContext.Provider>
   );
 };
