@@ -52,8 +52,8 @@ export const RelationInputDataManager = ({
   const currentLastPage = Math.ceil(relationsFromInitialData.length / RELATIONS_TO_DISPLAY);
 
   const fieldName = getFieldName(name); // CUSTOM MOD [11].
-  const isItemType = name.indexOf( 'items' ) === 0; // CUSTOM MOD [14].
-  const itemId = isItemType ? get( modifiedData, `${name.split('.').at(0)}.id` ) : null; // CUSTOM MOD [14].
+  const isItemType = name.indexOf('items') === 0; // CUSTOM MOD [14].
+  const itemId = isItemType ? get(modifiedData, `${name.split('.').at(0)}.id`) : null; // CUSTOM MOD [14].
   const relationId = itemId ?? initialData?.id ?? ''; // CUSTOM MOD [14].
   const slug = itemId ? 'plugin::menus.menu-item' : 'plugin::menus.menu'; // CUSTOM MOD [14].
 
