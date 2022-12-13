@@ -197,6 +197,11 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     }
   }, [ activeMenuItem, values?.items ] );
 
+  useEffect( () => {
+    // Reset initial data after the form submits.
+    setInitialData( initialValues );
+  }, [ initialValues ] );
+
   return (
     <MenuDataContext.Provider value={ {
       activeMenuItem,

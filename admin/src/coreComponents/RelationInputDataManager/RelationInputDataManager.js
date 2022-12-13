@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import PropTypes from 'prop-types';
-import React, { memo, useMemo } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import get from 'lodash/get';
 import pick from 'lodash/pick';
@@ -162,7 +162,7 @@ export const RelationInputDataManager = ({
    * actually subtract from the total number on the server (regardless of how many you fetched).
    */
   const browserRelationsCount = relationsFromModifiedData.length;
-  const serverRelationsCount = getRelationValue(initialData, name).length; // CUSTOM MOD [12].
+  const serverRelationsCount = relationsFromInitialData.length; // CUSTOM MOD [12].
   const realServerRelationsCount = relations.data?.pages[0]?.pagination?.total ?? 0;
   /**
    * _IF_ theres no relations data and the browserCount is the same as serverCount you can therefore assume
