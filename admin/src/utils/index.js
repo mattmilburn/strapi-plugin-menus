@@ -4,6 +4,7 @@ export { default as camelToTitle } from './camel-to-title';
 export { default as getBoxProps } from './get-box-props';
 export { default as getFieldError } from './get-field-error';
 export { default as getFieldName } from './get-field-name';
+export { default as getFieldsByType } from './get-fields-by-type';
 export { default as getFieldsLayout } from './get-fields-layout';
 export { default as getRelationValue } from './get-relation-value';
 export { default as getRequestUrl } from './get-request-url';
