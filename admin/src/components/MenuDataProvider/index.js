@@ -11,7 +11,12 @@ import uniqBy from 'lodash/uniqBy';
 import uniqueId from 'lodash/uniqueId';
 
 import { MenuDataContext } from '../../contexts';
-import { getRelationValue, menuProps, pluginId } from '../../utils';
+import {
+  getFieldsByType,
+  getRelationValue,
+  menuProps,
+  pluginId,
+} from '../../utils';
 import {
   defaultItem,
   getChildren,
@@ -72,8 +77,6 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
   };
 
   const connectRelation = ( { name, value, toOneRelation } ) => {
-    console.log( 'CONNECT', name, value );
-
     if ( toOneRelation ) {
       setFieldValue( name, [ value ] );
     } else {
@@ -120,8 +123,6 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
   };
 
   const disconnectRelation = ( { name, id } ) => {
-    console.log( 'DISCONNECT', name, id );
-
     const modifiedDataRelations = getRelationValue( values, name );
     const newRelations = modifiedDataRelations.filter( relation => relation.id !== id );
 
@@ -129,8 +130,6 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
   };
 
   const loadRelation = ( { target: { name, value } } ) => {
-    console.log( 'LOAD', name, value );
-
     const initialDataRelations = getRelationValue( initialData, name );
     const modifiedDataRelations = getRelationValue( values, name );
     const newInitialRelations = uniqBy( [ ...value, ...initialDataRelations ], 'id' );
@@ -198,8 +197,44 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
   }, [ activeMenuItem, values?.items ] );
 
   useEffect( () => {
-    // Reset initial data after the form submits.
-    setInitialData( initialValues );
+    const newInitialData = { ...initialValues };
+
+    // If there is an active menu item, attempt to sync it's previously loaded
+    // relations and apply them to the new initial values.
+    if ( activeMenuItem ) {
+      const relationFields = getFieldsByType(
+        schema.menuItem,
+        [ 'relation' ],
+        [ 'parent', 'root_menu', 'createdBy', 'updatedBy' ]
+      );
+
+      newInitialData.items = newInitialData.items.map( item => {
+        if ( item.id !== activeMenuItem.id ) {
+          return item;
+        }
+
+        /**
+         * @TODO - Need to support newly created items as well.
+         */
+
+        const prevItem = initialData.items.find( _item => _item.id === item.id );
+
+        if ( ! prevItem ) {
+          return item;
+        }
+
+        let resyncedItem = { ...item };
+
+        relationFields.forEach( field => {
+          resyncedItem[ field ] = prevItem[ field ];
+        } );
+
+        return resyncedItem;
+      } );
+    }
+
+    setInitialData( newInitialData );
+    setValues( newInitialData );
   }, [ initialValues ] );
 
   return (

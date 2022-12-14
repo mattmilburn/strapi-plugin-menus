@@ -32,6 +32,7 @@ import {
 } from '../../components';
 import {
   api,
+  getFieldsByType,
   getFieldsLayout,
   getTrad,
   pluginId,
@@ -94,10 +95,7 @@ const EditView = ( { history, location, match } ) => {
     queryKey = CLONE_QUERY_KEY.replace( '{id}', id );
   }
 
-  const mediaFields = Object.keys( schema.menuItem ).filter( key => {
-    return schema.menuItem[ key ].type === 'media';
-  } );
-
+  const mediaFields = getFieldsByType( schema.menuItem, [ 'media' ] );
   const fetchParams = {
     populate: uniq( [
       'items',
