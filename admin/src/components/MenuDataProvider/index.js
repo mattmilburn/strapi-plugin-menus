@@ -259,10 +259,12 @@ const MenuDataProvider = ( { children, isCloningEntry, isCreatingEntry, menu } )
       setActiveMenuItem,
     } }>
       { children }
-      <Prompt
-        when={ ! isEqual( values, initialData ) }
-        message={ formatMessage( { id: 'global.prompt.unsaved' } ) }
-      />
+      { ! isSubmitting && (
+        <Prompt
+          when={ ! isEqual( values, initialData ) }
+          message={ formatMessage( { id: 'global.prompt.unsaved' } ) }
+        />
+      ) }
     </MenuDataContext.Provider>
   );
 };
