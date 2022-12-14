@@ -24,7 +24,7 @@ import {
   sortByOrder,
 } from './utils';
 
-const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
+const MenuDataProvider = ( { children, isCloningEntry, isCreatingEntry, menu } ) => {
   const { formatMessage } = useIntl();
   const { config, schema } = useSelector( state => state[ `${pluginId}_config` ] );
   const { maxDepth } = config;
@@ -32,6 +32,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
     errors,
     handleChange,
     initialValues,
+    isSubmitting,
     setFieldValue,
     setValues,
     values,
@@ -247,6 +248,7 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
       errors,
       handleChange,
       initialData,
+      isCloningEntry,
       isCreatingEntry,
       items,
       loadRelation,
@@ -267,10 +269,12 @@ const MenuDataProvider = ( { children, isCreatingEntry, menu } ) => {
 
 MenuDataProvider.defaultProps = {
   isCreatingEntry: false,
+  isCloningEntry: false,
 };
 
 MenuDataProvider.propTypes = {
   children: PropTypes.node,
+  isCloningEntry: PropTypes.bool.isRequired,
   isCreatingEntry: PropTypes.bool.isRequired,
   menu: menuProps,
 };

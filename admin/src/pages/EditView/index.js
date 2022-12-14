@@ -274,7 +274,8 @@ const EditView = ( { history, location, match } ) => {
                 <Box paddingBottom={ 10 }>
                   <Stack spacing={ 8 }>
                     <MenuDataProvider
-                      isCreatingEntry={ isCreating }
+                      isCreating={ isCreating }
+                      isCloning={ isCloning }
                       menu={ data }
                     >
                       <Section>
