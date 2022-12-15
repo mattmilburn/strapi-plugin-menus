@@ -21,7 +21,7 @@ export const Relation = ({
         alignItems="end"
         wrap="wrap"
       >
-        <Stack basis={size <= 6 ? '100%' : '70%'} spacing={1} {...props}>
+        <Stack basis="100%" spacing={1} {...props}>{ /* CUSTOM MOD [15]. */ }
           {search}
         </Stack>
 
