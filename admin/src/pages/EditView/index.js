@@ -197,12 +197,12 @@ const EditView = ( { history, location, match } ) => {
 
     try {
       const sanitizedBody = sanitizeEntity( body );
-      const sanitizedMenuData = sanitizeFormData( sanitizedBody, data, formLayout.menu );
+      const sanitizedMenuData = sanitizeFormData( sanitizedBody, data, formLayout.menu, isCloning );
       const sanitizedMenuItemsData = get( sanitizedBody, 'items', [] ).map( item => {
         const sanitizedItem = sanitizeEntity( item );
         const prevItem = get( data, 'items', [] ).find( _item => _item.id === sanitizedItem.id );
 
-        return sanitizeFormData( sanitizedItem, prevItem, menuItemFields );
+        return sanitizeFormData( sanitizedItem, prevItem, menuItemFields, isCloning );
       } );
 
       const res = await submitMutation.mutateAsync( {

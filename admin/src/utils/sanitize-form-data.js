@@ -2,7 +2,7 @@ import get from 'lodash/get';
 
 import { TIME_HHMM_REGEX } from '../constants';
 
-const sanitizeFormData = ( data, prevData, layout ) => {
+const sanitizeFormData = ( data, prevData, layout, isCloning ) => {
   const fieldTypes = layout.reduce( ( acc, field ) => {
     if ( ! field?.input ) {
       return acc;
@@ -46,8 +46,13 @@ const sanitizeFormData = ( data, prevData, layout ) => {
         let connect = [];
         let disconnect = [];
 
+        // Always connect relations when cloning.
+        if ( isCloning && value?.length ) {
+          connect = value.map( ( { id } ) => ( { id } ) );
+        }
+
         // Maybe connect relations.
-        if ( value?.length ) {
+        if ( ! isCloning && value?.length ) {
           connect = value
             .filter( relation => {
               const match = prevValue.find( _relation => _relation.id === relation.id );
@@ -59,7 +64,7 @@ const sanitizeFormData = ( data, prevData, layout ) => {
         }
 
         // Maybe disconnect relations.
-        if ( prevValue?.length ) {
+        if ( ! isCloning && prevValue?.length ) {
           disconnect = prevValue
             .filter( relation => {
               const match = value.find( _relation => _relation.id === relation.id );
