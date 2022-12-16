@@ -214,10 +214,6 @@ const MenuDataProvider = ( { children, isCloningEntry, isCreatingEntry, menu } )
           return item;
         }
 
-        /**
-         * @TODO - Need to support newly created items as well.
-         */
-
         const prevItem = initialData.items.find( _item => _item.id === item.id );
 
         if ( ! prevItem ) {
