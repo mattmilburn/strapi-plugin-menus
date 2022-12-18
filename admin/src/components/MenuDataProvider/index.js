@@ -38,6 +38,7 @@ const MenuDataProvider = ( { children, isCloningEntry, isCreatingEntry, menu } )
     values,
   } = useFormikContext();
   const [ initialData, setInitialData ] = useState( initialValues );
+  const [ prevModifiedData, setPrevModifiedData ] = useState( values );
   const [ activeMenuItem, setActiveMenuItem ] = useState( null );
 
   const items = useMemo( () => {
@@ -198,37 +199,39 @@ const MenuDataProvider = ( { children, isCloningEntry, isCreatingEntry, menu } )
   }, [ activeMenuItem, values?.items ] );
 
   useEffect( () => {
+    // Keep track of previously modified data so relations data does not need to be
+    // re-fetched after saving.
+    if ( isSubmitting ) {
+      setPrevModifiedData( values );
+    }
+  }, [ isSubmitting ] );
+
+  useEffect( () => {
     const newInitialData = { ...initialValues };
 
-    // If there is an active menu item, attempt to sync it's previously loaded
-    // relations and apply them to the new initial values.
-    if ( activeMenuItem ) {
-      const relationFields = getFieldsByType(
-        schema.menuItem,
-        [ 'relation' ],
-        [ 'parent', 'root_menu', 'createdBy', 'updatedBy' ]
-      );
+    const relationFields = getFieldsByType(
+      schema.menuItem,
+      [ 'relation' ],
+      [ 'parent', 'root_menu', 'createdBy', 'updatedBy' ]
+    );
 
-      newInitialData.items = newInitialData.items.map( item => {
-        if ( item.id !== activeMenuItem.id ) {
-          return item;
-        }
+    // Keep any relations data that was loaded for menu items in the edit view
+    // state so we avoid reloading them after saving.
+    newInitialData.items = newInitialData.items.map( item => {
+      const prevItem = prevModifiedData.items.find( _item => _item.id === item.id );
 
-        const prevItem = initialData.items.find( _item => _item.id === item.id );
+      if ( ! prevItem ) {
+        return item;
+      }
 
-        if ( ! prevItem ) {
-          return item;
-        }
+      let resyncedItem = { ...item };
 
-        let resyncedItem = { ...item };
-
-        relationFields.forEach( field => {
-          resyncedItem[ field ] = prevItem[ field ];
-        } );
-
-        return resyncedItem;
+      relationFields.forEach( field => {
+        resyncedItem[ field ] = prevItem[ field ];
       } );
-    }
+
+      return resyncedItem;
+    } );
 
     setInitialData( newInitialData );
     setValues( newInitialData );
