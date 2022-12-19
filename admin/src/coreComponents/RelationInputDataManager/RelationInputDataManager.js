@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React, { memo, useEffect, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import get from 'lodash/get';
+import omit from 'lodash/omit';
 import pick from 'lodash/pick';
 
 import { NotAllowedInput } from '@strapi/helper-plugin'; // CUSTOM MOD [1].
@@ -119,11 +120,14 @@ export const RelationInputDataManager = ({
     /**
      * Any relation being added to the store should be normalized so it has it's link.
      */
-    const normalizedRelation = normalizeRelation(relation, {
-      mainFieldName: mainField.name,
-      shouldAddLink: shouldDisplayRelationLink,
-      targetModel,
-    });
+    const normalizedRelation = normalizeRelation(
+      omit(relation, ['label', 'value']), // CUSTOM MOD [17].
+      {
+        mainFieldName: mainField.name,
+        shouldAddLink: shouldDisplayRelationLink,
+        targetModel,
+      }
+    );
 
     connectRelation({ name, value: normalizedRelation, toOneRelation });
   };
