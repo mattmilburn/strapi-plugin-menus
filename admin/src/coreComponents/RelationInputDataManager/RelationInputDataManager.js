@@ -28,7 +28,7 @@ export const RelationInputDataManager = ({
   editable,
   description,
   intlLabel,
-  isCreatingEntry,
+  // isCreatingEntry, // CUSTOM MOD [16].
   isFieldAllowed,
   isFieldReadable,
   labelAction,
@@ -42,7 +42,14 @@ export const RelationInputDataManager = ({
   targetModel,
 }) => {
   const { formatMessage } = useIntl();
-  const { connectRelation, disconnectRelation, loadRelation, modifiedData, initialData } =
+  const {
+    connectRelation,
+    disconnectRelation,
+    loadRelation,
+    modifiedData,
+    initialData,
+    isCreatingEntry: isCreatingMenu, // CUSTOM MOD [16].
+  } =
     // useCMEditViewDataManager(); // CUSTOM MOD [1].
     useMenuData(); // CUSTOM MOD [1].
 
@@ -56,6 +63,7 @@ export const RelationInputDataManager = ({
   const itemId = isItemType ? get(modifiedData, `${name.split('.').at(0)}.id`) : null; // CUSTOM MOD [14].
   const relationId = itemId ?? initialData?.id ?? ''; // CUSTOM MOD [14].
   const slug = itemId ? 'plugin::menus.menu-item' : 'plugin::menus.menu'; // CUSTOM MOD [14].
+  const isCreatingEntry = isCreatingMenu || typeof itemId === 'string'; // CUSTOM MOD [16].
 
   const { relations, search, searchFor } = useRelation(`${slug}-${fieldName}-${relationId}`, { // CUSTOM MOD [11], CUSTOM MOD [14].
     name,
@@ -269,7 +277,7 @@ RelationInputDataManager.propTypes = {
     values: PropTypes.object,
   }).isRequired,
   labelAction: PropTypes.element,
-  isCreatingEntry: PropTypes.bool.isRequired,
+  // isCreatingEntry: PropTypes.bool.isRequired, // CUSTOM MOD [16].
   isComponentRelation: PropTypes.bool,
   isFieldAllowed: PropTypes.bool,
   isFieldReadable: PropTypes.bool.isRequired,

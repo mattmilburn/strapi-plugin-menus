@@ -38,7 +38,7 @@ const MenuDataProvider = ( { children, isCloningEntry, isCreatingEntry, menu } )
     values,
   } = useFormikContext();
   const [ initialData, setInitialData ] = useState( initialValues );
-  const [ prevModifiedData, setPrevModifiedData ] = useState( values );
+  const [ prevModifiedData, setPrevModifiedData ] = useState( null );
   const [ activeMenuItem, setActiveMenuItem ] = useState( null );
 
   const items = useMemo( () => {
@@ -207,6 +207,10 @@ const MenuDataProvider = ( { children, isCloningEntry, isCreatingEntry, menu } )
   }, [ isSubmitting ] );
 
   useEffect( () => {
+    if ( ! prevModifiedData ) {
+      return;
+    }
+
     const newInitialData = { ...initialValues };
 
     const relationFields = getFieldsByType(
