@@ -242,50 +242,56 @@ const EditView = ( { history, location, match } ) => {
         validationSchema={ formSchema }
         enableReinitialize
       >
-        { ( { dirty, handleSubmit, isSubmitting } ) => {
+        { ( { handleSubmit } ) => {
           return (
             <Form onSubmit={ handleSubmit }>
-              <HeaderLayout
-                title={ headerTitle }
-                navigationAction={
-                  <Link startIcon={ <ArrowLeft /> } to={ `/plugins/${pluginId}` }>
-                    { formatMessage( {
-                      id: getTrad( 'ui.goBack' ),
-                      defaultMessage: 'Go back',
-                    } ) }
-                  </Link>
-                }
-                primaryAction={
-                  <Button
-                    type="submit"
-                    disabled={ ! dirty || isSubmitting }
-                    loading={ isSubmitting }
-                    startIcon={ <Check /> }
-                    size="L"
-                  >
-                    { formatMessage( {
-                      id: getTrad( 'ui.save' ),
-                      defaultMessage: 'Save',
-                    } ) }
-                  </Button>
-                }
-              />
-              <ContentLayout>
-                <Box paddingBottom={ 10 }>
-                  <Stack spacing={ 8 }>
-                    <MenuDataProvider
-                      isCreatingEntry={ isCreating }
-                      isCloningEntry={ isCloning }
-                      menu={ data }
-                    >
-                      <Section>
-                        <FormLayout fields={ formLayout.menu } />
-                      </Section>
-                      <MenuItemsManager fields={ menuItemLayout } />
-                    </MenuDataProvider>
-                  </Stack>
-                </Box>
-              </ContentLayout>
+              <MenuDataProvider
+                isCreatingEntry={ isCreating }
+                isCloningEntry={ isCloning }
+                menu={ data }
+              >
+                { ( { dirty, isSubmitting } ) => {
+                  return (
+                    <>
+                      <HeaderLayout
+                        title={ headerTitle }
+                        navigationAction={
+                          <Link startIcon={ <ArrowLeft /> } to={ `/plugins/${pluginId}` }>
+                            { formatMessage( {
+                              id: getTrad( 'ui.goBack' ),
+                              defaultMessage: 'Go back',
+                            } ) }
+                          </Link>
+                        }
+                        primaryAction={
+                          <Button
+                            type="submit"
+                            disabled={ ! dirty || isSubmitting }
+                            loading={ isSubmitting }
+                            startIcon={ <Check /> }
+                            size="L"
+                          >
+                            { formatMessage( {
+                              id: getTrad( 'ui.save' ),
+                              defaultMessage: 'Save',
+                            } ) }
+                          </Button>
+                        }
+                      />
+                      <ContentLayout>
+                        <Box paddingBottom={ 10 }>
+                          <Stack spacing={ 8 }>
+                              <Section>
+                                <FormLayout fields={ formLayout.menu } />
+                              </Section>
+                              <MenuItemsManager fields={ menuItemLayout } />
+                          </Stack>
+                        </Box>
+                      </ContentLayout>
+                    </>
+                  );
+                } }
+              </MenuDataProvider>
             </Form>
           );
         } }

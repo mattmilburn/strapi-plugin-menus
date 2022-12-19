@@ -57,6 +57,10 @@ const MenuDataProvider = ( { children, isCloningEntry, isCreatingEntry, menu } )
     return sortByOrder( nestedItems );
   }, [ values?.items ] );
 
+  const dirty = useMemo( () => {
+    return ! isEqual( initialData, values );
+  }, [ initialData, values ] );
+
   const addMenuItem = parentId => {
     const order = getChildren( parentId, values.items ).length;
 
@@ -241,30 +245,33 @@ const MenuDataProvider = ( { children, isCloningEntry, isCreatingEntry, menu } )
     setValues( newInitialData );
   }, [ initialValues ] );
 
+  const providerProps = {
+    activeMenuItem,
+    addMenuItem,
+    connectRelation,
+    deleteMenuItem,
+    dirty,
+    disconnectRelation,
+    errors,
+    handleChange,
+    initialData,
+    isCloningEntry,
+    isCreatingEntry,
+    items,
+    loadRelation,
+    maxDepth,
+    modifiedData: values,
+    moveMenuItem,
+    schema,
+    setActiveMenuItem,
+  };
+
   return (
-    <MenuDataContext.Provider value={ {
-      activeMenuItem,
-      addMenuItem,
-      connectRelation,
-      deleteMenuItem,
-      disconnectRelation,
-      errors,
-      handleChange,
-      initialData,
-      isCloningEntry,
-      isCreatingEntry,
-      items,
-      loadRelation,
-      maxDepth,
-      modifiedData: values,
-      moveMenuItem,
-      schema,
-      setActiveMenuItem,
-    } }>
-      { children }
+    <MenuDataContext.Provider value={ providerProps }>
+      { children( providerProps ) }
       { ! isSubmitting && (
         <Prompt
-          when={ ! isEqual( values, initialData ) }
+          when={ dirty }
           message={ formatMessage( { id: 'global.prompt.unsaved' } ) }
         />
       ) }
@@ -278,7 +285,7 @@ MenuDataProvider.defaultProps = {
 };
 
 MenuDataProvider.propTypes = {
-  children: PropTypes.node,
+  children: PropTypes.func.isRequired,
   isCloningEntry: PropTypes.bool.isRequired,
   isCreatingEntry: PropTypes.bool.isRequired,
   menu: menuProps,
