@@ -32,5 +32,6 @@ As Strapi updates, these components and files may also need to be updated in thi
 | 14 | RelationInputDataManager<br>RelationInputDataManager | RelationInputDataManager.js<br>utils/select.js | Because menu items' fields are nested in the root menu `items` prop, we need extra handling when using the menu item `id` vs. the root menu `id`. |
 | 15 | RelationInput | Relation.js | Remove the `size` condition from the relation select input because the menus UI is narrower than the content manager UI. |
 | 16 | RelationInputDataManager | RelationInputDataManager.js | Manage the difference between creating a new menu vs. a new menu item. |
+| 17 | RelationInputDataManager | RelationInputDataManager.js | To maintain proper dirty state for relation fields, we need to omit the `label` and `id` props that come from the `ReactSelect` component. |
 
 Look for `CUSTOM MOD [n]` comments to identify exactly what lines were changed. The number in the comment corresponds to the table above.
