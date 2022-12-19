@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import React, { memo, useEffect, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import get from 'lodash/get';
-import omit from 'lodash/omit';
+import has from 'lodash/has'; // CUSTOM MOD [18].
+import omit from 'lodash/omit'; // CUSTOM MOD [17].
 import pick from 'lodash/pick';
 
 import { NotAllowedInput } from '@strapi/helper-plugin'; // CUSTOM MOD [1].
@@ -68,6 +69,7 @@ export const RelationInputDataManager = ({
 
   const { relations, search, searchFor } = useRelation(`${slug}-${fieldName}-${relationId}`, { // CUSTOM MOD [11], CUSTOM MOD [14].
     name,
+    hasLoaded: has( initialData, name ), // CUSTOM MOD [18].
     relation: {
       enabled: !!endpoints.relation,
       endpoint: endpoints.relation,

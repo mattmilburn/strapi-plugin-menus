@@ -5,7 +5,7 @@ import { axiosInstance } from '../../utils'; // CUSTOM MOD [2].
 
 import { normalizeRelations } from './utils'; // CUSTOM MOD [6].
 
-export const useRelation = (cacheKey, { name, relation, search }) => {
+export const useRelation = (cacheKey, { name, relation, search, hasLoaded }) => { // CUSTOM MOD [18].
   const [searchParams, setSearchParams] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
   /**
@@ -48,7 +48,7 @@ export const useRelation = (cacheKey, { name, relation, search }) => {
 
   const relationsRes = useInfiniteQuery(['relation', cacheKey], fetchRelations, {
     cacheTime: 0,
-    enabled: relation.enabled,
+    enabled: relation.enabled && ! hasLoaded, // CUSTOM MOD [18].
     /**
      * @type {(lastPage:
      * | { data: null }
