@@ -17,7 +17,6 @@ const FormLayout = ( { fields, gap } ) => {
   const {
     errors,
     handleChange,
-    isCreatingEntry,
     modifiedData,
     schema,
   } = useMenuData();
@@ -72,7 +71,6 @@ const FormLayout = ( { fields, gap } ) => {
                 description={ input?.description }
                 placeholder={ input?.placeholder }
                 size={ grid.col }
-                isCreatingEntry={ isCreatingEntry }
                 isFieldReadable={ true }
                 isUserAllowedToEditField={ true }
                 isUserAllowedToReadField={ true }
