@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
@@ -20,9 +20,6 @@ import { AddButton } from './styled';
 const MenuItemsManager = ( { fields } ) => {
   const { formatMessage } = useIntl();
   const [ activeLevel, setActiveLevel ] = useState( null );
-  const [ stickyWidth, setStickyWidth ] = useState( null );
-  const stickyRef = useRef( null );
-  const isSticky = useStickyPosition( stickyRef );
   const {
     activeMenuItem,
     addMenuItem,
@@ -34,22 +31,8 @@ const MenuItemsManager = ( { fields } ) => {
     moveMenuItem,
     setActiveMenuItem,
   } = useMenuData();
-
-  const onResize = () => {
-    setStickyWidth( stickyRef.current.parentNode.getBoundingClientRect().width );
-  };
-
-  useEffect( () => {
-    if ( isSticky ) {
-      window.addEventListener( 'resize', onResize );
-
-      onResize();
-    } else {
-      window.removeEventListener( 'resize', onResize );
-    }
-
-    return () => window.removeEventListener( 'resize', onResize );
-  }, [ isSticky ] );
+  const stickyRef = useRef( null );
+  const { isSticky, stickyWidth } = useStickyPosition( stickyRef, !! activeMenuItem );
 
   const addItemLabel = formatMessage( {
     id: getTrad( 'ui.add.menuItem' ),
