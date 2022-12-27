@@ -6,7 +6,7 @@
   "strapi": {
     "displayName": "Menus",
     "name": "menus",
-    "description": "A plugin for Strapi CMS to customize the structure of menus and menu items.",
+    "description": "Customize the structure of menus and menu items.",
     "kind": "plugin"
   },
   "peerDependencies": {
