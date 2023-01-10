@@ -15,6 +15,7 @@
 * [API Usage](#api-usage)
 * [Troubleshooting](#troubleshooting)
 * [Migration](#migration)
+* [Support or Donate](#donate)
 * [Roadmap](#roadmap)
 
 ## <a id="features"></a>✨ Features
@@ -902,6 +903,9 @@ Either something in your menus plugin configuration is setup incorrectly or you 
 
 ## <a id="migration"></a>🚌 Migration
 Follow the [migration guides](MIGRATION.md) to keep your menus plugin up-to-date.
+
+## <a id="donate"></a>❤️ Support or Donate
+If you are enjoying this plugin and feel extra appreciative, you can [buy me a beer or 3 🍺🍺🍺](https://www.buymeacoffee.com/mattmilburn).
 
 ## <a id="roadmap"></a>🚧 Roadmap
 * Localization support
