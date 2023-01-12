@@ -23,7 +23,7 @@
 * Easily manage menus with either a flat or nested structure.
 * Customize the `title`, `url`, and link `target` of menu items.
 * Extend the schema and UI with custom attributes and form layouts for menu items.
-* Supports custom fields.
+* Custom fields are supported (unless they rely on `useCMEditViewDataManager` hook).
 * Compatible with the [Strapi Transformer plugin](https://github.com/ComfortablyCoding/strapi-plugin-transformer) for cleaner API responses.
 
 ## <a id="installation"></a>💎 Installation
@@ -205,6 +205,8 @@ For `select` input types, the `enum` values associated with the attribute will b
 ```
 
 For `customField` input types, you must include the `customField` prop with the custom field UID.
+
+> **NOTE:** Custom fields will not work in this plugin if they rely on `useCMEditViewDataManager` hook.
 
 ```js
 {
