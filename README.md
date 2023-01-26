@@ -1,5 +1,5 @@
 <div align="center">
-  <img style="width: 160px; height: auto;" src="public/logo.png" alt="Logo for Strapi menus plugin" />
+  <img style="width: 160px; height: auto;" src="public/logo-2x.png" alt="Logo for Strapi menus plugin" />
   <h1>Strapi Menus</h1>
   <p>A plugin for Strapi CMS to customize the structure of menus and menu items.</p>
   <img style="width: 960px; height: auto;" src="public/screenshot.png" alt="Screenshot for Strapi menus plugin" />
@@ -914,4 +914,5 @@ If you are enjoying this plugin and feel extra appreciative, you can [buy me a b
 * RBAC support
 * Drag and drop items
 * Populate `url` via relation
+* Restore deleted items (before saving)
 * More translations
