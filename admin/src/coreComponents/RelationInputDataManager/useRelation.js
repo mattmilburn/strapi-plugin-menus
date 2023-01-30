@@ -5,9 +5,12 @@ import { axiosInstance } from '../../utils'; // CUSTOM MOD [2].
 
 import { normalizeRelations } from './utils'; // CUSTOM MOD [6].
 
+import { useCallbackRef } from './useCallbackRef'; // CUSTOM MOD [6].
+
 export const useRelation = (cacheKey, { name, relation, search, hasLoaded }) => { // CUSTOM MOD [18].
   const [searchParams, setSearchParams] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
+
   /**
    * This runs in `useInfiniteQuery` to actually fetch the data
    */
@@ -44,7 +47,7 @@ export const useRelation = (cacheKey, { name, relation, search, hasLoaded }) => 
     }
   };
 
-  const { onLoad: onLoadRelationsCallback, normalizeArguments = {} } = relation;
+  const { onLoad: onLoadRelations, normalizeArguments = {} } = relation;
 
   const relationsRes = useInfiniteQuery(['relation', cacheKey], fetchRelations, {
     cacheTime: 0,
@@ -120,15 +123,15 @@ export const useRelation = (cacheKey, { name, relation, search, hasLoaded }) => 
     }
   }, [pageGoal, currentPage, fetchNextPage, hasNextPage, status]);
 
+  const onLoadRelationsCallback = useCallbackRef(onLoadRelations);
+
   useEffect(() => {
     if (status === 'success' && data && data.pages?.at(-1)?.results && onLoadRelationsCallback) {
       // everytime we fetch, we normalize prior to adding to redux
       const normalizedResults = normalizeRelations(data.pages.at(-1).results, normalizeArguments);
 
       // this is relationLoad from EditViewDataManagerProvider
-      onLoadRelationsCallback({
-        target: { name, value: normalizedResults },
-      });
+      onLoadRelationsCallback(normalizedResults);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -21,7 +21,7 @@ As Strapi updates, these components and files may also need to be updated in thi
 | 3 | InputUID<br>RelationInputDataManager | index.js<br>getRelationLink.js | The `getRequestUrl` util will not be used. Instead, we use explicit paths for `/content-manager/` routes. |
 | 4 | InputUID | index.js | The `createdAtName` var will be explicitly defined as `createdAt` instead of deriving from `layout` data. |
 | 5 | RelationInput | RelationInput.js | The `usePrev`  hook was cloned into this component directory and the import path updated. |
-| 6 | RelationInputDataManager | RelationInputDataManager.js | The `useRelation`  hook was cloned into this component directory and the import path updated. |
+| 6 | RelationInputDataManager | RelationInputDataManager.js | The `useRelation` hook and required utils/hooks were cloned into this component directory and the import paths updated. |
 | 7 | RelationInputDataManager | utils/select.js | This plugin does not handle RBAC yet. Previous props from `useCMEditViewDataManager` are hard-coded in the plugin. |
 | 8 | RelationInputDataManager | utils/select.js | The `slug` value from `useCMEditViewDataManager` is hard-coded to `plugin::menus.menu-item`. |
 | 9 | Relations Controller | relations.js | The `getService` util will not be used. Instead we provide a custom one that points to the `content-manager` plugin. |
@@ -33,6 +33,6 @@ As Strapi updates, these components and files may also need to be updated in thi
 | 15 | RelationInput | Relation.js | Remove the `size` condition from the relation select input because the menus UI is narrower than the content manager UI. |
 | 16 | RelationInputDataManager | RelationInputDataManager.js | Manage the difference between creating a new menu vs. a new menu item. |
 | 17 | RelationInputDataManager | RelationInputDataManager.js | To maintain proper dirty state for relation fields, we need to omit the `label` and `id` props that come from the `ReactSelect` component. |
-| 18 | RelationInputDataManager<br>RelationInputDataManager | RelationInputDataManager.js<br>useRelation.js | Avoid re-fetching relation data as fields are toggled in the UI. |
+| 18 | RelationInputDataManager<br>RelationInputDataManager | RelationInputDataManager.js<br>useRelation.js | Avoid re-fetching relation data as fields are toggled in the UI with `hasLoaded` var. |
 
 Look for `CUSTOM MOD [n]` comments to identify exactly what lines were changed. The number in the comment corresponds to the table above.
