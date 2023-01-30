@@ -82,17 +82,6 @@ const MenuDataProvider = ( { children, isCloningEntry, isCreatingEntry, menu } )
     setActiveMenuItem( newItem );
   };
 
-  const connectRelation = ( { name, value, toOneRelation } ) => {
-    if ( toOneRelation ) {
-      setFieldValue( name, [ value ] );
-    } else {
-      const modifiedDataRelations = getRelationValue( values, name );
-      const newRelations = [ ...modifiedDataRelations, value ];
-
-      setFieldValue( name, newRelations );
-    }
-  };
-
   const deleteMenuItem = id => {
     // Determine all items to delete, which includes it's descendants.
     const itemToDelete = values.items.find( item => item.id === id );
@@ -128,28 +117,6 @@ const MenuDataProvider = ( { children, isCloningEntry, isCreatingEntry, menu } )
     }
   };
 
-  const disconnectRelation = ( { name, id } ) => {
-    const modifiedDataRelations = getRelationValue( values, name );
-    const newRelations = modifiedDataRelations.filter( relation => relation.id !== id );
-
-    setFieldValue( name, newRelations );
-  };
-
-  const loadRelation = ( { target: { name, value } } ) => {
-    const initialDataRelations = getRelationValue( initialData, name );
-    const modifiedDataRelations = getRelationValue( values, name );
-    const newInitialRelations = uniqBy( [ ...value, ...initialDataRelations ], 'id' );
-    const newRelations = uniqBy( [ ...value, ...modifiedDataRelations ], 'id' );
-
-    setFieldValue( name, newRelations );
-
-    // We set the value in `initialData` as well so it stays in sync with
-    // `modifiedData` to allow the correct dirty UI state to render.
-    let newInitialData = { ...initialData };
-    set( newInitialData, name, newInitialRelations );
-    setInitialData( newInitialData );
-  };
-
   const moveMenuItem = ( id, direction ) => {
     const itemA = values.items.find( _item => _item.id === id );
     const siblings = getChildren( itemA?.parent?.id, values.items );
@@ -183,6 +150,39 @@ const MenuDataProvider = ( { children, isCloningEntry, isCreatingEntry, menu } )
     } );
 
     setActiveMenuItem( orderedItemA );
+  };
+
+  const relationConnect = ( { name, value, toOneRelation } ) => {
+    if ( toOneRelation ) {
+      setFieldValue( name, [ value ] );
+    } else {
+      const modifiedDataRelations = getRelationValue( values, name );
+      const newRelations = [ ...modifiedDataRelations, value ];
+
+      setFieldValue( name, newRelations );
+    }
+  };
+
+  const relationDisconnect = ( { name, id } ) => {
+    const modifiedDataRelations = getRelationValue( values, name );
+    const newRelations = modifiedDataRelations.filter( relation => relation.id !== id );
+
+    setFieldValue( name, newRelations );
+  };
+
+  const relationLoad = ( { target: { name, value } } ) => {
+    const initialDataRelations = getRelationValue( initialData, name );
+    const modifiedDataRelations = getRelationValue( values, name );
+    const newInitialRelations = uniqBy( [ ...value, ...initialDataRelations ], 'id' );
+    const newRelations = uniqBy( [ ...value, ...modifiedDataRelations ], 'id' );
+
+    setFieldValue( name, newRelations );
+
+    // We set the value in `initialData` as well so it stays in sync with
+    // `modifiedData` to allow the correct dirty UI state to render.
+    let newInitialData = { ...initialData };
+    set( newInitialData, name, newInitialRelations );
+    setInitialData( newInitialData );
   };
 
   useEffect( () => {
@@ -248,20 +248,20 @@ const MenuDataProvider = ( { children, isCloningEntry, isCreatingEntry, menu } )
   const providerProps = {
     activeMenuItem,
     addMenuItem,
-    connectRelation,
     deleteMenuItem,
     dirty,
-    disconnectRelation,
     errors,
     handleChange,
     initialData,
     isCloningEntry,
     isCreatingEntry,
     items,
-    loadRelation,
+    relationLoad,
     maxDepth,
     modifiedData: values,
     moveMenuItem,
+    relationConnect,
+    relationDisconnect,
     schema,
     setActiveMenuItem,
   };
