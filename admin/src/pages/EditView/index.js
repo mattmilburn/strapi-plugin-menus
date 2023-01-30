@@ -282,7 +282,10 @@ const EditView = ( { history, location, match } ) => {
                         <Box paddingBottom={ 10 }>
                           <Stack spacing={ 8 }>
                               <Section>
-                                <FormLayout fields={ formLayout.menu } />
+                                <FormLayout
+                                  fields={ formLayout.menu }
+                                  schema={ schema.menu }
+                                />
                               </Section>
                               <MenuItemsManager fields={ menuItemLayout } />
                           </Stack>

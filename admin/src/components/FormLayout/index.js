@@ -10,16 +10,11 @@ import { InputUID, RelationInputDataManager } from '../../coreComponents';
 import { useMenuData } from '../../hooks';
 import { getFieldError, getFieldName, getRelationValue } from '../../utils';
 
-const FormLayout = ( { fields, gap } ) => {
+const FormLayout = ( { fields, gap, schema } ) => {
   const { formatMessage } = useIntl();
   const customFields = useCustomFields();
   const { fields: strapiFields } = useLibrary();
-  const {
-    errors,
-    handleChange,
-    modifiedData,
-    schema,
-  } = useMenuData();
+  const { errors, handleChange, modifiedData } = useMenuData();
 
   return (
     <Grid gap={ gap }>
@@ -46,6 +41,7 @@ const FormLayout = ( { fields, gap } ) => {
         // actually want to use the `defaultValue` if we get `null`.
         const fieldName = getFieldName( input.name );
         const fieldError = getFieldError( errors, input.name, fieldName );
+        const fieldSchema = get( schema, fieldName, null );
         let fieldValue = get( modifiedData, input.name ) ?? defaultValue;
 
         if ( input.type === 'number' ) {
@@ -53,7 +49,7 @@ const FormLayout = ( { fields, gap } ) => {
         }
 
         if ( input.type === 'relation' ) {
-          const metadata = schema.menuItem[ fieldName ]?.metadata;
+          const metadata = fieldSchema?.metadata;
 
           if ( ! metadata ) {
             console.warn( `Missing metadata for ${fieldName} relation field.` );
@@ -87,9 +83,9 @@ const FormLayout = ( { fields, gap } ) => {
             <GridItem key={ input.name } { ...grid }>
               <CustomFieldInput
                 { ...input }
-                attribute={ schema.menuItem[ fieldName ] }
-                value={ fieldValue }
+                attribute={ fieldSchema }
                 error={ fieldError }
+                value={ fieldValue }
                 onChange={ handleChange }
               />
             </GridItem>
@@ -100,8 +96,9 @@ const FormLayout = ( { fields, gap } ) => {
           <GridItem key={ input.name } { ...grid }>
             <GenericInput
               { ...input }
-              value={ fieldValue }
+              attribute={ fieldSchema }
               error={ fieldError }
+              value={ fieldValue }
               onChange={ handleChange }
               customInputs={ {
                 ...strapiFields,
@@ -127,6 +124,7 @@ FormLayout.propTypes = {
     } )
   ).isRequired,
   gap: PropTypes.number,
+  schema: PropTypes.object.isRequired,
 };
 
 export default FormLayout;
