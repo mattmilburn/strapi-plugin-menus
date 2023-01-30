@@ -55,6 +55,10 @@ export const RelationInputDataManager = ({
     // useCMEditViewDataManager(); // CUSTOM MOD [1].
     useMenuData(); // CUSTOM MOD [1].
 
+  const nameSplit = name.split('.');
+
+  // const initialDataPath = getInitialDataPathUsingTempKeys(initialData, modifiedData)(name);
+
   const relationsFromInitialData = getRelationValue(initialData, name); // CUSTOM MOD [12].
   const relationsFromModifiedData = getRelationValue(modifiedData, name); // CUSTOM MOD [12].
 
@@ -62,12 +66,13 @@ export const RelationInputDataManager = ({
 
   const fieldName = getFieldName(name); // CUSTOM MOD [11].
   const isItemType = name.indexOf('items') === 0; // CUSTOM MOD [14].
-  const itemId = isItemType ? get(modifiedData, `${name.split('.').at(0)}.id`) : null; // CUSTOM MOD [14].
+  const itemId = isItemType ? get(modifiedData, `${nameSplit.at(0)}.id`) : null; // CUSTOM MOD [14].
   const relationId = itemId ?? initialData?.id ?? ''; // CUSTOM MOD [14].
   const slug = itemId ? 'plugin::menus.menu-item' : 'plugin::menus.menu'; // CUSTOM MOD [14].
   const isCreatingEntry = isCreatingMenu || typeof itemId === 'string'; // CUSTOM MOD [16].
 
-  const { relations, search, searchFor } = useRelation(`${slug}-${fieldName}-${relationId}`, { // CUSTOM MOD [11], CUSTOM MOD [14].
+  const cacheKey = `${slug}-${fieldName}-${relationId}`; // CUSTOM MOD [11], CUSTOM MOD [14].
+  const { relations, search, searchFor } = useRelation(cacheKey, {
     name,
     hasLoaded: has( initialData, name ), // CUSTOM MOD [18].
     relation: {
@@ -78,14 +83,22 @@ export const RelationInputDataManager = ({
         ...defaultParams,
         pageSize: RELATIONS_TO_DISPLAY,
       },
-      onLoad: relationLoad,
+      onLoad(value) {
+        relationLoad({
+          target: {
+            // initialDataPath: ['initialData', ...initialDataPath],
+            // modifiedDataPath: ['modifiedData', ...nameSplit],
+            name,
+            value,
+          },
+        });
+      },
       normalizeArguments: {
         mainFieldName: mainField.name,
         shouldAddLink: shouldDisplayRelationLink,
         targetModel,
       },
     },
-
     search: {
       endpoint: endpoints.search,
       pageParams: {
@@ -221,9 +234,9 @@ export const RelationInputDataManager = ({
         defaultMessage: 'No relations available',
       })}
       numberOfRelationsToDisplay={RELATIONS_TO_DISPLAY}
-      onRelationConnect={(relation) => handleRelationConnect(relation)}
-      onRelationDisconnect={(relation) => handleRelationDisconnect(relation)}
-      onRelationLoadMore={() => handleRelationLoadMore()}
+      onRelationConnect={handleRelationConnect}
+      onRelationDisconnect={handleRelationDisconnect}
+      onRelationLoadMore={handleRelationLoadMore}
       onSearch={(term) => handleSearch(term)}
       onSearchNextPage={() => handleSearchMore()}
       placeholder={formatMessage(

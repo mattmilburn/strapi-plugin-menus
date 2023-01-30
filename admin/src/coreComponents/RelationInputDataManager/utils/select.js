@@ -18,11 +18,10 @@ function useSelect({
   //   readActionAllowedFields,
   //   updateActionAllowedFields,
   //   slug,
-  //   initialData,
+  //   modifiedData,
   // } = useCMEditViewDataManager(); // CUSTOM MOD [1].
   const {
     isCreatingEntry,
-    initialData,
     modifiedData, // CUSTOM MOD [14].
   } = useMenuData(); // CUSTOM MOD [1].
   const createActionAllowedFields = true; // CUSTOM MOD [7].
@@ -61,7 +60,7 @@ function useSelect({
   let itemId; // CUSTOM MOD [14].
 
   if (componentUid) {
-    componentId = get(initialData, fieldNameKeys.slice(0, -1))?.id;
+    componentId = get(modifiedData, fieldNameKeys.slice(0, -1))?.id;
   }
 
   if (isItemType) { // CUSTOM MOD [14].
@@ -78,7 +77,7 @@ function useSelect({
 
     if (componentUid) {
       // repeatable components and dz are dynamically created
-      // if no componentId exists in initialData it means that the user just created it
+      // if no componentId exists in modifiedData it means that the user just created it
       // there then are no relations to request
       return componentId
         ? getRequestUrl(`relations/${componentUid}/${componentId}/${fieldNameKeys.at(-1)}`)
@@ -94,8 +93,8 @@ function useSelect({
         : null;
     }
 
-    return getRequestUrl(`relations/${slug}/${initialData.id}/${name.split('.').at(-1)}`);
-  }, [isCreatingEntry, componentUid, slug, initialData.id, name, componentId, fieldNameKeys]);
+    return getRequestUrl(`relations/${slug}/${modifiedData.id}/${name.split('.').at(-1)}`);
+  }, [isCreatingEntry, componentUid, slug, modifiedData.id, name, componentId, fieldNameKeys]);
 
   // /content-manager/relations/[model]/[field-name]
   const relationSearchEndpoint = useMemo(() => {
