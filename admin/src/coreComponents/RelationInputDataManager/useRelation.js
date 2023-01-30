@@ -125,7 +125,7 @@ export const useRelation = (cacheKey, { name, relation, search, hasLoaded }) => 
       // everytime we fetch, we normalize prior to adding to redux
       const normalizedResults = normalizeRelations(data.pages.at(-1).results, normalizeArguments);
 
-      // this is loadRelation from EditViewDataManagerProvider
+      // this is relationLoad from EditViewDataManagerProvider
       onLoadRelationsCallback({
         target: { name, value: normalizedResults },
       });

@@ -45,12 +45,12 @@ export const RelationInputDataManager = ({
 }) => {
   const { formatMessage } = useIntl();
   const {
-    connectRelation,
-    disconnectRelation,
-    loadRelation,
     modifiedData,
     initialData,
     isCreatingEntry: isCreatingMenu, // CUSTOM MOD [16].
+    relationConnect,
+    relationDisconnect,
+    relationLoad,
   } =
     // useCMEditViewDataManager(); // CUSTOM MOD [1].
     useMenuData(); // CUSTOM MOD [1].
@@ -78,7 +78,7 @@ export const RelationInputDataManager = ({
         ...defaultParams,
         pageSize: RELATIONS_TO_DISPLAY,
       },
-      onLoad: loadRelation,
+      onLoad: relationLoad,
       normalizeArguments: {
         mainFieldName: mainField.name,
         shouldAddLink: shouldDisplayRelationLink,
@@ -131,11 +131,11 @@ export const RelationInputDataManager = ({
       }
     );
 
-    connectRelation({ name, value: normalizedRelation, toOneRelation });
+    relationConnect({ name, value: normalizedRelation, toOneRelation });
   };
 
   const handleRelationDisconnect = (relation) => {
-    disconnectRelation({ name, id: relation.id });
+    relationDisconnect({ name, id: relation.id });
   };
 
   const handleRelationLoadMore = () => {
