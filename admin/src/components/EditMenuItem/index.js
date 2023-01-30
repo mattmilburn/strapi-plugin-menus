@@ -19,7 +19,7 @@ import { StyledTabGroup } from './styled';
 
 const EditMenuItem = ( { data, fields } ) => {
   const { formatMessage } = useIntl();
-  const { errors, modifiedData } = useMenuData();
+  const { errors, modifiedData, schema } = useMenuData();
 
   const itemIndex = modifiedData.items.findIndex( item => item.id === data.id );
   const hasItemError = !! ( errors?.items && errors.items[ itemIndex ] );
@@ -79,7 +79,10 @@ const EditMenuItem = ( { data, fields } ) => {
               <TabPanel key={ i }>
                 <Box paddingTop={ 6 }>
                   <Stack spacing={ 6 }>
-                    <FormLayout fields={ itemFields } />
+                    <FormLayout
+                      fields={ itemFields }
+                      schema={ schema.menuItem }
+                    />
                   </Stack>
                 </Box>
               </TabPanel>
