@@ -7,7 +7,7 @@ import { normalizeRelations } from './utils'; // CUSTOM MOD [6].
 
 import { useCallbackRef } from './useCallbackRef'; // CUSTOM MOD [6].
 
-export const useRelation = (cacheKey, { name, relation, search, hasLoaded }) => { // CUSTOM MOD [18].
+export const useRelation = (cacheKey, { relation, search, hasLoaded }) => { // CUSTOM MOD [18].
   const [searchParams, setSearchParams] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -135,7 +135,7 @@ export const useRelation = (cacheKey, { name, relation, search, hasLoaded }) => 
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, name, data]); // CUSTOM MOD [13].
+  }, [status, data]); // CUSTOM MOD [13].
 
   const searchRes = useInfiniteQuery(
     ['relation', cacheKey, 'search', JSON.stringify(searchParams)],
