@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import PropTypes from 'prop-types';
-import React, { memo, useEffect, useMemo } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import get from 'lodash/get';
 import has from 'lodash/has'; // CUSTOM MOD [18].
@@ -43,14 +43,17 @@ export const RelationInputDataManager = ({
   size,
   targetModel,
 }) => {
+  const [liveText, setLiveText] = useState('');
   const { formatMessage } = useIntl();
   const {
-    modifiedData,
+    // slug, // CUSTOM MOD [8].
     initialData,
     isCreatingEntry: isCreatingMenu, // CUSTOM MOD [16].
+    modifiedData,
     relationConnect,
     relationDisconnect,
     relationLoad,
+    relationReorder,
   } =
     // useCMEditViewDataManager(); // CUSTOM MOD [1].
     useMenuData(); // CUSTOM MOD [1].
@@ -68,12 +71,11 @@ export const RelationInputDataManager = ({
   const isItemType = name.indexOf('items') === 0; // CUSTOM MOD [14].
   const itemId = isItemType ? get(modifiedData, `${nameSplit.at(0)}.id`) : null; // CUSTOM MOD [14].
   const relationId = itemId ?? initialData?.id ?? ''; // CUSTOM MOD [14].
-  const slug = itemId ? 'plugin::menus.menu-item' : 'plugin::menus.menu'; // CUSTOM MOD [14].
+  const slug = itemId ? 'plugin::menus.menu-item' : 'plugin::menus.menu'; // CUSTOM MOD [8].
   const isCreatingEntry = isCreatingMenu || typeof itemId === 'string'; // CUSTOM MOD [16].
 
   const cacheKey = `${slug}-${fieldName}-${relationId}`; // CUSTOM MOD [11], CUSTOM MOD [14].
   const { relations, search, searchFor } = useRelation(cacheKey, {
-    name,
     hasLoaded: has( initialData, name ), // CUSTOM MOD [18].
     relation: {
       enabled: !!endpoints.relation,
@@ -86,8 +88,8 @@ export const RelationInputDataManager = ({
       onLoad(value) {
         relationLoad({
           target: {
-            // initialDataPath: ['initialData', ...initialDataPath],
-            // modifiedDataPath: ['modifiedData', ...nameSplit],
+            // initialDataPath: ['initialData', ...initialDataPath], // CUSTOM MOD [?].
+            // modifiedDataPath: ['modifiedData', ...nameSplit], // CUSTOM MOD [?].
             name,
             value,
           },
@@ -170,6 +172,105 @@ export const RelationInputDataManager = ({
   const handleSearchMore = () => {
     search.fetchNextPage();
   };
+  /**
+   *
+   * @param {number} index
+   * @returns {string}
+   */
+  const getItemPos = (index) => `${index + 1} of ${relationsFromModifiedData.length}`;
+
+  /**
+   *
+   * @param {number} currentIndex
+   * @param {number} oldIndex
+   */
+  const handleRelationReorder = (oldIndex, newIndex) => {
+    const item = relationsFromModifiedData[oldIndex];
+
+    setLiveText(
+      formatMessage(
+        {
+          id: 'content.manager.dnd.reorder', // CUSTOM MOD [9].
+          defaultMessage: '{item}, moved. New position in list: {position}.',
+        },
+        {
+          item: item.mainField ?? item.id,
+          position: getItemPos(newIndex),
+        }
+      )
+    );
+
+    relationReorder({
+      name,
+      newIndex,
+      oldIndex,
+    });
+  };
+
+  /**
+   *
+   * @param {number} index
+   * @returns {void}
+   */
+  const handleGrabItem = (index) => {
+    const item = relationsFromModifiedData[index];
+
+    setLiveText(
+      formatMessage(
+        {
+          id: 'content-manager.dnd.grab-item', // CUSTOM MOD [9].
+          defaultMessage: `{item}, grabbed. Current position in list: {position}. Press up and down arrow to change position, Spacebar to drop, Escape to cancel.`,
+        },
+        {
+          item: item.mainField ?? item.id,
+          position: getItemPos(index),
+        }
+      )
+    );
+  };
+
+  /**
+   *
+   * @param {number} index
+   * @returns {void}
+   */
+  const handleDropItem = (index) => {
+    const item = relationsFromModifiedData[index];
+
+    setLiveText(
+      formatMessage(
+        {
+          id: 'content-manager.dnd.drop-item', // CUSTOM MOD [9].
+          defaultMessage: `{item}, dropped. Final position in list: {position}.`,
+        },
+        {
+          item: item.mainField ?? item.id,
+          position: getItemPos(index),
+        }
+      )
+    );
+  };
+
+  /**
+   *
+   * @param {number} index
+   * @returns {void}
+   */
+  const handleCancel = (index) => {
+    const item = relationsFromModifiedData[index];
+
+    setLiveText(
+      formatMessage(
+        {
+          id: 'content-manager.dnd.cancel-item', // CUSTOM MOD [9].
+          defaultMessage: '{item}, dropped. Re-order cancelled.',
+        },
+        {
+          item: item.mainField ?? item.id,
+        }
+      )
+    );
+  };
 
   if (
     (!isFieldAllowed && isCreatingEntry) ||
@@ -203,8 +304,13 @@ export const RelationInputDataManager = ({
   return (
     <RelationInput
       error={error}
+      canReorder={!toOneRelation}
       description={description}
       disabled={isDisabled}
+      iconButtonAriaLabel={formatMessage({
+        id: 'content-manager.components.RelationInput.icon-button-aria-label', // CUSTOM MOD [9].
+        defaultMessage: 'Drag',
+      })}
       id={name}
       label={`${formatMessage({
         id: intlLabel.id,
@@ -223,7 +329,12 @@ export const RelationInputDataManager = ({
         id: getTrad('relation.disconnect'),
         defaultMessage: 'Remove',
       })}
+      listAriaDescription={formatMessage({
+        id: 'content-manager.dnd.instructions', // CUSTOM MOD [9].
+        defaultMessage: `Press spacebar to grab and re-order`,
+      })}
       listHeight={320}
+      liveText={liveText}
       loadingMessage={formatMessage({
         id: getTrad('relation.isLoading'),
         defaultMessage: 'Relations are loading',
@@ -234,9 +345,13 @@ export const RelationInputDataManager = ({
         defaultMessage: 'No relations available',
       })}
       numberOfRelationsToDisplay={RELATIONS_TO_DISPLAY}
+      onDropItem={handleDropItem}
+      onGrabItem={handleGrabItem}
+      onCancel={handleCancel}
       onRelationConnect={handleRelationConnect}
       onRelationDisconnect={handleRelationDisconnect}
       onRelationLoadMore={handleRelationLoadMore}
+      onRelationReorder={handleRelationReorder}
       onSearch={(term) => handleSearch(term)}
       onSearchNextPage={() => handleSearchMore()}
       placeholder={formatMessage(

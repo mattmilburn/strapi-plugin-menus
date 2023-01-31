@@ -185,6 +185,17 @@ const MenuDataProvider = ( { children, isCloningEntry, isCreatingEntry, menu } )
     setInitialData( newInitialData );
   };
 
+  const relationReorder = ( { name, oldIndex, newIndex } ) => {
+    const modifiedDataRelations = getRelationValue( values, name );
+    let newRelations = [ ...modifiedDataRelations ];
+
+    // Swap relation indexes.
+    newRelations[ newIndex ] = modifiedDataRelations[ oldIndex ];
+    newRelations[ oldIndex ] = modifiedDataRelations[ newIndex ];
+
+    setFieldValue( name, newRelations );
+  };
+
   useEffect( () => {
     if ( ! activeMenuItem || ! `${activeMenuItem.id}`.includes( 'create' ) ) {
       return;
@@ -256,12 +267,13 @@ const MenuDataProvider = ( { children, isCloningEntry, isCreatingEntry, menu } )
     isCloningEntry,
     isCreatingEntry,
     items,
-    relationLoad,
     maxDepth,
     modifiedData: values,
     moveMenuItem,
     relationConnect,
     relationDisconnect,
+    relationLoad,
+    relationReorder,
     schema,
     setActiveMenuItem,
   };
