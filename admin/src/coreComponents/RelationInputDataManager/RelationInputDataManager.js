@@ -12,7 +12,7 @@ import { useMenuData } from '../../hooks'; // CUSTOM MOD [1].
 
 import { RelationInput } from '../RelationInput';
 
-import { useRelation } from './useRelation'; // CUSTOM MOD [6].
+import { useRelation } from './hooks/useRelation'; // CUSTOM MOD [6].
 
 import {
   getFieldName, // CUSTOM MOD [11].

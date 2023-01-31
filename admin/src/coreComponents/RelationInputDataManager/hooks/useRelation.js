@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useInfiniteQuery } from 'react-query';
 
-import { axiosInstance } from '../../utils'; // CUSTOM MOD [2].
+import { axiosInstance } from '../../../utils'; // CUSTOM MOD [2].
 
-import { normalizeRelations } from './utils'; // CUSTOM MOD [6].
+import { normalizeRelations } from '../utils'; // CUSTOM MOD [6].
 
 import { useCallbackRef } from './useCallbackRef'; // CUSTOM MOD [6].
 
