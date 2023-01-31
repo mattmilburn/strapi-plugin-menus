@@ -6,9 +6,9 @@ import { getEmptyImage } from 'react-dnd-html5-backend';
 import { Box, Flex, Stack, IconButton } from '@strapi/design-system';
 import { Drag } from '@strapi/icons';
 
-import { useDragAndDrop } from '../useDragAndDrop'; // CUSTOM MOD [5].
+import { useDragAndDrop } from '../hooks/useDragAndDrop'; // CUSTOM MOD [5].
 
-import { composeRefs } from '../composeRefs'; // CUSTOM MOD [5], CUSTOM MOD [19].
+import { composeRefs } from '../utils/composeRefs'; // CUSTOM MOD [5], CUSTOM MOD [19].
 
 import { RELATION_GUTTER } from '../constants';
 

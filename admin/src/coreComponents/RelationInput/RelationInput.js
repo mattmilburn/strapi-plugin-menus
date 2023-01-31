@@ -23,7 +23,7 @@ import { RelationList } from './components/RelationList';
 import { Option } from './components/Option';
 import { RELATION_GUTTER, RELATION_ITEM_HEIGHT } from './constants';
 
-import { usePrev } from './usePrev'; // CUSTOM MOD [5].
+import { usePrev } from './hooks/usePrev'; // CUSTOM MOD [5].
 
 export const LinkEllipsis = styled(Link)`
   display: block;
