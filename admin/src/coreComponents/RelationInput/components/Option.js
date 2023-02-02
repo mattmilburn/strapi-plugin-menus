@@ -8,7 +8,7 @@ import { pxToRem } from '@strapi/helper-plugin';
 import { Flex } from '@strapi/design-system/Flex';
 import { Typography } from '@strapi/design-system/Typography';
 
-import { getTrad } from '../../../utils';
+// import { getTrad } from '../../../utils'; // CUSTOM MOD [6].
 
 const StyledBullet = styled.div`
   flex-shrink: 0;
@@ -28,11 +28,11 @@ export const Option = (props) => {
   if (publicationState) {
     const isDraft = publicationState === 'draft';
     const draftMessage = {
-      id: getTrad('components.Select.draft-info-title'),
+      id: 'content-manager.components.Select.draft-info-title', // CUSTOM MOD [6].
       defaultMessage: 'State: Draft',
     };
     const publishedMessage = {
-      id: getTrad('components.Select.publish-info-title'),
+      id: 'content-manager.components.Select.publish-info-title', // CUSTOM MOD [6].
       defaultMessage: 'State: Published',
     };
     const title = isDraft ? formatMessage(draftMessage) : formatMessage(publishedMessage);

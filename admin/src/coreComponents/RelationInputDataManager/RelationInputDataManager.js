@@ -12,12 +12,12 @@ import { useMenuData } from '../../hooks'; // CUSTOM MOD [1].
 
 import { RelationInput } from '../RelationInput';
 
-import { useRelation } from './hooks/useRelation'; // CUSTOM MOD [6].
+import { useRelation } from './hooks/useRelation'; // CUSTOM MOD [5].
 
 import {
   getFieldName, // CUSTOM MOD [11].
   getRelationValue, // CUSTOM MOD [12].
-  getTrad,
+  // getTrad, // CUSTOM MOD [6].
 } from '../../utils';
 
 import { PUBLICATION_STATES, RELATIONS_TO_DISPLAY, SEARCH_RESULTS_TO_DISPLAY } from './constants';
@@ -60,7 +60,7 @@ export const RelationInputDataManager = ({
 
   const nameSplit = name.split('.');
 
-  // const initialDataPath = getInitialDataPathUsingTempKeys(initialData, modifiedData)(name);
+  // const initialDataPath = getInitialDataPathUsingTempKeys(initialData, modifiedData)(name); // CUSTOM MOD [18].
 
   const relationsFromInitialData = getRelationValue(initialData, name); // CUSTOM MOD [12].
   const relationsFromModifiedData = getRelationValue(modifiedData, name); // CUSTOM MOD [12].
@@ -88,8 +88,8 @@ export const RelationInputDataManager = ({
       onLoad(value) {
         relationLoad({
           target: {
-            // initialDataPath: ['initialData', ...initialDataPath], // CUSTOM MOD [?].
-            // modifiedDataPath: ['modifiedData', ...nameSplit], // CUSTOM MOD [?].
+            // initialDataPath: ['initialData', ...initialDataPath], // CUSTOM MOD [18].
+            // modifiedDataPath: ['modifiedData', ...nameSplit], // CUSTOM MOD [18].
             name,
             value,
           },
@@ -320,28 +320,28 @@ export const RelationInputDataManager = ({
       labelLoadMore={
         !isCreatingEntry
           ? formatMessage({
-              id: getTrad('relation.loadMore'),
+              id: 'content-manager.relation.loadMore', // CUSTOM MOD [6].
               defaultMessage: 'Load More',
             })
           : null
       }
       labelDisconnectRelation={formatMessage({
-        id: getTrad('relation.disconnect'),
+        id: 'content-manager.relation.disconnect', // CUSTOM MOD [6].
         defaultMessage: 'Remove',
       })}
       listAriaDescription={formatMessage({
-        id: 'content-manager.dnd.instructions', // CUSTOM MOD [9].
+        id: 'content-manager.dnd.instructions', // CUSTOM MOD [6].
         defaultMessage: `Press spacebar to grab and re-order`,
       })}
       listHeight={320}
       liveText={liveText}
       loadingMessage={formatMessage({
-        id: getTrad('relation.isLoading'),
+        id: 'content-manager.relation.isLoading', // CUSTOM MOD [6].
         defaultMessage: 'Relations are loading',
       })}
       name={name}
       noRelationsMessage={formatMessage({
-        id: getTrad('relation.notAvailable'),
+        id: 'content-manager.relation.notAvailable', // CUSTOM MOD [6].
         defaultMessage: 'No relations available',
       })}
       numberOfRelationsToDisplay={RELATIONS_TO_DISPLAY}
@@ -356,18 +356,18 @@ export const RelationInputDataManager = ({
       onSearchNextPage={() => handleSearchMore()}
       placeholder={formatMessage(
         placeholder || {
-          id: getTrad('relation.add'),
+          id: 'content-manager.relation.add', // CUSTOM MOD [6].
           defaultMessage: 'Add relation',
         }
       )}
       publicationStateTranslations={{
         [PUBLICATION_STATES.DRAFT]: formatMessage({
-          id: getTrad('relation.publicationState.draft'),
+          id: 'content-manager.relation.publicationState.draft', // CUSTOM MOD [6].
           defaultMessage: 'Draft',
         }),
 
         [PUBLICATION_STATES.PUBLISHED]: formatMessage({
-          id: getTrad('relation.publicationState.published'),
+          id: 'content-manager.relation.publicationState.published', // CUSTOM MOD [6].
           defaultMessage: 'Published',
         }),
       }}

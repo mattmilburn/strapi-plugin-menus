@@ -2,10 +2,10 @@ import React from 'react';
 import { useDragLayer } from 'react-dnd';
 import LayoutDndProvider from '../LayoutDndProvider';
 
-// import ItemTypes from '../../utils/ItemTypes'; // CUSTOM MOD [?].
-// import CardPreview from '../../pages/ListSettingsView/components/CardPreview'; // CUSTOM MOD [?].
+// import ItemTypes from '../../utils/ItemTypes'; // CUSTOM MOD [19].
+// import CardPreview from '../../pages/ListSettingsView/components/CardPreview'; // CUSTOM MOD [19].
 
-import ComponentPreview from './ComponentDragPreview';
+// import ComponentPreview from './ComponentDragPreview'; // CUSTOM MOD [19].
 import { RelationDragPreview } from './RelationDragPreview';
 
 const layerStyles = {
@@ -62,14 +62,14 @@ const CustomDragLayer = () => {
         <div style={getItemStyles(initialOffset, currentOffset, mouseOffset)} className="col-md-2">
           {/*[ItemTypes.EDIT_FIELD, ItemTypes.FIELD].includes(itemType) && (
             <CardPreview labelField={item.labelField} />
-          ) CUSTOM MOD [?]. */}
+          ) CUSTOM MOD [19]. */}
           {/*actualType === ItemTypes.COMPONENT && (
             <ComponentPreview displayedValue={item.displayedValue} />
-          ) CUSTOM MOD [?]. */}
+          ) CUSTOM MOD [19]. */}
           {/*actualType === ItemTypes.DYNAMIC_ZONE && (
             <ComponentPreview displayedValue={item.displayedValue} />
-          ) CUSTOM MOD [?]. */}
-          {actualType === 'relation' && ( // CUSTOM MOD [?].
+          ) CUSTOM MOD [19]. */}
+          {actualType === 'relation' && ( // CUSTOM MOD [19].
             <RelationDragPreview
               displayedValue={item.displayedValue}
               status={item.status}

@@ -3,9 +3,9 @@ import { useInfiniteQuery } from 'react-query';
 
 import { axiosInstance } from '../../../utils'; // CUSTOM MOD [2].
 
-import { normalizeRelations } from '../utils'; // CUSTOM MOD [6].
+import { normalizeRelations } from '../utils'; // CUSTOM MOD [5].
 
-import { useCallbackRef } from './useCallbackRef'; // CUSTOM MOD [6].
+import { useCallbackRef } from './useCallbackRef'; // CUSTOM MOD [5].
 
 export const useRelation = (cacheKey, { relation, search, hasLoaded }) => { // CUSTOM MOD [18].
   const [searchParams, setSearchParams] = useState({});
