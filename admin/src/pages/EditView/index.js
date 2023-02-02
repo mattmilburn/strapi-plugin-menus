@@ -30,6 +30,7 @@ import {
   MenuItemsManager,
   Section,
 } from '../../components';
+import { DragLayer } from '../../coreComponents';
 import {
   api,
   getFieldsByType,
@@ -235,6 +236,7 @@ const EditView = ( { history, location, match } ) => {
       isLoading={ ! isCreating && status !== 'success' }
       title={ headerTitle }
     >
+      <DragLayer />
       <Formik
         onSubmit={ onSubmit }
         initialValues={ data ?? defaultValues }
