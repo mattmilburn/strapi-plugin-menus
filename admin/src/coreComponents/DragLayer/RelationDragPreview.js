@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Box, Flex, IconButton, Typography, Status, Icon } from '@strapi/design-system';
 import { Drag, Cross } from '@strapi/icons';
 
-import { getTrad } from '../../utils';
+// import { getTrad } from '../../utils'; // CUSTOM MOD [6].
 import { PUBLICATION_STATES } from '../RelationInputDataManager/constants';
 import { ChildrenWrapper, StackWrapper } from '../RelationInput/components/RelationItem';
 import { LinkEllipsis, DisconnectButton } from '../RelationInput';
@@ -14,12 +14,12 @@ export const RelationDragPreview = ({ status, displayedValue, width }) => {
 
   const stateMessage = {
     [PUBLICATION_STATES.DRAFT]: formatMessage({
-      id: getTrad('relation.publicationState.draft'),
+      id: 'content-manager.relation.publicationState.draft', // CUSTOM MOD [6].
       defaultMessage: 'Draft',
     }),
 
     [PUBLICATION_STATES.PUBLISHED]: formatMessage({
-      id: getTrad('relation.publicationState.published'),
+      id: 'content-manager.relation.publicationState.published', // CUSTOM MOD [6].
       defaultMessage: 'Published',
     }),
   };
