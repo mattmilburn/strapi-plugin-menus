@@ -27,6 +27,7 @@ module.exports = createCoreController( UID_MENU, ( { strapi } ) =>  ( {
 
   async find( ctx ) {
     const { query } = ctx;
+    const totalEntries = await strapi.query( 'plugin::menus.menu' ).count();
 
     const isNested = Object.keys( query ).includes( 'nested' );
     const params = isNested ? getNestedParams( query ) : query;
@@ -34,7 +35,10 @@ module.exports = createCoreController( UID_MENU, ( { strapi } ) =>  ( {
 
     const { results, pagination } = await getService( 'menu' ).find( params );
     const sanitizedResults = await this.sanitizeOutput( results, ctx );
-    const transformedResults = this.transformResponse( sanitizedResults, { pagination } );
+    const transformedResults = this.transformResponse( sanitizedResults, {
+      ...pagination,
+      total: totalEntries,
+    } );
 
     // Maybe return results in a nested format.
     if ( isNested ) {
