@@ -5,13 +5,11 @@ import { Flex } from '@strapi/design-system/Flex';
 import { PaginationURLQuery, PageSizeURLQuery } from '@strapi/helper-plugin';
 
 const PaginationFooter = ( { pagination } ) => {
-  const pageCount = pagination?.total ? Math.ceil( pagination.total / pagination.limit ) : 1;
-
   return (
     <Box paddingTop={ 4 }>
       <Flex alignItems="flex-end" justifyContent="space-between">
         <PageSizeURLQuery />
-        <PaginationURLQuery pagination={ { pageCount } } />
+        <PaginationURLQuery pagination={ pagination } />
       </Flex>
     </Box>
   );
@@ -19,16 +17,17 @@ const PaginationFooter = ( { pagination } ) => {
 
 PaginationFooter.defaultProps = {
   pagination: {
-    limit: 10,
-    start: 0,
+    pageCount: 0,
+    pageSize: 10,
     total: 0,
   },
 };
 
 PaginationFooter.propTypes = {
   pagination: PropTypes.shape( {
-    limit: PropTypes.number,
-    start: PropTypes.number,
+    page: PropTypes.number,
+    pageCount: PropTypes.number,
+    pageSize: PropTypes.number,
     total: PropTypes.number,
   } ),
 };

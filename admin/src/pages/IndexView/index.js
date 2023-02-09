@@ -102,11 +102,12 @@ const IndexView = ( { history } ) => {
     } catch ( err ) {
       unlockApp();
     }
-  }
+  };
 
   const isLoading = status !== 'success';
   const colCount = 3;
   const rowCount = ( data?.data?.length ?? 0 ) + 1;
+  const pageCount = data?.meta?.total ? Math.ceil( data.meta.total / data.meta.limit ) : 1;
 
   const tableHeaders = [
     {
@@ -202,7 +203,7 @@ const IndexView = ( { history } ) => {
                   onClickEdit={ id => history.push( `/plugins/${pluginId}/edit/${id}` ) }
                 />
               </DynamicTable>
-              <PaginationFooter pagination={ data?.meta?.pagination } />
+              <PaginationFooter pagination={ { pageCount } } />
             </>
           ) : (
             <EmptyStateLayout
