@@ -1,8 +1,28 @@
 <div align="center">
-  <img style="width: 160px; height: auto;" src="public/logo.png" alt="Logo for Strapi menus plugin" />
+  <img style="width: 160px; height: auto;" src="public/logo-2x.png" alt="Logo for Strapi menus plugin" />
   <h1>Strapi Menus Migration Guides</h1>
   <p>Follow our migration guides to keep your menus plugin up-to-date.</p>
 </div>
+
+## Migrate to Strapi v4.6 and v4.7
+
+In both versions, the Users and Permissions plugin features crash while the menus plugin is installed. This seems to be an issue that will be resolved in an upcoming release of Strapi.
+
+Until then, add the following to your Strapi application's `package.json` depending on your version of Strapi.
+
+##### Strapi v4.6.x
+```
+"resolutions": {
+  "match-sorter": "4.2.1"
+},
+```
+
+##### Strapi v4.7.x
+```
+"resolutions": {
+  "match-sorter": "6.3.1"
+},
+```
 
 ## Migrate from v0.x to v1.0.0
 
