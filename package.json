@@ -54,6 +54,9 @@
     "type": "git",
     "url": "git+https://github.com/mattmilburn/strapi-plugin-menus.git"
   },
+  "resolutions": {
+    "match-sorter": "4.2.1"
+  },
   "keywords": [
     "strapi",
     "plugin",
