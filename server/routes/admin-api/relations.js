@@ -4,7 +4,7 @@ module.exports = [
   {
     method: 'GET',
     path: '/relations/:model/:targetField',
-    handler: 'relations.findAvailable',
+    handler: 'plugin::menus.relations.findAvailable',
     config: {
       policies: [ 'admin::isAuthenticatedAdmin' ],
     },
@@ -12,7 +12,7 @@ module.exports = [
   {
     method: 'GET',
     path: '/relations/:model/:id/:targetField',
-    handler: 'relations.findExisting',
+    handler: 'plugin::menus.relations.findExisting',
     config: {
       policies: [ 'admin::isAuthenticatedAdmin' ],
     },

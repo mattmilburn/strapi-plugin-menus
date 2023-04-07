@@ -4,7 +4,7 @@ module.exports = [
   {
     method: 'GET',
     path: '/config',
-    handler: 'menu.config',
+    handler: 'plugin::menus.menu.config',
     config: {
       policies: [ 'admin::isAuthenticatedAdmin' ],
     },
@@ -12,7 +12,7 @@ module.exports = [
   {
     method: 'GET',
     path: '/',
-    handler: 'menu.find',
+    handler: 'plugin::menus.menu.find',
     config: {
       policies: [ 'admin::isAuthenticatedAdmin' ],
     },
@@ -20,7 +20,7 @@ module.exports = [
   {
     method: 'GET',
     path: '/:id',
-    handler: 'menu.findOne',
+    handler: 'plugin::menus.menu.findOne',
     config: {
       policies: [ 'admin::isAuthenticatedAdmin' ],
     },
@@ -28,7 +28,7 @@ module.exports = [
   {
     method: 'POST',
     path: '/',
-    handler: 'menu.create',
+    handler: 'plugin::menus.menu.create',
     config: {
       policies: [ 'admin::isAuthenticatedAdmin' ],
     },
@@ -36,7 +36,7 @@ module.exports = [
   {
     method: 'PUT',
     path: '/:id',
-    handler: 'menu.update',
+    handler: 'plugin::menus.menu.update',
     config: {
       policies: [ 'admin::isAuthenticatedAdmin' ],
     },
@@ -44,7 +44,7 @@ module.exports = [
   {
     method: 'DELETE',
     path: '/:id',
-    handler: 'menu.delete',
+    handler: 'plugin::menus.menu.delete',
     config: {
       policies: [ 'admin::isAuthenticatedAdmin' ],
     },

@@ -4,26 +4,26 @@ module.exports = [
   {
     method: 'GET',
     path: '/',
-    handler: 'menu.find',
+    handler: 'plugin::menus.menu.find',
   },
   {
     method: 'GET',
     path: '/:id',
-    handler: 'menu.findOne',
+    handler: 'plugin::menus.menu.findOne',
   },
   {
     method: 'POST',
     path: '/',
-    handler: 'menu.create',
+    handler: 'plugin::menus.menu.create',
   },
   {
     method: 'PUT',
     path: '/:id',
-    handler: 'menu.update',
+    handler: 'plugin::menus.menu.update',
   },
   {
     method: 'DELETE',
     path: '/:id',
-    handler: 'menu.delete',
+    handler: 'plugin::menus.menu.delete',
   },
 ];
