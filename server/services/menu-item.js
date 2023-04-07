@@ -1,6 +1,7 @@
 'use strict';
 
 const flattenDeep = require( 'lodash/flattenDeep' );
+const get = require( 'lodash/get' );
 const omit = require( 'lodash/omit' );
 const { createCoreService } = require('@strapi/strapi').factories;
 
