@@ -57,10 +57,12 @@
   "keywords": [
     "strapi",
     "plugin",
+    "link",
     "list",
-    "menus",
+    "mega",
+    "menu",
     "navigation",
     "nested",
-    "pages"
+    "page"
   ]
 }
