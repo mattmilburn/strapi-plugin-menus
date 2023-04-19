@@ -794,7 +794,6 @@ const query = qs.stringify( params, { addQueryPrefix: true } );
 await fetch( `/api/menus/3${query}` );
 ```
 
-
 ##### Response
 
 ```json
@@ -892,25 +891,6 @@ Remember to **rebuild your app** after making changes to some config or other co
 yarn build
 # OR
 yarn develop
-```
-
-#### Users and Permissions plugin features crash while the menus plugin is installed.
-This seems to be an issue that will be resolved in an upcoming release of Strapi.
-
-Until then, add the following to your Strapi application's `package.json` depending on your version of Strapi.
-
-##### Strapi v4.6.x
-```
-"resolutions": {
-  "match-sorter": "4.2.1"
-},
-```
-
-##### Strapi v4.7.x
-```
-"resolutions": {
-  "match-sorter": "6.3.1"
-},
 ```
 
 #### Custom `MenuItem` attributes don't save or appear in the database table schema.
