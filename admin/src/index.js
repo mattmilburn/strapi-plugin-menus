@@ -27,7 +27,7 @@ export default {
         //   subject: null,
         // },
       ],
-    });
+    } );
 
     app.registerPlugin( {
       id: pluginId,
