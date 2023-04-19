@@ -3,6 +3,12 @@
 const get = require( 'lodash/get' );
 const has = require( 'lodash/has' );
 
+/**
+ * @NOTE - Populating the parent field in each menu item is necessary for serializing
+ * items into a nested structure. Once they are sorted and nested, the parent
+ * population will either be removed or remain in the response data.
+ */
+
 const hasParentPopulation = params => {
   const populate = get( params, 'populate' );
 
