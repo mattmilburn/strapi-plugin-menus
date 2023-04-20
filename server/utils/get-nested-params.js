@@ -32,7 +32,8 @@ const getNestedParams = params => {
     };
   }
 
-  const itemsPopulate = get( populate, 'items.populate' );
+  const items = get( populate, 'items' );
+  const itemsPopulate = get( items, 'populate' );
 
   // Object population.
   if ( itemsPopulate ) {
@@ -43,6 +44,7 @@ const getNestedParams = params => {
         populate: {
           ...populate,
           items: {
+            ...items,
             populate: {
               parent: true,
             },
@@ -58,6 +60,7 @@ const getNestedParams = params => {
         populate: {
           ...populate,
           items: {
+            ...items,
             populate: uniq( [
               ...itemsPopulate,
               ...populateParent,
@@ -73,12 +76,18 @@ const getNestedParams = params => {
       populate: {
         ...populate,
         items: {
+          ...items,
           populate: {
             ...itemsPopulate,
             parent: true,
           },
         },
       },
+    };
+  } else if ( items ) {
+    return {
+      ...params,
+      populate: items,
     };
   }
 
