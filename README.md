@@ -42,9 +42,10 @@ Limits how deep menus can be nested. By default, there is no limit.
 
 #### Example
 
-`./config/plugins.js`
-
 ```js
+// ./config/plugins.js`
+'use strict';
+
 module.exports = {
   menus: {
     config: {
@@ -59,9 +60,10 @@ Provide form layout configuration for custom attributes. The example below is qu
 
 #### Example
 
-`./config/plugins.js`
-
 ```js
+// ./config/plugins.js`
+'use strict';
+
 module.exports = {
   menus: {
     config: {
@@ -94,6 +96,7 @@ This plugin can be extended to add new attributes to the `MenuItem` schema and i
 First, create the file `./src/extensions/menus/strapi-server.js`. Then copy/paste the code below into that file to get started.
 
 ```js
+// ./src/extensions/menus/strapi-server.js`
 'use strict';
 
 module.exports = plugin => {
@@ -126,6 +129,9 @@ In `./config/plugins.js`, we will configure the `layouts` prop to allow our cust
 New tabs in the edit panel are configured with each key in the `layouts.menuItem` object. The example below will add our custom attribute into the "Link" tab and it will occupy the remaining 6 columns of spacing in that panel.
 
 ```js
+// ./config/plugins.js`
+'use strict';
+
 module.exports = {
   menus: {
     config: {
@@ -236,6 +242,9 @@ You may optionally provide a translation config object instead of a string value
 You must also include the custom field translations in your `./src/admin/app.js` file as you see in the example below.
 
 ```js
+// ./src/admin/app.js`
+'use strict';
+
 export default {
   config: {
     locales: [ 'en' ],
@@ -282,6 +291,7 @@ For reference, here is an example of a 100% complete config with all supported f
 First, create the file `./src/extensions/menus/strapi-server.js` and add the code below.
 
 ```js
+// ./src/extensions/menus/strapi-server.js`
 'use strict';
 
 module.exports = plugin => {
@@ -367,6 +377,9 @@ Next, add the plugin config for `menus` to `./config/plugins.js` to include cust
 > **TIP:** Despite the simplicity, this is certainly a lot of code. It may be best to move it into a separate file and `require()` it into your main config file to keep things organized.
 
 ```js
+// ./config/plugins.js`
+'use strict';
+
 module.exports = {
   menus: {
     config: {
