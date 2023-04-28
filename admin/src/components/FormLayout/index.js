@@ -81,6 +81,7 @@ const FormLayout = ( { fields, gap, schema } ) => {
 
           return (
             <GridItem key={ input.name } { ...grid }>
+              <React.Suspense fallback={<div>Loading...</div>}>
               <CustomFieldInput
                 { ...input }
                 attribute={ fieldSchema }
@@ -88,6 +89,7 @@ const FormLayout = ( { fields, gap, schema } ) => {
                 value={ fieldValue }
                 onChange={ handleChange }
               />
+              </React.Suspense>
             </GridItem>
           );
         }
