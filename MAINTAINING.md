@@ -34,5 +34,6 @@ As Strapi updates, these components and files may also need to be updated in thi
 | 17 | RelationInputDataManager | RelationInputDataManager.js | To maintain proper dirty state for relation fields, we need to omit the `label` and `id` props that come from the `ReactSelect` component. |
 | 18 | RelationInputDataManager<br>RelationInputDataManager | RelationInputDataManager.js<br>useRelation.js | Avoid re-fetching relation data as fields are toggled in the UI with `hasLoaded` var. Some cloned vars are also removed because of how this is already handled in the plugin. |
 | 19 | RelationInput | components/RelationItem.js | This plugin has no need to work with different item types like dynamic zones or components. |
+| 20 | useLazyComponents | hooks/use-lazy-components.js | This hook was cloned from Strapi core to help render custom fields. |
 
 Look for `CUSTOM MOD [n]` comments to identify exactly what lines were changed. The number in the comment corresponds to the table above.
