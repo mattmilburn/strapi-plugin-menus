@@ -3,18 +3,32 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import get from 'lodash/get';
 
-import { GenericInput, useCustomFields, useLibrary } from '@strapi/helper-plugin';
+import { GenericInput, useLibrary } from '@strapi/helper-plugin';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 
 import { InputUID, RelationInputDataManager } from '../../coreComponents';
-import { useMenuData } from '../../hooks';
+import { useLazyComponents, useMenuData } from '../../hooks';
 import { getFieldError, getFieldName, getRelationValue } from '../../utils';
 
 const FormLayout = ( { fields, gap, schema } ) => {
   const { formatMessage } = useIntl();
-  const customFields = useCustomFields();
   const { fields: strapiFields } = useLibrary();
   const { errors, handleChange, modifiedData } = useMenuData();
+
+  const customFieldUids = fields
+    .filter( ( { input } ) => input.type === 'customField' )
+    .map( ( { input } ) => input.customField );
+  const { isLazyLoading, lazyComponentStore } = useLazyComponents( customFieldUids );
+
+  if ( isLazyLoading ) {
+    return null;
+  }
+
+  const customInputs = {
+    ...strapiFields,
+    ...lazyComponentStore,
+    uid: InputUID,
+  };
 
   return (
     <Grid gap={ gap }>
@@ -42,6 +56,7 @@ const FormLayout = ( { fields, gap, schema } ) => {
         const fieldName = getFieldName( input.name );
         const fieldError = getFieldError( errors, input.name, fieldName );
         const fieldSchema = get( schema, fieldName, null );
+        const fieldType  = get( input, 'customField', input.type );
         let fieldValue = get( modifiedData, input.name ) ?? defaultValue;
 
         if ( input.type === 'number' ) {
@@ -75,35 +90,16 @@ const FormLayout = ( { fields, gap, schema } ) => {
           );
         }
 
-        if ( input.type === 'customField' ) {
-          const customField = customFields.get( input.customField );
-          const CustomFieldInput = React.lazy( customField.components.Input );
-
-          return (
-            <GridItem key={ input.name } { ...grid }>
-              <CustomFieldInput
-                { ...input }
-                attribute={ fieldSchema }
-                error={ fieldError }
-                value={ fieldValue }
-                onChange={ handleChange }
-              />
-            </GridItem>
-          );
-        }
-
         return (
           <GridItem key={ input.name } { ...grid }>
             <GenericInput
               { ...input }
               attribute={ fieldSchema }
+              customInputs={ customInputs }
               error={ fieldError }
-              value={ fieldValue }
               onChange={ handleChange }
-              customInputs={ {
-                ...strapiFields,
-                uid: InputUID,
-              } }
+              value={ fieldValue }
+              type={ fieldType }
             />
           </GridItem>
         );
