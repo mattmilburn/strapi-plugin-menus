@@ -59,7 +59,9 @@ const IndexView = ( { history } ) => {
     },
   } );
 
-  useEffect( () => refetch(), [ page, pageSize ] );
+  useEffect( () => {
+    refetch();
+  }, [ page, pageSize ] );
 
   const deleteMutation = useMutation( id => api.deleteAction( id ), {
     onSuccess: async () => {
