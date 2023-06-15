@@ -1,7 +1,5 @@
 import get from 'lodash/get';
 
-import { TIME_HHMM_REGEX } from '../constants';
-
 const sanitizeFormData = ( data, prevData, layout, isCloning ) => {
   const fieldTypes = layout.reduce( ( acc, field ) => {
     if ( ! field?.input ) {
@@ -30,7 +28,7 @@ const sanitizeFormData = ( data, prevData, layout, isCloning ) => {
 
       case 'date':
       case 'datetime':
-        sanitizedValue = value ? new Date( value ) : null;
+        sanitizedValue = value ? ( new Date( value ) ).toISOString() : null;
         break;
 
       case 'media':
@@ -85,7 +83,13 @@ const sanitizeFormData = ( data, prevData, layout, isCloning ) => {
         break;
 
       case 'time':
-        sanitizedValue = value?.match( TIME_HHMM_REGEX ) ? `${value}:00.000` : value;
+        const timeParts = value?.split( ':' ) ?? [];
+
+        if ( timeParts.length > 2 ) {
+          const [ hour, minute ] = timeParts;
+
+          sanitizedValue = `${hour}:${minute}`;
+        }
         break;
 
       default:
