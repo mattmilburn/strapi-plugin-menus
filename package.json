@@ -9,13 +9,22 @@
     "description": "Customize the structure of menus and menu items.",
     "kind": "plugin"
   },
-  "peerDependencies": {
-    "@strapi/design-system": "^1.6.6",
-    "@strapi/helper-plugin": "^4.9.0",
-    "@strapi/icons": "^1.6.6",
-    "@strapi/strapi": "^4.9.0",
-    "@strapi/utils": "^4.9.0",
-    "formik": "^2.2.9"
+  "author": {
+    "name": "Matt Milburn",
+    "url": "https://github.com/mattmilburn"
+  },
+  "maintainers": [
+    {
+      "name": "Matt Milburn",
+      "url": "https://github.com/mattmilburn"
+    }
+  ],
+  "engines": {
+    "node": ">=14.19.1 <=18.x.x",
+    "npm": ">=6.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "axios": "^0.27.2",
@@ -33,22 +42,13 @@
     "react-select": "^5.2.2",
     "styled-components": "5.3.3"
   },
-  "engines": {
-    "node": ">=14.19.1 <=18.x.x",
-    "npm": ">=6.0.0"
-  },
-  "author": {
-    "name": "Matt Milburn",
-    "url": "https://github.com/mattmilburn"
-  },
-  "maintainers": [
-    {
-      "name": "Matt Milburn",
-      "url": "https://github.com/mattmilburn"
-    }
-  ],
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "peerDependencies": {
+    "@strapi/design-system": "^1.6.6",
+    "@strapi/helper-plugin": "^4.9.0",
+    "@strapi/icons": "^1.6.6",
+    "@strapi/strapi": "^4.9.0",
+    "@strapi/utils": "^4.9.0",
+    "formik": "^2.2.9"
   },
   "repository": {
     "type": "git",
