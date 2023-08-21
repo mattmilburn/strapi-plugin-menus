@@ -135,7 +135,7 @@ module.exports = createCoreService( UID_MENU_ITEM, ( { strapi } ) => ( {
   },
 
   async getPopulation() {
-    const { layouts } = await getService( 'plugin' ).getConfig();
+    const { layouts } = await getService( 'config' ).get();
     const customLayouts = get( layouts, 'menuItem', {} );
     const fields = Object.values( customLayouts ).flat();
 
