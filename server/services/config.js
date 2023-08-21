@@ -2,18 +2,19 @@
 
 const get = require( 'lodash/get' );
 
+const { default: defaultConfig } = require('../config');
 const config = require( '../config' );
 const { UID_MENU, UID_MENU_ITEM } = require( '../constants' );
 const { pluginId } = require( '../utils' );
 
 module.exports = ( { strapi } ) => ( {
-  async getConfig() {
-    const data = await strapi.config.get( `plugin.${pluginId}`, config.default );
+  async get() {
+    const config = await strapi.config.get( `plugin.${pluginId}`, defaultConfig );
 
-    return data;
+    return config;
   },
 
-  async getSchema() {
+  async schema() {
     const contentTypes = strapi.plugin( 'content-manager' ).service( 'content-types' );
     const menuModel = strapi.getModel( UID_MENU );
     const menuItemModel = strapi.getModel( UID_MENU_ITEM );

@@ -15,9 +15,8 @@ const {
 
 module.exports = createCoreController( UID_MENU, ( { strapi } ) =>  ( {
   async config( ctx ) {
-    const service = getService( 'plugin' );
-    const config = await service.getConfig();
-    const schema = await service.getSchema();
+    const config = await getService( 'config' ).get();
+    const schema = await getService( 'config' ).schema();
 
     ctx.send( {
       config,
