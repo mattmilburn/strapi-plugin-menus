@@ -16,8 +16,8 @@ As Strapi updates, these components and files may also need to be updated in thi
 | Num | Location | Filename | Description |
 |-|-|-|-|
 | 1 | InputUID<br>RelationInputDataManager<br>RelationInputDataManager | index.js<br>utils/select.js<br>RelationInputDataManager.js | The `useMenuData` hook will be used in place of `useCMEditViewDataManager`. |
-| 2 | InputUID<br>RelationInputDataManager | index.js<br>useRelation.js | The path to `axiosInstance` is updated to use the instance provided in the plugin. |
-| 3 | InputUID<br>RelationInputDataManager | index.js<br>getRelationLink.js | The `getRequestUrl` util will not be used. Instead, we use explicit paths for `/content-manager/` routes. |
+| 2 | RelationInputDataManager | useRelation.js | The path to `axiosInstance` is updated to use the instance provided in the plugin. |
+| 3 | RelationInputDataManager | getRelationLink.js | The `getRequestUrl` util will not be used. Instead, we use explicit paths for `/content-manager/` routes. |
 | 4 | InputUID | index.js | The `createdAtName` var will be explicitly defined as `createdAt` instead of deriving from `layout` data. |
 | 5 | RelationInput<br>RelationInput<br>RelationInputDataManager | RelationInput.js<br>RelationItem.js<br>useRelation.js | Certain hooks and utils were cloned and their import paths updated in components. |
 | 6 | DragLayer<br>RelationInput<br>RelationInputDataManager | RelationDragPreview.js<br>Option.js<br>RelationInputDataManager.js | The `getTrad` util will not be used. Instead, we use explicit paths for `content-manager` translations. |
@@ -34,6 +34,6 @@ As Strapi updates, these components and files may also need to be updated in thi
 | 17 | RelationInputDataManager | RelationInputDataManager.js | To maintain proper dirty state for relation fields, we need to omit the `label` and `id` props that come from the `ReactSelect` component. |
 | 18 | RelationInputDataManager<br>RelationInputDataManager | RelationInputDataManager.js<br>useRelation.js | Avoid re-fetching relation data as fields are toggled in the UI with `hasLoaded` var. Some cloned vars are also removed because of how this is already handled in the plugin. |
 | 19 | RelationInput | components/RelationItem.js | This plugin has no need to work with different item types like dynamic zones or components. |
-| 20 | useLazyComponents | hooks/use-lazy-components.js | This hook was cloned from Strapi core to help render custom fields. |
+| 20 | useDebounce<br>useLazyComponents | hooks/use-debounce.js<br>hooks/use-lazy-components.js | These hooks were cloned from Strapi core. |
 
 Look for `CUSTOM MOD [n]` comments to identify exactly what lines were changed. The number in the comment corresponds to the table above.

@@ -1,25 +1,20 @@
-import React, { useEffect, useState, useRef } from 'react';
-import PropTypes from 'prop-types';
-// import { useCMEditViewDataManager } from '@strapi/helper-plugin'; // CUSTOM MOD [1].
-import { useMenuData } from '../../hooks'; // CUSTOM MOD [1].
-import { useIntl } from 'react-intl';
-import get from 'lodash/get';
-import { TextInput } from '@strapi/design-system/TextInput';
-import { Typography } from '@strapi/design-system/Typography';
-import Refresh from '@strapi/icons/Refresh';
-import CheckCircle from '@strapi/icons/CheckCircle';
-import ExclamationMarkCircle from '@strapi/icons/ExclamationMarkCircle';
-import Loader from '@strapi/icons/Loader';
-import { axiosInstance } from '../../utils'; // CUSTOM MOD [2].
-// import { getRequestUrl } from '../../utils'; // CUSTOM MOD [3].
-import useDebounce from './useDebounce';
-import UID_REGEX from './regex';
+import React, { useEffect, useRef, useState } from 'react';
+
+import { Flex, TextInput, Typography } from '@strapi/design-system';
 import {
-  EndActionWrapper,
-  FieldActionWrapper,
-  TextValidation,
-  LoadingWrapper,
-} from './endActionStyle';
+  useAPIErrorHandler,
+  // useCMEditViewDataManager, // CUSTOM MOD [1].
+  useFetchClient,
+  useNotification,
+} from '@strapi/helper-plugin';
+import { CheckCircle, ExclamationMarkCircle, Loader, Refresh } from '@strapi/icons';
+import PropTypes from 'prop-types';
+import { useIntl } from 'react-intl';
+
+import { useDebounce, useMenuData } from '../../hooks'; // CUSTOM MOD [20], [1].
+
+import { FieldActionWrapper, LoadingWrapper, TextValidation } from './endActionStyle';
+import UID_REGEX from './regex';
 
 const InputUID = ({
   attribute,
@@ -41,6 +36,8 @@ const InputUID = ({
   const [availability, setAvailability] = useState(null);
   const debouncedValue = useDebounce(value, 300);
   const generateUid = useRef();
+  const toggleNotification = useNotification();
+  const { formatAPIError } = useAPIErrorHandler();
   const initialValue = initialData[name];
   const { formatMessage } = useIntl();
   const createdAtName = 'createdAt'; // get(layout, ['options', 'timestamps', 0]); // CUSTOM MOD [4].
@@ -48,6 +45,7 @@ const InputUID = ({
   const debouncedTargetFieldValue = useDebounce(modifiedData[attribute.targetField], 300);
   const [isCustomized, setIsCustomized] = useState(false);
   const [regenerateLabel, setRegenerateLabel] = useState(null);
+  const { post } = useFetchClient();
 
   const label = intlLabel.id
     ? formatMessage(
@@ -65,43 +63,49 @@ const InputUID = ({
 
   generateUid.current = async (shouldSetInitialValue = false) => {
     setIsLoading(true);
-    const requestURL = '/content-manager/uid/generate'; // CUSTOM MOD [3].
+
     try {
       const {
         data: { data },
-      } = await axiosInstance.post(requestURL, {
+      } = await post('/content-manager/uid/generate', {
         contentTypeUID,
         field: name,
         data: modifiedData,
       });
+
       onChange({ target: { name, value: data, type: 'text' } }, shouldSetInitialValue);
       setIsLoading(false);
-    } catch (err) {
+    } catch (error) {
       setIsLoading(false);
+      toggleNotification({
+        type: 'warning',
+        message: formatAPIError(error),
+      });
     }
   };
 
   const checkAvailability = async () => {
-    setIsLoading(true);
-
-    const requestURL = '/content-manager/uid/check-availability'; // CUSTOM MOD [3].
-
     if (!value) {
       return;
     }
 
+    setIsLoading(true);
+
     try {
-      const { data } = await axiosInstance.post(requestURL, {
+      const { data } = await post('/content-manager/uid/check-availability', {
         contentTypeUID,
         field: name,
         value: value ? value.trim() : '',
       });
 
+      setIsLoading(false);
       setAvailability(data);
-
+    } catch (error) {
       setIsLoading(false);
-    } catch (err) {
-      setIsLoading(false);
+      toggleNotification({
+        type: 'warning',
+        message: formatAPIError(error),
+      });
     }
   };
 
@@ -110,27 +114,23 @@ const InputUID = ({
     if (!value && attribute.required) {
       generateUid.current(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [attribute.required, generateUid, value]);
 
   useEffect(() => {
-    if (
-      debouncedValue &&
-      debouncedValue.trim().match(UID_REGEX) &&
-      debouncedValue !== initialValue
-    ) {
+    if (debouncedValue?.trim().match(UID_REGEX) && debouncedValue !== initialValue) {
       checkAvailability();
     }
+
     if (!debouncedValue) {
       setAvailability(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedValue, initialValue]);
+  }, [initialValue, debouncedValue]);
 
   useEffect(() => {
     let timer;
 
-    if (availability && availability.isAvailable) {
+    if (availability?.isAvailable) {
       timer = setTimeout(() => {
         setAvailability(null);
       }, 4000);
@@ -182,51 +182,70 @@ const InputUID = ({
       disabled={disabled}
       error={error}
       endAction={
-        <EndActionWrapper>
-          {availability && availability.isAvailable && !regenerateLabel && (
-            <TextValidation alignItems="center" justifyContent="flex-end">
-              <CheckCircle />
-              <Typography textColor="success600" variant="pi">
-                {formatMessage({
-                  id: 'content-manager.components.uid.available',
-                  defaultMessage: 'Available',
+        <Flex position="relative" gap={1}>
+          {availability && !regenerateLabel && (
+            <TextValidation
+              alignItems="center"
+              gap={1}
+              justifyContent="flex-end"
+              available={!!availability?.isAvailable}
+              data-not-here-outer
+              position="absolute"
+              pointerEvents="none"
+              right={6}
+              width="100px"
+            >
+              {availability?.isAvailable ? <CheckCircle /> : <ExclamationMarkCircle />}
+
+              <Typography
+                textColor={availability.isAvailable ? 'success600' : 'danger600'}
+                variant="pi"
+              >
+                {formatMessage(
+                  availability.isAvailable
+                    ? {
+                        id: 'content-manager.components.uid.available',
+                        defaultMessage: 'Available',
+                      }
+                    : {
+                        id: 'content-manager.components.uid.unavailable',
+                        defaultMessage: 'Unavailable',
+                      }
+                )}
+              </Typography>
+            </TextValidation>
+          )}
+
+          {!disabled && (
+            <>
+              {regenerateLabel && (
+                <TextValidation alignItems="center" justifyContent="flex-end" gap={1}>
+                  <Typography textColor="primary600" variant="pi">
+                    {regenerateLabel}
+                  </Typography>
+                </TextValidation>
+              )}
+
+              <FieldActionWrapper
+                onClick={() => generateUid.current()}
+                label={formatMessage({
+                  id: 'content-manager.components.uid.regenerate',
+                  defaultMessage: 'Regenerate',
                 })}
-              </Typography>
-            </TextValidation>
+                onMouseEnter={handleGenerateMouseEnter}
+                onMouseLeave={handleGenerateMouseLeave}
+              >
+                {isLoading ? (
+                  <LoadingWrapper data-testid="loading-wrapper">
+                    <Loader />
+                  </LoadingWrapper>
+                ) : (
+                  <Refresh />
+                )}
+              </FieldActionWrapper>
+            </>
           )}
-          {availability && !availability.isAvailable && !regenerateLabel && (
-            <TextValidation notAvailable alignItems="center" justifyContent="flex-end">
-              <ExclamationMarkCircle />
-              <Typography textColor="danger600" variant="pi">
-                {formatMessage({
-                  id: 'content-manager.components.uid.unavailable',
-                  defaultMessage: 'Unavailable',
-                })}
-              </Typography>
-            </TextValidation>
-          )}
-          {regenerateLabel && (
-            <TextValidation alignItems="center" justifyContent="flex-end">
-              <Typography textColor="primary600" variant="pi">
-                {regenerateLabel}
-              </Typography>
-            </TextValidation>
-          )}
-          <FieldActionWrapper
-            onClick={() => generateUid.current()}
-            label="regenerate"
-            onMouseEnter={handleGenerateMouseEnter}
-            onMouseLeave={handleGenerateMouseLeave}
-          >
-            {isLoading ? (
-              <LoadingWrapper>
-                <Loader />
-              </LoadingWrapper>
-            ) : (
-              <Refresh />
-            )}
-          </FieldActionWrapper>
-        </EndActionWrapper>
+        </Flex>
       }
       hint={hint}
       label={label}
