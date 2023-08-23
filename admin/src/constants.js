@@ -1,6 +1,6 @@
 import pluginId from './utils/plugin-id';
 
-export const HEADER_HEIGHT = 96;
+export const STRAPI_HEADER_HEIGHT = 96;
 
 export const ACTION_RESOLVE_CONFIG = `${pluginId}/resolve-config`;
 
