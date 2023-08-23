@@ -11,7 +11,7 @@ import Plus from '@strapi/icons/Plus';
 import PlusCircle from '@strapi/icons/PlusCircle';
 
 import { EditMenuItem, TreeMenu, TreeMenuItem } from '../';
-import { HEADER_HEIGHT } from '../../constants';
+import { STRAPI_HEADER_HEIGHT } from '../../constants';
 import { useMenuData, useStickyPosition } from '../../hooks';
 import { getTrad } from '../../utils';
 
@@ -116,7 +116,7 @@ const MenuItemsManager = ( { fields } ) => {
           <div ref={ stickyRef } style={ isSticky ? {
             width: stickyWidth ? `${stickyWidth}px` : 'auto',
             position: 'fixed',
-            top: HEADER_HEIGHT,
+            top: STRAPI_HEADER_HEIGHT,
           } : {} }>
             <EditMenuItem
               data={ activeMenuItem }

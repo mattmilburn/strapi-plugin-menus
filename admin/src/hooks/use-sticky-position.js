@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { HEADER_HEIGHT } from '../constants';
+import { STRAPI_HEADER_HEIGHT } from '../constants';
 
 const useStickyPosition = ( ref, enabled = true ) => {
   const [ isSticky, setSticky ] = useState( false );
@@ -22,11 +22,11 @@ const useStickyPosition = ( ref, enabled = true ) => {
     const destination = ref.current.parentNode.getBoundingClientRect().top;
     const isStickyPos = ref.current.style.position === 'fixed';
 
-    if ( ! isStickyPos && destination <= HEADER_HEIGHT ) {
+    if ( ! isStickyPos && destination <= STRAPI_HEADER_HEIGHT ) {
       setSticky( true );
     }
 
-    if ( isStickyPos && destination > HEADER_HEIGHT ) {
+    if ( isStickyPos && destination > STRAPI_HEADER_HEIGHT ) {
       setSticky( false );
     }
   };
