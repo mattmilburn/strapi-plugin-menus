@@ -1,22 +1,21 @@
 import { useState, useEffect } from 'react';
+
+import { useCallbackRef, useFetchClient } from '@strapi/helper-plugin';
 import { useInfiniteQuery } from 'react-query';
 
-import { axiosInstance } from '../../../utils'; // CUSTOM MOD [2].
-
 import { normalizeRelations } from '../utils'; // CUSTOM MOD [5].
-
-import { useCallbackRef } from './useCallbackRef'; // CUSTOM MOD [5].
 
 export const useRelation = (cacheKey, { relation, search, hasLoaded }) => { // CUSTOM MOD [18].
   const [searchParams, setSearchParams] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
+  const { get } = useFetchClient();
 
   /**
    * This runs in `useInfiniteQuery` to actually fetch the data
    */
   const fetchRelations = async ({ pageParam = 1 }) => {
     try {
-      const { data } = await axiosInstance.get(relation?.endpoint, {
+      const { data } = await get(relation?.endpoint, {
         params: {
           ...(relation.pageParams ?? {}),
           page: pageParam,
@@ -33,7 +32,7 @@ export const useRelation = (cacheKey, { relation, search, hasLoaded }) => { // C
 
   const fetchSearch = async ({ pageParam = 1 }) => {
     try {
-      const { data } = await axiosInstance.get(search.endpoint, {
+      const { data } = await get(search.endpoint, {
         params: {
           ...(search.pageParams ?? {}),
           ...searchParams,

@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
-import get from 'lodash/get';
+
 // import { useCMEditViewDataManager } from '@strapi/helper-plugin'; // CUSTOM MOD [1].
 import { useMenuData } from '../../../hooks'; // CUSTOM MOD [1].
-
-import { getRequestUrl } from '../../../utils';
+import get from 'lodash/get';
+import { useRouteMatch } from 'react-router-dom';
 
 function useSelect({
   componentUid,
@@ -27,6 +27,15 @@ function useSelect({
   const createActionAllowedFields = true; // CUSTOM MOD [7].
   const readActionAllowedFields = true; // CUSTOM MOD [7].
   const updateActionAllowedFields = true; // CUSTOM MOD [7].
+
+  /**
+   * This is our cloning route because the EditView & CloneView share the same UI component
+   * We need the origin ID to pre-load the relations into the modifiedData of the new
+   * to-be-cloned entity.
+   */
+  const { params } = useRouteMatch(`/plugins/menus/clone/:id`) ?? {}; // CUSTOM MOD [?].
+
+  const { origin } = params ?? {};
 
   const isFieldAllowed = useMemo(() => {
     if (isUserAllowedToEditField === true) {
@@ -55,23 +64,25 @@ function useSelect({
   }, [isCreatingEntry, isUserAllowedToReadField, name, readActionAllowedFields]);
 
   const fieldNameKeys = name.split('.');
-  const isItemType = name.indexOf( 'items' ) === 0; // CUSTOM MOD [14].
   let componentId;
-  let itemId; // CUSTOM MOD [14].
 
   if (componentUid) {
     componentId = get(modifiedData, fieldNameKeys.slice(0, -1))?.id;
   }
 
+  const isItemType = name.indexOf( 'items' ) === 0; // CUSTOM MOD [14].
+  let itemId; // CUSTOM MOD [14].
+
   if (isItemType) { // CUSTOM MOD [14].
     itemId = get( modifiedData, `${fieldNameKeys.at( 0 )}.id` );
   }
 
+  const entityId = origin || modifiedData.id;
   const slug = itemId ? 'plugin::menus.menu-item' : 'plugin::menus.menu'; // CUSTOM MOD [8], CUSTOM MOD [14].
 
   // /content-manager/relations/[model]/[id]/[field-name]
   const relationFetchEndpoint = useMemo(() => {
-    if (isCreatingEntry) {
+    if (isCreatingEntry && !origin) {
       return null;
     }
 
@@ -80,7 +91,7 @@ function useSelect({
       // if no componentId exists in modifiedData it means that the user just created it
       // there then are no relations to request
       return componentId
-        ? getRequestUrl(`relations/${componentUid}/${componentId}/${fieldNameKeys.at(-1)}`)
+        ? `/menus/relations/${componentUid}/${componentId}/${fieldNameKeys.at(-1)}`
         : null;
     }
 
@@ -89,23 +100,24 @@ function useSelect({
       // We check against newly created items here by inspecting the data type because
       // new menu items are temporarily given a "create_[n]" formatted id attribute.
       return itemId && typeof itemId !== 'string'
-        ? getRequestUrl(`relations/${slug}/${itemId}/${name.split('.').at(-1)}`)
+        ? `/menus/relations/${slug}/${itemId}/${name.split('.').at(-1)}`
         : null;
     }
 
-    return getRequestUrl(`relations/${slug}/${modifiedData.id}/${name.split('.').at(-1)}`);
-  }, [isCreatingEntry, componentUid, slug, modifiedData.id, name, componentId, fieldNameKeys]);
+    return `/menus/relations/${slug}/${entityId}/${name.split('.').at(-1)}`;
+  }, [isCreatingEntry, origin, componentUid, slug, entityId, name, componentId, fieldNameKeys]);
 
   // /content-manager/relations/[model]/[field-name]
   const relationSearchEndpoint = useMemo(() => {
     if (componentUid) {
-      return getRequestUrl(`relations/${componentUid}/${name.split('.').at(-1)}`);
+      return `/menus/relations/${componentUid}/${name.split('.').at(-1)}`;
     }
 
-    return getRequestUrl(`relations/${slug}/${name.split('.').at(-1)}`);
+    return `/menus/relations/${slug}/${name.split('.').at(-1)}`;
   }, [componentUid, slug, name]);
 
   return {
+    entityId,
     componentId,
     isComponentRelation: Boolean(componentUid),
     queryInfos: {
@@ -115,6 +127,7 @@ function useSelect({
         relation: relationFetchEndpoint,
       },
     },
+    isCloningEntry: Boolean(origin),
     isCreatingEntry,
     isFieldAllowed,
     isFieldReadable,
