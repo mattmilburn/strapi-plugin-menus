@@ -4,6 +4,9 @@ export const STRAPI_HEADER_HEIGHT = 96;
 
 export const ACTION_RESOLVE_CONFIG = `${pluginId}/resolve-config`;
 
+export const UID_MENU = 'plugin::menus.menu';
+export const UID_MENU_ITEM = 'plugin::menus.menu-item';
+
 export const URL_ABSOLUTE_REGEX = new RegExp(
   '^(https?:\\/\\/)?'+
   '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+
