@@ -1,8 +1,12 @@
 import pluginId from './utils/plugin-id';
 
-export const STRAPI_HEADER_HEIGHT = 96;
-
 export const ACTION_RESOLVE_CONFIG = `${pluginId}/resolve-config`;
+
+export const DRAG_ITEM_TYPES = {
+  RELATION: 'relation',
+};
+
+export const STRAPI_HEADER_HEIGHT = 96;
 
 export const UID_MENU = 'plugin::menus.menu';
 export const UID_MENU_ITEM = 'plugin::menus.menu-item';
