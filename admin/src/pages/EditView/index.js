@@ -17,12 +17,6 @@ import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
 import ArrowLeft from '@strapi/icons/ArrowLeft';
 import Check from '@strapi/icons/Check';
 
-const defaultValues = {
-  title: '',
-  slug: '',
-  items: [],
-};
-
 import {
   FormLayout,
   Layout,
@@ -30,7 +24,8 @@ import {
   MenuItemsManager,
   Section,
 } from '../../components';
-import { DragLayer } from '../../coreComponents';
+import { DRAG_ITEM_TYPES } from '../../constants';
+import { DragLayer, RelationDragPreview } from '../../coreComponents';
 import {
   api,
   getFieldsByType,
@@ -48,6 +43,35 @@ import formSchema from './form-schema';
 const CLONE_QUERY_KEY = 'menus-clone-{id}';
 const CREATE_QUERY_KEY = 'menus-create';
 const EDIT_QUERY_KEY = 'menus-edit-{id}';
+
+const defaultValues = {
+  title: '',
+  slug: '',
+  items: [],
+};
+
+function renderDragLayerItem({ type, item }) {
+  /**
+   * Because a user may have multiple relations / dynamic zones / repeable fields in the same content type,
+   * we append the fieldName for the item type to make them unique, however, we then want to extract that
+   * first type to apply the correct preview.
+   */
+  const [actualType] = type.split('_');
+
+  switch (actualType) {
+    case DRAG_ITEM_TYPES.RELATION:
+      return (
+        <RelationDragPreview
+          displayedValue={item.displayedValue}
+          status={item.status}
+          width={item.width}
+        />
+      );
+
+    default:
+      return null;
+  }
+}
 
 const EditView = ( { history, location, match } ) => {
   const { id } = match.params;
@@ -236,7 +260,7 @@ const EditView = ( { history, location, match } ) => {
       isLoading={ ! isCreating && status !== 'success' }
       title={ headerTitle }
     >
-      <DragLayer />
+      <DragLayer renderItem={ renderDragLayerItem } />
       <Formik
         onSubmit={ onSubmit }
         initialValues={ data ?? defaultValues }
