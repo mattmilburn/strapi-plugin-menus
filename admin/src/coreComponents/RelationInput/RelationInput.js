@@ -201,10 +201,11 @@ const RelationInput = ({
   }, [previewRelationsLength, relations]);
 
   const ariaDescriptionId = `${name}-item-instructions`;
+  const flexBasis = '100%'; // CUSTOM MOD [?].
 
   return (
     <Flex gap={3} justifyContent="space-between" alignItems="end" wrap="wrap">
-      <Flex direction="column" alignItems="stretch" basis={size <= 6 ? '100%' : '70%'} gap={2}>
+      <Flex direction="column" alignItems="stretch" basis={flexBasis} gap={2}>
         <Combobox
           autocomplete="list"
           error={error}
