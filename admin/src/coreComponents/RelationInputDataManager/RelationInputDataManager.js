@@ -3,25 +3,25 @@ import React, { memo, useMemo, useState } from 'react';
 
 import { NotAllowedInput } from '@strapi/helper-plugin'; // CUSTOM MOD [1].
 import get from 'lodash/get';
-import has from 'lodash/has'; // CUSTOM MOD [18].
-import omit from 'lodash/omit'; // CUSTOM MOD [17].
+import has from 'lodash/has'; // CUSTOM MOD [11].
+import omit from 'lodash/omit'; // CUSTOM MOD [10].
 import pick from 'lodash/pick';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
-import { UID_MENU, UID_MENU_ITEM } from '../../constants'; // CUSTOM MOD [?].
+import { UID_MENU, UID_MENU_ITEM } from '../../constants'; // CUSTOM MOD [7].
 import { useMenuData } from '../../hooks'; // CUSTOM MOD [1].
-import { useRelation } from './hooks/useRelation'; // CUSTOM MOD [5].
-// import { getTrad } from '../../utils'; // CUSTOM MOD [6].
-// import { getInitialDataPathUsingTempKeys } from './utils/paths'; // CUSTOM MOD [5].
+import { useRelation } from './hooks/useRelation'; // CUSTOM MOD [3].
+// import { getTrad } from '../../utils'; // CUSTOM MOD [4].
+// import { getInitialDataPathUsingTempKeys } from './utils/paths'; // CUSTOM MOD [3].
 import { RelationInput } from '../RelationInput';
 
 import { PUBLICATION_STATES, RELATIONS_TO_DISPLAY, SEARCH_RESULTS_TO_DISPLAY } from './constants';
 import { connect, diffRelations, normalizeRelation, normalizeSearchResults, select } from './utils';
 
 import {
-  getFieldName, // CUSTOM MOD [11].
-  getRelationValue, // CUSTOM MOD [12].
+  getFieldName, // CUSTOM MOD [7].
+  getRelationValue, // CUSTOM MOD [7].
 } from '../../utils';
 
 export const RelationInputDataManager = ({
@@ -32,8 +32,8 @@ export const RelationInputDataManager = ({
   editable,
   description,
   intlLabel,
-  // isCreatingEntry, // CUSTOM MOD [16].
-  // isCloningEntry, // CUSTOM MOD [16].
+  // isCreatingEntry, // CUSTOM MOD [9].
+  // isCloningEntry, // CUSTOM MOD [9].
   isFieldAllowed,
   isFieldReadable,
   labelAction,
@@ -49,9 +49,9 @@ export const RelationInputDataManager = ({
   const [liveText, setLiveText] = useState('');
   const { formatMessage } = useIntl();
   const {
-    // slug, // CUSTOM MOD [8].
+    // slug, // CUSTOM MOD [6].
     initialData,
-    isCreatingEntry: isCreatingMenu, // CUSTOM MOD [16].
+    isCreatingEntry: isCreatingMenu, // CUSTOM MOD [9].
     modifiedData,
     relationConnect,
     relationDisconnect,
@@ -61,23 +61,23 @@ export const RelationInputDataManager = ({
 
   const nameSplit = name.split('.');
 
-  // const initialDataPath = getInitialDataPathUsingTempKeys(initialData, modifiedData)(name); // CUSTOM MOD [18].
+  // const initialDataPath = getInitialDataPathUsingTempKeys(initialData, modifiedData)(name); // CUSTOM MOD [11].
 
-  const relationsFromInitialData = getRelationValue(initialData, name, []); // CUSTOM MOD [12].
-  const relationsFromModifiedData = getRelationValue(modifiedData, name, []); // CUSTOM MOD [12].
+  const relationsFromInitialData = getRelationValue(initialData, name, []); // CUSTOM MOD [7].
+  const relationsFromModifiedData = getRelationValue(modifiedData, name, []); // CUSTOM MOD [7].
 
   const currentLastPage = Math.ceil(relationsFromInitialData.length / RELATIONS_TO_DISPLAY);
 
-  const fieldName = getFieldName(name); // CUSTOM MOD [11].
-  const isItemType = name.indexOf('items') === 0; // CUSTOM MOD [14].
-  const itemId = isItemType ? get(modifiedData, `${nameSplit.at(0)}.id`) : null; // CUSTOM MOD [14].
-  const relationId = itemId ?? initialData?.id ?? ''; // CUSTOM MOD [14].
-  const slug = itemId ? UID_MENU_ITEM : UID_MENU; // CUSTOM MOD [8].
-  const isCreatingEntry = isCreatingMenu || typeof itemId === 'string'; // CUSTOM MOD [16].
+  const fieldName = getFieldName(name); // CUSTOM MOD [7].
+  const isItemType = name.indexOf('items') === 0; // CUSTOM MOD [7].
+  const itemId = isItemType ? get(modifiedData, `${nameSplit.at(0)}.id`) : null; // CUSTOM MOD [7].
+  const relationId = itemId ?? initialData?.id ?? ''; // CUSTOM MOD [7].
+  const slug = itemId ? UID_MENU_ITEM : UID_MENU; // CUSTOM MOD [6].
+  const isCreatingEntry = isCreatingMenu || typeof itemId === 'string'; // CUSTOM MOD [9].
 
-  const cacheKey = `${slug}-${fieldName}-${relationId}`; // CUSTOM MOD [11], CUSTOM MOD [14].
+  const cacheKey = `${slug}-${fieldName}-${relationId}`; // CUSTOM MOD [7].
   const { relations, search, searchFor } = useRelation(cacheKey, {
-    hasLoaded: has( initialData, name ), // CUSTOM MOD [18].
+    hasLoaded: has( initialData, name ), // CUSTOM MOD [11].
     relation: {
       enabled: !!endpoints.relation,
       endpoint: endpoints.relation,
@@ -89,8 +89,8 @@ export const RelationInputDataManager = ({
       onLoad(value) {
         relationLoad({
           target: {
-            // initialDataPath: ['initialData', ...initialDataPath], // CUSTOM MOD [18].
-            // modifiedDataPath: ['modifiedData', ...nameSplit], // CUSTOM MOD [18].
+            // initialDataPath: ['initialData', ...initialDataPath], // CUSTOM MOD [11].
+            // modifiedDataPath: ['modifiedData', ...nameSplit], // CUSTOM MOD [11].
             name,
             value,
           },
@@ -107,7 +107,7 @@ export const RelationInputDataManager = ({
       pageParams: {
         ...defaultParams,
         // eslint-disable-next-line no-nested-ternary
-        entityId: isCreatingEntry ? undefined : relationId, // CUSTOM MOD [14].
+        entityId: isCreatingEntry ? undefined : relationId, // CUSTOM MOD [7].
         pageSize: SEARCH_RESULTS_TO_DISPLAY,
       },
     },
@@ -139,7 +139,7 @@ export const RelationInputDataManager = ({
      * Any relation being added to the store should be normalized so it has it's link.
      */
     const normalizedRelation = normalizeRelation(
-      omit(relation, ['label', 'value']), // CUSTOM MOD [17].
+      omit(relation, ['label', 'value']), // CUSTOM MOD [10].
       {
         mainFieldName: mainField.name,
         shouldAddLink: shouldDisplayRelationLink,
@@ -161,7 +161,7 @@ export const RelationInputDataManager = ({
   const handleSearch = (term = '') => {
     const [connected, disconnected] = diffRelations(
       relationsFromModifiedData,
-      getRelationValue(initialData, name) // CUSTOM MOD [12].
+      getRelationValue(initialData, name) // CUSTOM MOD [7].
     );
 
     searchFor(term, {
@@ -191,7 +191,7 @@ export const RelationInputDataManager = ({
     setLiveText(
       formatMessage(
         {
-          id: 'content-manager.dnd.reorder', // CUSTOM MOD [9].
+          id: 'content-manager.dnd.reorder', // CUSTOM MOD [4].
           defaultMessage: '{item}, moved. New position in list: {position}.',
         },
         {
@@ -219,7 +219,7 @@ export const RelationInputDataManager = ({
     setLiveText(
       formatMessage(
         {
-          id: 'content-manager.dnd.grab-item', // CUSTOM MOD [9].
+          id: 'content-manager.dnd.grab-item', // CUSTOM MOD [4].
           defaultMessage: `{item}, grabbed. Current position in list: {position}. Press up and down arrow to change position, Spacebar to drop, Escape to cancel.`,
         },
         {
@@ -241,7 +241,7 @@ export const RelationInputDataManager = ({
     setLiveText(
       formatMessage(
         {
-          id: 'content-manager.dnd.drop-item', // CUSTOM MOD [9].
+          id: 'content-manager.dnd.drop-item', // CUSTOM MOD [4].
           defaultMessage: `{item}, dropped. Final position in list: {position}.`,
         },
         {
@@ -263,7 +263,7 @@ export const RelationInputDataManager = ({
     setLiveText(
       formatMessage(
         {
-          id: 'content-manager.dnd.cancel-item', // CUSTOM MOD [9].
+          id: 'content-manager.dnd.cancel-item', // CUSTOM MOD [4].
           defaultMessage: '{item}, dropped. Re-order cancelled.',
         },
         {
@@ -291,7 +291,7 @@ export const RelationInputDataManager = ({
    * actually subtract from the total number on the server (regardless of how many you fetched).
    */
   const browserRelationsCount = relationsFromModifiedData.length;
-  const serverRelationsCount = relationsFromInitialData.length; // CUSTOM MOD [12].
+  const serverRelationsCount = relationsFromInitialData.length; // CUSTOM MOD [7].
   const realServerRelationsCount = relations.data?.pages[0]?.pagination?.total ?? 0;
   /**
    * _IF_ theres no relations data and the browserCount is the same as serverCount you can therefore assume
@@ -309,7 +309,7 @@ export const RelationInputDataManager = ({
       description={description}
       disabled={isDisabled}
       iconButtonAriaLabel={formatMessage({
-        id: 'content-manager.components.RelationInput.icon-button-aria-label', // CUSTOM MOD [9].
+        id: 'content-manager.components.RelationInput.icon-button-aria-label', // CUSTOM MOD [4].
         defaultMessage: 'Drag',
       })}
       id={name}
@@ -319,30 +319,30 @@ export const RelationInputDataManager = ({
       })} ${totalRelations > 0 ? `(${totalRelations})` : ''}`}
       labelAction={labelAction}
       labelLoadMore={
-        !isCreatingEntry // CUSTOM MOD [14].
+        !isCreatingEntry // CUSTOM MOD [7].
           ? formatMessage({
-              id: 'content-manager.relation.loadMore', // CUSTOM MOD [6].
+              id: 'content-manager.relation.loadMore', // CUSTOM MOD [4].
               defaultMessage: 'Load More',
             })
           : null
       }
       labelDisconnectRelation={formatMessage({
-        id: 'content-manager.relation.disconnect', // CUSTOM MOD [6].
+        id: 'content-manager.relation.disconnect', // CUSTOM MOD [4].
         defaultMessage: 'Remove',
       })}
       listAriaDescription={formatMessage({
-        id: 'content-manager.dnd.instructions', // CUSTOM MOD [6].
+        id: 'content-manager.dnd.instructions', // CUSTOM MOD [4].
         defaultMessage: `Press spacebar to grab and re-order`,
       })}
       listHeight={320}
       liveText={liveText}
       loadingMessage={formatMessage({
-        id: 'content-manager.relation.isLoading', // CUSTOM MOD [6].
+        id: 'content-manager.relation.isLoading', // CUSTOM MOD [4].
         defaultMessage: 'Relations are loading',
       })}
       name={name}
       noRelationsMessage={formatMessage({
-        id: 'content-manager.relation.notAvailable', // CUSTOM MOD [6].
+        id: 'content-manager.relation.notAvailable', // CUSTOM MOD [4].
         defaultMessage: 'No relations available',
       })}
       numberOfRelationsToDisplay={RELATIONS_TO_DISPLAY}
@@ -357,18 +357,18 @@ export const RelationInputDataManager = ({
       onSearchNextPage={() => handleSearchMore()}
       placeholder={formatMessage(
         placeholder || {
-          id: 'content-manager.relation.add', // CUSTOM MOD [6].
+          id: 'content-manager.relation.add', // CUSTOM MOD [4].
           defaultMessage: 'Add relation',
         }
       )}
       publicationStateTranslations={{
         [PUBLICATION_STATES.DRAFT]: formatMessage({
-          id: 'content-manager.relation.publicationState.draft', // CUSTOM MOD [6].
+          id: 'content-manager.relation.publicationState.draft', // CUSTOM MOD [4].
           defaultMessage: 'Draft',
         }),
 
         [PUBLICATION_STATES.PUBLISHED]: formatMessage({
-          id: 'content-manager.relation.publicationState.published', // CUSTOM MOD [6].
+          id: 'content-manager.relation.publicationState.published', // CUSTOM MOD [4].
           defaultMessage: 'Published',
         }),
       }}
@@ -414,8 +414,8 @@ RelationInputDataManager.propTypes = {
     values: PropTypes.object,
   }).isRequired,
   labelAction: PropTypes.element,
-  // isCloningEntry: PropTypes.bool.isRequired, // CUSTOM MOD [16].
-  // isCreatingEntry: PropTypes.bool.isRequired, // CUSTOM MOD [16].
+  // isCloningEntry: PropTypes.bool.isRequired, // CUSTOM MOD [9].
+  // isCreatingEntry: PropTypes.bool.isRequired, // CUSTOM MOD [9].
   isComponentRelation: PropTypes.bool,
   isFieldAllowed: PropTypes.bool,
   isFieldReadable: PropTypes.bool.isRequired,

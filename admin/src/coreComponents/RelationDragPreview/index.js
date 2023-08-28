@@ -5,25 +5,25 @@ import { Cross, Drag } from '@strapi/icons';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
-import { DisconnectButton, LinkEllipsis } from '../RelationInput'; // CUSTOM MOD [?].
+import { DisconnectButton, LinkEllipsis } from '../RelationInput'; // CUSTOM MOD [3].
 import {
   ChildrenWrapper,
   FlexWrapper,
-} from '../RelationInput/components/RelationItem'; // CUSTOM MOD [?].
-import { PUBLICATION_STATES } from '../RelationInputDataManager/constants'; // CUSTOM MOD [?].
-// import { getTrad } from '../../../utils'; // CUSTOM MOD [?].
+} from '../RelationInput/components/RelationItem'; // CUSTOM MOD [3].
+import { PUBLICATION_STATES } from '../RelationInputDataManager/constants'; // CUSTOM MOD [3].
+// import { getTrad } from '../../../utils'; // CUSTOM MOD [4].
 
 export const RelationDragPreview = ({ status, displayedValue, width }) => {
   const { formatMessage } = useIntl();
 
   const stateMessage = {
     [PUBLICATION_STATES.DRAFT]: formatMessage({
-      id: 'content-manager.relation.publicationState.draft', // CUSTOM MOD [?].
+      id: 'content-manager.relation.publicationState.draft', // CUSTOM MOD [4].
       defaultMessage: 'Draft',
     }),
 
     [PUBLICATION_STATES.PUBLISHED]: formatMessage({
-      id: 'content-manager.relation.publicationState.published', // CUSTOM MOD [?].
+      id: 'content-manager.relation.publicationState.published', // CUSTOM MOD [4].
       defaultMessage: 'Published',
     }),
   };

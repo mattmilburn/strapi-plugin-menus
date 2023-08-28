@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { LayoutDndContext } from '../../contexts'; // CUSTOM MOD [5].
+import { LayoutDndContext } from '../../contexts'; // CUSTOM MOD [3].
 
 function LayoutDndProvider({
   attributes,

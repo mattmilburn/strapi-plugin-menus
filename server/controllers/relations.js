@@ -5,11 +5,11 @@ const { hasDraftAndPublish } = require('@strapi/utils').contentTypes;
 const { isAnyToMany } = require('@strapi/utils').relations;
 const { PUBLISHED_AT_ATTRIBUTE } = require('@strapi/utils').contentTypes.constants;
 
-// const { getService } = require('../utils'); // CUSTOM MOD [9].
+// const { getService } = require('../utils'); // CUSTOM MOD [4].
 const { validateFindAvailable, validateFindExisting } = require('./validation/relations');
-const { isListable } = require('../utils'); // CUSTOM MOD [?].
+const { isListable } = require('../utils'); // CUSTOM MOD [3].
 
-const getService = name => strapi.plugin( 'content-manager' ).service( name ); // CUSTOM MOD [9].
+const getService = name => strapi.plugin( 'content-manager' ).service( name ); // CUSTOM MOD [4].
 
 const addFiltersClause = (params, filtersClause) => {
   params.filters = params.filters || {};
@@ -43,7 +43,7 @@ module.exports = {
 
     const isComponent = modelSchema.modelType === 'component';
 
-    // CUSTOM MOD [10].
+    // CUSTOM MOD [5].
     // if (!isComponent) {
     //   const permissionChecker = getService('permission-checker').create({
     //     userAbility,
@@ -85,7 +85,7 @@ module.exports = {
 
     const targetedModel = strapi.getModel(attribute.target);
 
-    // CUSTOM MOD [10].
+    // CUSTOM MOD [5].
     // const permissionChecker = getService('permission-checker').create({
     //   userAbility,
     //   model: attribute.target,
@@ -97,7 +97,7 @@ module.exports = {
 
     const mainField = prop(`metadatas.${targetField}.edit.mainField`, modelConfig) || 'id';
 
-    if (!isListable(targetedModel, mainField)) { // CUSTOM MOD [10].
+    if (!isListable(targetedModel, mainField)) { // CUSTOM MOD [5].
       mainField = 'id';
     }
 
@@ -166,7 +166,7 @@ module.exports = {
 
     const isComponent = modelSchema.modelType === 'component';
 
-    // CUSTOM MOD [10].
+    // CUSTOM MOD [5].
     // if (!isComponent) {
     //   const entityManager = getService('entity-manager');
     //   const permissionChecker = getService('permission-checker').create({
@@ -206,14 +206,14 @@ module.exports = {
       ? await getService('components').findConfiguration(modelSchema)
       : await getService('content-types').findConfiguration(modelSchema);
 
-    // CUSTOM MOD [10].
+    // CUSTOM MOD [5].
     // const permissionChecker = getService('permission-checker').create({
     //   userAbility,
     //   model: attribute.target,
     // });
 
     const mainField = prop(`metadatas.${targetField}.edit.mainField`, modelConfig) || 'id';
-    if (!isListable(targetedModel, mainField)) { // CUSTOM MOD [10].
+    if (!isListable(targetedModel, mainField)) { // CUSTOM MOD [5].
       mainField = 'id';
     }
 

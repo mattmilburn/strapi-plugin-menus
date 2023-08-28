@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react';
 import { useCallbackRef, useFetchClient } from '@strapi/helper-plugin';
 import { useInfiniteQuery } from 'react-query';
 
-import { normalizeRelations } from '../utils'; // CUSTOM MOD [5].
+import { normalizeRelations } from '../utils'; // CUSTOM MOD [3].
 
-export const useRelation = (cacheKey, { relation, search, hasLoaded }) => { // CUSTOM MOD [18].
+export const useRelation = (cacheKey, { relation, search, hasLoaded }) => { // CUSTOM MOD [11].
   const [searchParams, setSearchParams] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
   const { get } = useFetchClient();
@@ -50,7 +50,7 @@ export const useRelation = (cacheKey, { relation, search, hasLoaded }) => { // C
 
   const relationsRes = useInfiniteQuery(['relation', cacheKey], fetchRelations, {
     cacheTime: 0,
-    enabled: relation.enabled && ! hasLoaded, // CUSTOM MOD [18].
+    enabled: relation.enabled && ! hasLoaded, // CUSTOM MOD [11].
     /**
      * @type {(lastPage:
      * | { data: null }
@@ -134,7 +134,7 @@ export const useRelation = (cacheKey, { relation, search, hasLoaded }) => { // C
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, data]); // CUSTOM MOD [13].
+  }, [status, data]); // CUSTOM MOD [8].
 
   const searchRes = useInfiniteQuery(
     ['relation', cacheKey, 'search', JSON.stringify(searchParams)],
