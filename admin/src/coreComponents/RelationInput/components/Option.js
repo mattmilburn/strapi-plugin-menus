@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import styled from 'styled-components';
 
-// import { getTrad } from '../../../utils'; // CUSTOM MOD [6]
+// import { getTrad } from '../../../utils'; // CUSTOM MOD [4]
 
 const StyledBullet = styled.div`
   flex-shrink: 0;
@@ -25,11 +25,11 @@ export const Option = ({ publicationState, mainField, id }) => {
   if (publicationState) {
     const isDraft = publicationState === 'draft';
     const draftMessage = {
-      id: 'content-manager.components.Select.draft-info-title', // CUSTOM MOD [6]
+      id: 'content-manager.components.Select.draft-info-title', // CUSTOM MOD [4]
       defaultMessage: 'State: Draft',
     };
     const publishedMessage = {
-      id: 'content-manager.components.Select.publish-info-title', // CUSTOM MOD [6]
+      id: 'content-manager.components.Select.publish-info-title', // CUSTOM MOD [4]
       defaultMessage: 'State: Published',
     };
     const title = isDraft ? formatMessage(draftMessage) : formatMessage(publishedMessage);

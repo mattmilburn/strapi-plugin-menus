@@ -11,7 +11,7 @@ import { CheckCircle, ExclamationMarkCircle, Loader, Refresh } from '@strapi/ico
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
-import { useDebounce, useMenuData } from '../../hooks'; // CUSTOM MOD [20], [1].
+import { useDebounce, useMenuData } from '../../hooks'; // CUSTOM MOD [3], [1].
 
 import { FieldActionWrapper, LoadingWrapper, TextValidation } from './endActionStyle';
 import UID_REGEX from './regex';
@@ -40,7 +40,7 @@ const InputUID = ({
   const { formatAPIError } = useAPIErrorHandler();
   const initialValue = initialData[name];
   const { formatMessage } = useIntl();
-  const createdAtName = 'createdAt'; // get(layout, ['options', 'timestamps', 0]); // CUSTOM MOD [4].
+  const createdAtName = 'createdAt'; // get(layout, ['options', 'timestamps', 0]); // CUSTOM MOD [2].
   const isCreation = !initialData[createdAtName];
   const debouncedTargetFieldValue = useDebounce(modifiedData[attribute.targetField], 300);
   const [isCustomized, setIsCustomized] = useState(false);

@@ -1,9 +1,11 @@
 import { useMemo } from 'react';
 
 // import { useCMEditViewDataManager } from '@strapi/helper-plugin'; // CUSTOM MOD [1].
-import { useMenuData } from '../../../hooks'; // CUSTOM MOD [1].
 import get from 'lodash/get';
 import { useRouteMatch } from 'react-router-dom';
+
+import { pluginId } from '../../../constants'; // CUSTOM MOD [14].
+import { useMenuData } from '../../../hooks'; // CUSTOM MOD [1].
 
 function useSelect({
   componentUid,
@@ -22,18 +24,18 @@ function useSelect({
   // } = useCMEditViewDataManager(); // CUSTOM MOD [1].
   const {
     isCreatingEntry,
-    modifiedData, // CUSTOM MOD [14].
+    modifiedData, // CUSTOM MOD [7].
   } = useMenuData(); // CUSTOM MOD [1].
-  const createActionAllowedFields = true; // CUSTOM MOD [7].
-  const readActionAllowedFields = true; // CUSTOM MOD [7].
-  const updateActionAllowedFields = true; // CUSTOM MOD [7].
+  const createActionAllowedFields = true; // CUSTOM MOD [5].
+  const readActionAllowedFields = true; // CUSTOM MOD [5].
+  const updateActionAllowedFields = true; // CUSTOM MOD [5].
 
   /**
    * This is our cloning route because the EditView & CloneView share the same UI component
    * We need the origin ID to pre-load the relations into the modifiedData of the new
    * to-be-cloned entity.
    */
-  const { params } = useRouteMatch(`/plugins/menus/clone/:id`) ?? {}; // CUSTOM MOD [?].
+  const { params } = useRouteMatch(`/plugins/${pluginId}/clone/:id`) ?? {}; // CUSTOM MOD [14].
 
   const { origin } = params ?? {};
 
@@ -70,15 +72,15 @@ function useSelect({
     componentId = get(modifiedData, fieldNameKeys.slice(0, -1))?.id;
   }
 
-  const isItemType = name.indexOf( 'items' ) === 0; // CUSTOM MOD [14].
-  let itemId; // CUSTOM MOD [14].
+  const isItemType = name.indexOf( 'items' ) === 0; // CUSTOM MOD [7].
+  let itemId; // CUSTOM MOD [7].
 
-  if (isItemType) { // CUSTOM MOD [14].
+  if (isItemType) { // CUSTOM MOD [7].
     itemId = get( modifiedData, `${fieldNameKeys.at( 0 )}.id` );
   }
 
   const entityId = origin || modifiedData.id;
-  const slug = itemId ? 'plugin::menus.menu-item' : 'plugin::menus.menu'; // CUSTOM MOD [8], CUSTOM MOD [14].
+  const slug = itemId ? 'plugin::menus.menu-item' : 'plugin::menus.menu'; // CUSTOM MOD [6], [7].
 
   // /content-manager/relations/[model]/[id]/[field-name]
   const relationFetchEndpoint = useMemo(() => {
@@ -95,7 +97,7 @@ function useSelect({
         : null;
     }
 
-    // Make explicit check for `items` prop so we use a menu item ID, not the menu ID. CUSTOM MOD [14].
+    // Make explicit check for `items` prop so we use a menu item ID, not the menu ID. CUSTOM MOD [7].
     if (isItemType) {
       // We check against newly created items here by inspecting the data type because
       // new menu items are temporarily given a "create_[n]" formatted id attribute.

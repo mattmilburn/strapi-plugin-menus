@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import styled from 'styled-components';
 
-import { useDragAndDrop } from '../hooks/useDragAndDrop'; // CUSTOM MOD [5].
-import { composeRefs } from '../utils/composeRefs'; // CUSTOM MOD [5], CUSTOM MOD [19].
+import { useDragAndDrop } from '../hooks/useDragAndDrop'; // CUSTOM MOD [3].
+import { composeRefs } from '../utils/composeRefs'; // CUSTOM MOD [3], [12].
 import { RELATION_GUTTER } from '../constants';
 
 export const FlexWrapper = styled(Flex)`
@@ -47,7 +47,7 @@ export const RelationItem = ({
 }) => {
   const [{ handlerId, isDragging, handleKeyDown }, relationRef, dropRef, dragRef, dragPreviewRef] =
     useDragAndDrop(canDrag && !disabled, {
-      type: `relation_${name}`, // CUSTOM MOD [19].
+      type: `relation_${name}`, // CUSTOM MOD [12].
       index,
       item: {
         displayedValue: displayValue,

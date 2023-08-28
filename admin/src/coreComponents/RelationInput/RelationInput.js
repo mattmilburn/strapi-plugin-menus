@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
 import { FixedSizeList as List } from 'react-window';
 import styled from 'styled-components';
 
-import { usePrev } from './hooks/usePrev'; // CUSTOM MOD [5].
+import { usePrev } from './hooks/usePrev'; // CUSTOM MOD [3].
 
 import { Option } from './components/Option';
 import { RelationItem } from './components/RelationItem';
@@ -201,7 +201,7 @@ const RelationInput = ({
   }, [previewRelationsLength, relations]);
 
   const ariaDescriptionId = `${name}-item-instructions`;
-  const flexBasis = '100%'; // CUSTOM MOD [?].
+  const flexBasis = '100%'; // CUSTOM MOD [13].
 
   return (
     <Flex gap={3} justifyContent="space-between" alignItems="end" wrap="wrap">
