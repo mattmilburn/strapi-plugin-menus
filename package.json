@@ -35,7 +35,6 @@
     "react-query": "^3.34.15",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.2.1",
-    "react-select": "^5.2.2",
     "react-window": "^1.8.8"
   },
   "peerDependencies": {
