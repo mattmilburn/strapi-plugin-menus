@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import get from 'lodash/get';
 import { useRouteMatch } from 'react-router-dom';
 
-import { pluginId } from '../../../constants'; // CUSTOM MOD [14].
+import { pluginId } from '../../../utils'; // CUSTOM MOD [14].
 import { useMenuData } from '../../../hooks'; // CUSTOM MOD [1].
 
 function useSelect({
