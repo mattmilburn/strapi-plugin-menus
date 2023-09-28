@@ -3,7 +3,6 @@
 const get = require( 'lodash/get' );
 
 const { default: defaultConfig } = require('../config');
-const config = require( '../config' );
 const { UID_MENU, UID_MENU_ITEM } = require( '../constants' );
 const { pluginId } = require( '../utils' );
 
