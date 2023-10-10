@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
 import { Prompt } from 'react-router-dom';
 import { useFormikContext } from 'formik';
 import get from 'lodash/get';
@@ -11,6 +10,7 @@ import uniqBy from 'lodash/uniqBy';
 import uniqueId from 'lodash/uniqueId';
 
 import { MenuDataContext } from '../../contexts';
+import { usePluginConfig } from '../../hooks';
 import {
   getFieldsByType,
   getRelationValue,
@@ -26,8 +26,7 @@ import {
 
 const MenuDataProvider = ( { children, isCloningEntry, isCreatingEntry, menu } ) => {
   const { formatMessage } = useIntl();
-  const { config, schema } = useSelector( state => state[ `${pluginId}_config` ] );
-  const { maxDepth } = config;
+  const { data: { config, isLoading, schema } } = usePluginConfig();
   const {
     errors,
     handleChange,
@@ -222,7 +221,7 @@ const MenuDataProvider = ( { children, isCloningEntry, isCreatingEntry, menu } )
   }, [ isSubmitting ] );
 
   useEffect( () => {
-    if ( ! prevModifiedData ) {
+    if ( isLoading || ! prevModifiedData) {
       return;
     }
 
@@ -254,7 +253,7 @@ const MenuDataProvider = ( { children, isCloningEntry, isCreatingEntry, menu } )
 
     setInitialData( newInitialData );
     setValues( newInitialData );
-  }, [ initialValues ] );
+  }, [ initialValues, isLoading ] );
 
   const providerProps = {
     activeMenuItem,
@@ -267,7 +266,7 @@ const MenuDataProvider = ( { children, isCloningEntry, isCreatingEntry, menu } )
     isCloningEntry,
     isCreatingEntry,
     items,
-    maxDepth,
+    maxDepth: config?.maxDepth,
     modifiedData: values,
     moveMenuItem,
     relationConnect,

@@ -32,8 +32,6 @@ export default {
     app.registerPlugin( {
       id: pluginId,
       name: pluginName,
-      initializer: Initializer,
-      isReady: false,
     } );
   },
 

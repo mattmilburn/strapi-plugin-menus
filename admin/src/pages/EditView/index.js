@@ -1,6 +1,5 @@
 import React, { memo, useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import get from 'lodash/get';
 import pick from 'lodash/pick';
@@ -26,6 +25,7 @@ import {
 } from '../../components';
 import { DRAG_ITEM_TYPES } from '../../constants';
 import { DragLayer, RelationDragPreview } from '../../coreComponents';
+import { usePluginConfig } from '../../hooks';
 import {
   getFieldsByType,
   getFieldsLayout,
@@ -83,7 +83,7 @@ const EditView = ( { history, location, match } ) => {
   const queryClient = useQueryClient();
 
   // Get config and custom layouts.
-  const { config, schema } = useSelector( state => state[ `${pluginId}_config` ] );
+  const { data: { config, isLoading, schema } } = usePluginConfig();
   const customLayouts = get( config, 'layouts.menuItem', {} );
 
   // Merge default fields layout with custom field layouts.
@@ -91,6 +91,14 @@ const EditView = ( { history, location, match } ) => {
     return getFieldsLayout( formLayout.menuItem, customLayouts, schema );
   }, [ customLayouts ] );
   const menuItemFields = Object.values( menuItemLayout ).flat();
+
+  const mediaFields = useMemo( () => {
+    if ( isLoading ) {
+      return [];
+    }
+
+    return getFieldsByType( schema.menuItem, [ 'media' ] );
+  }, [ isLoading ] );
 
   const isCreating = ! id;
   const isCloning = location.pathname.split( '/' ).includes( 'clone' );
@@ -120,8 +128,6 @@ const EditView = ( { history, location, match } ) => {
 
     queryKey = CLONE_QUERY_KEY.replace( '{id}', id );
   }
-
-  const mediaFields = getFieldsByType( schema.menuItem, [ 'media' ] );
 
   const getMenu = async id => {
     const { data } = await fetchClient.get( getRequestUrl( id, {
