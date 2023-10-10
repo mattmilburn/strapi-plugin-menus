@@ -1,42 +1,51 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { request, useNotification } from '@strapi/helper-plugin';
+import { useFetchClient, useNotification } from '@strapi/helper-plugin';
 
 import { ACTION_RESOLVE_CONFIG } from '../constants';
 import { pluginId } from '../utils';
 
-const fetchConfig = async ( toggleNotification ) => {
-  try {
-    const endpoint = `/${pluginId}/config`;
-    const data = await request( endpoint, { method: 'GET' } );
-
-    return data ?? {};
-  } catch ( err ) {
-    toggleNotification( {
-      type: 'warning',
-      message: { id: 'notification.error' },
-    } );
-
-    return err;
-  }
-};
-
 const usePluginConfig = () => {
   const dispatch = useDispatch();
+  const fetchClient = useFetchClient();
   const toggleNotification = useNotification();
-
-  const stateKey = `${pluginId}_config`;
-  const config = useSelector( state => state[ stateKey ].config );
-  const schema = useSelector( state => state[ stateKey ].schema );
-  const isLoading = useSelector( state => state[ stateKey ].isLoading );
+  const { config, isLoading, schema } = useSelector( state => state[ `${pluginId}_config` ] );
 
   useEffect( () => {
-    fetchConfig( toggleNotification ).then( data => {
-      dispatch( { type: ACTION_RESOLVE_CONFIG, data } );
-    } );
-  }, [ dispatch, toggleNotification ] );
+    // Do nothing if we have already loaded the data.
+    if ( ! isLoading && !! config ) {
+      return;
+    }
 
-  return { isLoading, config, schema };
+    fetchClient.get( `/${pluginId}/config` )
+      .then( res => {
+        dispatch( {
+          type: ACTION_RESOLVE_CONFIG,
+          data: {
+            config: res?.data?.config ?? {},
+            schema: res?.data?.schema ?? {},
+          },
+        } );
+      } )
+      .catch( err => {
+        if ( 'code' in err && err?.code === 'ERR_CANCELED' ) {
+          return;
+        }
+
+        toggleNotification( {
+          type: 'warning',
+          message: { id: 'notification.error' },
+        } );
+      } );
+  }, [] );
+
+  return {
+    data: {
+      config,
+      schema,
+    },
+    isLoading,
+  };
 };
 
 export default usePluginConfig;
