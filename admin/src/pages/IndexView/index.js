@@ -5,6 +5,7 @@ import get from 'lodash/get';
 import {
   DynamicTable,
   EmptyStateLayout,
+  useFetchClient,
   useNotification,
   useOverlayBlocker,
   useQueryParams,
@@ -15,12 +16,13 @@ import { Button } from '@strapi/design-system/Button';
 import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
 import Plus from '@strapi/icons/Plus';
 
-import { api, getTrad, pluginId, pluginName } from '../../utils';
+import { getRequestUrl, getTrad, pluginId, pluginName } from '../../utils';
 import { Layout, MenuRows, PaginationFooter } from '../../components';
 
 const QUERY_KEY = 'menus-index';
 
 const IndexView = ( { history } ) => {
+  const fetchClient = useFetchClient();
   const { formatMessage } = useIntl();
   const { notifyStatus } = useNotifyAT();
   const toggleNotification = useNotification();
@@ -31,15 +33,19 @@ const IndexView = ( { history } ) => {
   const pageSize = get( query, 'pageSize', 10 );
   const page = ( get( query, 'page', 1 ) * pageSize ) - pageSize;
 
-  const fetchParams = {
-    populate: '*',
-    pagination: {
-      start: page,
-      limit: pageSize,
-    },
+  const getAllMenus = async () => {
+    const { data } = await fetchClient.get( getRequestUrl( null, {
+      populate: '*',
+      pagination: {
+        start: page,
+        limit: pageSize,
+      },
+    } ) );
+
+    return data;
   };
 
-  const { data, refetch, status } = useQuery( QUERY_KEY, () => api.get( null, fetchParams ), {
+  const { data, refetch, status } = useQuery( QUERY_KEY, () => getAllMenus(), {
     onSuccess: () => {
       notifyStatus(
         formatMessage( {
@@ -63,7 +69,7 @@ const IndexView = ( { history } ) => {
     refetch();
   }, [ page, pageSize ] );
 
-  const deleteMutation = useMutation( id => api.deleteAction( id ), {
+  const deleteMutation = useMutation( id => fetchClient.delete( getRequestUrl( id ) ), {
     onSuccess: async () => {
       await queryClient.invalidateQueries( QUERY_KEY );
 

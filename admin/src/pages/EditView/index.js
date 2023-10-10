@@ -7,7 +7,7 @@ import pick from 'lodash/pick';
 import uniq from 'lodash/uniq';
 import uniqueId from 'lodash/uniqueId';
 import { Formik } from 'formik';
-import { Form, useNotification, useOverlayBlocker } from '@strapi/helper-plugin';
+import { Form, useFetchClient, useNotification, useOverlayBlocker } from '@strapi/helper-plugin';
 import { useNotifyAT } from '@strapi/design-system';
 import { Box } from '@strapi/design-system/Box';
 import { Button } from '@strapi/design-system/Button';
@@ -27,9 +27,9 @@ import {
 import { DRAG_ITEM_TYPES } from '../../constants';
 import { DragLayer, RelationDragPreview } from '../../coreComponents';
 import {
-  api,
   getFieldsByType,
   getFieldsLayout,
+  getRequestUrl,
   getTrad,
   pluginId,
   sanitizeEntity,
@@ -75,6 +75,7 @@ function renderDragLayerItem({ type, item }) {
 
 const EditView = ( { history, location, match } ) => {
   const { id } = match.params;
+  const fetchClient = useFetchClient();
   const { formatMessage } = useIntl();
   const { notifyStatus } = useNotifyAT();
   const toggleNotification = useNotification();
@@ -121,15 +122,20 @@ const EditView = ( { history, location, match } ) => {
   }
 
   const mediaFields = getFieldsByType( schema.menuItem, [ 'media' ] );
-  const fetchParams = {
-    populate: uniq( [
-      'items',
-      'items.parent',
-      ...mediaFields.map( field => `items.${field}` ),
-    ] ),
+
+  const getMenu = async id => {
+    const { data } = await fetchClient.get( getRequestUrl( id, {
+      populate: uniq( [
+        'items',
+        'items.parent',
+        ...mediaFields.map( field => `items.${field}` ),
+      ] ),
+    } ) );
+
+    return data;
   };
 
-  const { status, data } = useQuery( queryKey, () => api.get( id, fetchParams ), {
+  const { status, data } = useQuery( queryKey, () => getMenu( id ), {
     enabled: ! isCreating,
     select: data => transformResponse( data ),
     onSuccess: () => {
@@ -180,16 +186,16 @@ const EditView = ( { history, location, match } ) => {
         },
       };
 
-      return api.postAction( clonedBody );
+      return fetchClient.post( getRequestUrl(), clonedBody );
     }
 
     // Maybe submit a new menu.
     if ( isCreating ) {
-      return api.postAction( body );
+      return fetchClient.post( getRequestUrl(), body );
     }
 
     // If not creating or cloning, update this menu.
-    return api.putAction( id, body );
+    return fetchClient.put( getRequestUrl( id ), body );
   }, {
     refetchActive: true,
     onSuccess: async () => {
