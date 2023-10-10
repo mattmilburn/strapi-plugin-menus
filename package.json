@@ -27,7 +27,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "axios": "^0.27.2",
     "qs": "6.11.2",
     "react-dnd": "16.0.1",
     "react-dnd-html5-backend": "16.0.1",
