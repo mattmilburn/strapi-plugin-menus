@@ -24,7 +24,14 @@
     "npm": ">=6.0.0"
   },
   "scripts": {
+    "prepare": "husky install",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --check",
+      "eslint --fix-dry-run"
+    ]
   },
   "dependencies": {
     "qs": "6.11.2",
@@ -74,6 +81,8 @@
     "eslint-plugin-react": "7.32.2",
     "eslint-plugin-react-hooks": "4.6.0",
     "formik": "^2.2.9",
+    "husky": "8.0.3",
+    "lint-staged": "13.2.3",
     "lodash": "4.17.21",
     "prettier": "2.8.8",
     "prop-types": "^15.8.1",
