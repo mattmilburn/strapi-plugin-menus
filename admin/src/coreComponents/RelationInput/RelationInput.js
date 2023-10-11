@@ -78,7 +78,7 @@ const RelationInput = ({
   required,
   relations: paginatedRelations,
   searchResults,
-  size,
+  // size, // CUSTOM MOD [9].
 }) => {
   const [textValue, setTextValue] = useState('');
   const [overflow, setOverflow] = useState('');
@@ -369,7 +369,7 @@ RelationInput.propTypes = {
   }).isRequired,
   required: PropTypes.bool,
   searchResults: SearchResults,
-  size: PropTypes.number.isRequired,
+  // size: PropTypes.number.isRequired, // CUSTOM MOD [9].
   relations: RelationsResult,
 };
 

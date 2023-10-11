@@ -12,6 +12,43 @@ const sanitizeFormData = (data, prevData, layout, isCloning) => {
     };
   }, {});
 
+  const sanitizeRelationConnection = (key, value) => {
+    const prevValue = get(prevData, key) ?? [];
+    let connect = [];
+    let disconnect = [];
+
+    // Always connect relations when cloning.
+    if (isCloning && value?.length) {
+      connect = value.map(({ id }) => ({ id }));
+    }
+
+    // Maybe connect relations.
+    if (!isCloning && value?.length) {
+      connect = value
+        .filter((relation) => {
+          const match = prevValue.find((_relation) => _relation.id === relation.id);
+
+          // Add if not found in previous data.
+          return !match;
+        })
+        .map(({ id }) => ({ id }));
+    }
+
+    // Maybe disconnect relations.
+    if (!isCloning && prevValue?.length) {
+      disconnect = prevValue
+        .filter((relation) => {
+          const match = value.find((_relation) => _relation.id === relation.id);
+
+          // Add if found in previous data, but not in next data.
+          return !match;
+        })
+        .map(({ id }) => ({ id }));
+    }
+
+    return { connect, disconnect };
+  };
+
   const sanitizedData = Object.entries(data).reduce((acc, [key, value]) => {
     const type = fieldTypes[key];
 
@@ -40,40 +77,7 @@ const sanitizeFormData = (data, prevData, layout, isCloning) => {
         break;
 
       case 'relation':
-        const prevValue = get(prevData, key) ?? [];
-        let connect = [];
-        let disconnect = [];
-
-        // Always connect relations when cloning.
-        if (isCloning && value?.length) {
-          connect = value.map(({ id }) => ({ id }));
-        }
-
-        // Maybe connect relations.
-        if (!isCloning && value?.length) {
-          connect = value
-            .filter((relation) => {
-              const match = prevValue.find((_relation) => _relation.id === relation.id);
-
-              // Add if not found in previous data.
-              return !match;
-            })
-            .map(({ id }) => ({ id }));
-        }
-
-        // Maybe disconnect relations.
-        if (!isCloning && prevValue?.length) {
-          disconnect = prevValue
-            .filter((relation) => {
-              const match = value.find((_relation) => _relation.id === relation.id);
-
-              // Add if found in previous data, but not in next data.
-              return !match;
-            })
-            .map(({ id }) => ({ id }));
-        }
-
-        sanitizedValue = { connect, disconnect };
+        sanitizedValue = sanitizeRelationConnection(key, value);
         break;
 
       case 'string':
@@ -83,9 +87,11 @@ const sanitizeFormData = (data, prevData, layout, isCloning) => {
         break;
 
       case 'time':
+      // eslint-disable-next-line no-case-declarations
         const timeParts = value?.split(':') ?? [];
 
         if (timeParts.length > 2) {
+          // eslint-disable-next-line no-case-declarations
           const [hour, minute] = timeParts;
 
           sanitizedValue = `${hour}:${minute}`;

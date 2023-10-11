@@ -22,7 +22,7 @@ const addFiltersClause = (params, filtersClause) => {
 
 module.exports = {
   async findAvailable(ctx) {
-    const { userAbility } = ctx.state;
+    // const { userAbility } = ctx.state; // CUSTOM MOD [5].
     const { model, targetField } = ctx.params;
 
     await validateFindAvailable(ctx.request.query);
@@ -95,7 +95,7 @@ module.exports = {
       ? await getService('components').findConfiguration(modelSchema)
       : await getService('content-types').findConfiguration(modelSchema);
 
-    const mainField = prop(`metadatas.${targetField}.edit.mainField`, modelConfig) || 'id';
+    let mainField = prop(`metadatas.${targetField}.edit.mainField`, modelConfig) || 'id';
 
     // CUSTOM MOD [5].
     if (!isListable(targetedModel, mainField)) {
@@ -150,7 +150,7 @@ module.exports = {
   },
 
   async findExisting(ctx) {
-    const { userAbility } = ctx.state;
+    // const { userAbility } = ctx.state; // CUSTOM MOD [5].
     const { model, id, targetField } = ctx.params;
 
     await validateFindExisting(ctx.request.query);
@@ -213,7 +213,8 @@ module.exports = {
     //   model: attribute.target,
     // });
 
-    const mainField = prop(`metadatas.${targetField}.edit.mainField`, modelConfig) || 'id';
+    let mainField = prop(`metadatas.${targetField}.edit.mainField`, modelConfig) || 'id';
+
     // CUSTOM MOD [5].
     if (!isListable(targetedModel, mainField)) {
       mainField = 'id';

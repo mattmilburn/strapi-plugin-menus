@@ -1,13 +1,7 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.div`
-  ${({ level }) => {
-    // Indent for all levels except the root level.
-    if (level) {
-      return `margin-left: 2.5rem;`;
-    }
-  }}
-
+  margin-left: ${({ level }) => level ? '2.5rem' : 0};
   padding-top: 1rem;
   position: relative;
   z-index: 1;

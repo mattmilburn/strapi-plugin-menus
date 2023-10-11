@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { Prompt } from 'react-router-dom';
@@ -11,7 +11,7 @@ import uniqueId from 'lodash/uniqueId';
 
 import { MenuDataContext } from '../../contexts';
 import { usePluginConfig } from '../../hooks';
-import { getFieldsByType, getRelationValue, menuProps, pluginId } from '../../utils';
+import { getFieldsByType, getRelationValue, menuProps } from '../../utils';
 import { defaultItem, getChildren, getDescendants, sortByOrder } from './utils';
 
 const MenuDataProvider = ({ children, isCloningEntry, isCreatingEntry, menu }) => {
@@ -194,6 +194,7 @@ const MenuDataProvider = ({ children, isCloningEntry, isCreatingEntry, menu }) =
     if (newActiveItem) {
       setActiveMenuItem(newActiveItem);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeMenuItem, values?.items]);
 
   useEffect(() => {
@@ -202,6 +203,7 @@ const MenuDataProvider = ({ children, isCloningEntry, isCreatingEntry, menu }) =
     if (isSubmitting) {
       setPrevModifiedData(values);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSubmitting]);
 
   useEffect(() => {
@@ -237,8 +239,10 @@ const MenuDataProvider = ({ children, isCloningEntry, isCreatingEntry, menu }) =
 
     setInitialData(newInitialData);
     setValues(newInitialData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialValues, isLoading]);
 
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
   const providerProps = {
     activeMenuItem,
     addMenuItem,
@@ -272,8 +276,7 @@ const MenuDataProvider = ({ children, isCloningEntry, isCreatingEntry, menu }) =
 };
 
 MenuDataProvider.defaultProps = {
-  isCreatingEntry: false,
-  isCloningEntry: false,
+  menu: null,
 };
 
 MenuDataProvider.propTypes = {

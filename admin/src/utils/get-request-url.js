@@ -1,6 +1,6 @@
 import qs from 'qs';
 
-import { pluginId } from './';
+import pluginId from './plugin-id';
 
 const getRequestUrl = (path, params = {}) => {
   const query = qs.stringify(params, { addQueryPrefix: true });

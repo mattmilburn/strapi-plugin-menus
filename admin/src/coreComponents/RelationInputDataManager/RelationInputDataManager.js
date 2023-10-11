@@ -26,9 +26,9 @@ import {
 
 export const RelationInputDataManager = ({
   error,
-  entityId,
-  componentId,
-  isComponentRelation,
+  // entityId, // CUSTOM MOD [9].
+  // componentId, // CUSTOM MOD [9].
+  // isComponentRelation, // CUSTOM MOD [9].
   editable,
   description,
   intlLabel,
@@ -390,21 +390,21 @@ export const RelationInputDataManager = ({
 };
 
 RelationInputDataManager.defaultProps = {
-  componentId: undefined,
-  entityId: undefined,
+  // componentId: undefined, // CUSTOM MOD [9].
+  // entityId: undefined, // CUSTOM MOD [9].
   editable: true,
   error: undefined,
   description: '',
   labelAction: null,
-  isComponentRelation: false,
+  // isComponentRelation: false, // CUSTOM MOD [9].
   isFieldAllowed: true,
   placeholder: null,
   required: false,
 };
 
 RelationInputDataManager.propTypes = {
-  componentId: PropTypes.number,
-  entityId: PropTypes.number,
+  // componentId: PropTypes.number, // CUSTOM MOD [9].
+  // entityId: PropTypes.number, // CUSTOM MOD [9].
   editable: PropTypes.bool,
   error: PropTypes.string,
   description: PropTypes.string,
@@ -416,7 +416,7 @@ RelationInputDataManager.propTypes = {
   labelAction: PropTypes.element,
   // isCloningEntry: PropTypes.bool.isRequired, // CUSTOM MOD [9].
   // isCreatingEntry: PropTypes.bool.isRequired, // CUSTOM MOD [9].
-  isComponentRelation: PropTypes.bool,
+  // isComponentRelation: PropTypes.bool, // CUSTOM MOD [9].
   isFieldAllowed: PropTypes.bool,
   isFieldReadable: PropTypes.bool.isRequired,
   mainField: PropTypes.shape({

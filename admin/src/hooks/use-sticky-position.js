@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { STRAPI_HEADER_HEIGHT } from '../constants';
 
@@ -6,15 +6,15 @@ const useStickyPosition = (ref, enabled = true) => {
   const [isSticky, setSticky] = useState(false);
   const [stickyWidth, setStickyWidth] = useState(null);
 
-  const onResize = () => {
+  const onResize = useCallback(() => {
     if (!ref.current) {
       return;
     }
 
     setStickyWidth(ref.current.parentNode.getBoundingClientRect().width);
-  };
+  }, [ref, setStickyWidth]);
 
-  const onScroll = () => {
+  const onScroll = useCallback(() => {
     if (!ref.current) {
       return;
     }
@@ -29,7 +29,7 @@ const useStickyPosition = (ref, enabled = true) => {
     if (isStickyPos && destination > STRAPI_HEADER_HEIGHT) {
       setSticky(false);
     }
-  };
+  }, [ref, setSticky]);
 
   useEffect(() => {
     if (isSticky) {
@@ -41,7 +41,7 @@ const useStickyPosition = (ref, enabled = true) => {
     }
 
     return () => window.removeEventListener('resize', onResize);
-  }, [isSticky]);
+  }, [isSticky, onResize]);
 
   useEffect(() => {
     if (enabled) {
@@ -53,7 +53,7 @@ const useStickyPosition = (ref, enabled = true) => {
     }
 
     return () => window.removeEventListener('scroll', onScroll);
-  }, [enabled]);
+  }, [enabled, onScroll]);
 
   return {
     isSticky,

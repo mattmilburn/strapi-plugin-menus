@@ -38,7 +38,7 @@ const usePluginConfig = () => {
           message: { id: 'notification.error' },
         });
       });
-  }, []);
+  }, [isLoading, config, dispatch, fetchClient, toggleNotification]);
 
   return {
     data: {

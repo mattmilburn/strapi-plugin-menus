@@ -23,7 +23,7 @@ As Strapi updates, these components and files may also need to be updated in thi
 | 6 | The `slug` value from `useCMEditViewDataManager` is updated to use either `plugin::menus.menu` or `plugin::menus.menu-item`. |
 | 7 | Because menu items' fields are nested in the root menu `items` prop, we need extra handling for accessing values. |
 | 8 | Because we are not using a reducer (yet) for state management, we remove the `onLoadRelationsCallback` dependency from `useEffect` otherwise it re-renders infinitely. |
-| 9 | Manage the difference between creating a new menu vs. a new menu item. |
+| 9 | Manage the difference between creating a new menu vs. a new menu item. Some code is commented out due to it being useless after changes made for this plugin. |
 | 10 | To maintain proper dirty state for relation fields, we need to omit the `label` and `id` props that come from the `ReactSelect` component. |
 | 11 | Avoid re-fetching relation data as fields are toggled in the UI with `hasLoaded` var. Some cloned vars are also removed because of how this is already handled in the plugin. |
 | 12 | Dynamic zones and components are not supported in this plugin so logic pertaining to them is removed. |
