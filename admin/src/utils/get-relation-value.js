@@ -1,13 +1,13 @@
 import get from 'lodash/get';
 
-const getRelationValue = ( data, path ) => {
-  const value = get( data, path );
+const getRelationValue = (data, path) => {
+  const value = get(data, path);
 
-  if ( ! value ) {
+  if (!value) {
     return [];
   }
 
-  return Array.isArray( value ) ? value : [ value ];
+  return Array.isArray(value) ? value : [value];
 };
 
 export default getRelationValue;

@@ -77,7 +77,7 @@ export const RelationInputDataManager = ({
 
   const cacheKey = `${slug}-${fieldName}-${relationId}`; // CUSTOM MOD [7].
   const { relations, search, searchFor } = useRelation(cacheKey, {
-    hasLoaded: has( initialData, name ), // CUSTOM MOD [11].
+    hasLoaded: has(initialData, name), // CUSTOM MOD [11].
     relation: {
       enabled: !!endpoints.relation,
       endpoint: endpoints.relation,

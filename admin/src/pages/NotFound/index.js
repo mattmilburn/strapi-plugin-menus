@@ -14,27 +14,27 @@ const NotFound = () => {
     <Main labelledBy="title">
       <HeaderLayout
         id="title"
-        title={ formatMessage( {
+        title={formatMessage({
           id: 'content-manager.pageNotFound',
           defaultMessage: 'Page not found',
-        } ) }
+        })}
       />
       <ContentLayout>
         <EmptyStateLayout
           action={
-            <LinkButton variant="secondary" endIcon={ <ArrowRight /> } to={ `/plugins/${pluginId}` }>
-              { formatMessage( {
+            <LinkButton variant="secondary" endIcon={<ArrowRight />} to={`/plugins/${pluginId}`}>
+              {formatMessage({
                 id: 'app.components.NotFoundPage.back',
                 defaultMessage: 'Back to homepage',
-              } ) }
+              })}
             </LinkButton>
           }
-          content={ formatMessage( {
+          content={formatMessage({
             id: 'app.page.not.found',
             defaultMessage: "Oops! We can't seem to find the page you're looging for...",
-          } ) }
+          })}
           hasRadius
-          icon={ <EmptyPictures width="10rem" /> }
+          icon={<EmptyPictures width="10rem" />}
           shadow="tableShadow"
         />
       </ContentLayout>

@@ -1,86 +1,84 @@
 'use strict';
 
-const get = require( 'lodash/get' );
-const has = require( 'lodash/has' );
-const omit = require( 'lodash/omit' );
+const get = require('lodash/get');
+const has = require('lodash/has');
+const omit = require('lodash/omit');
 
-const sortByOrder = require( './sort-by-order' );
+const sortByOrder = require('./sort-by-order');
 
-const getDescendants = ( items, parentId ) => {
+const getDescendants = (items, parentId) => {
   const results = [];
-  const children = items.filter( item => get( item, 'attributes.parent.data.id' ) === parentId );
+  const children = items.filter((item) => get(item, 'attributes.parent.data.id') === parentId);
 
-  children.forEach( child => {
-    results.push( {
+  children.forEach((child) => {
+    results.push({
       ...child,
       attributes: {
         ...child.attributes,
         children: {
-          data: getDescendants( items, child.id ),
+          data: getDescendants(items, child.id),
         },
       },
-    } );
-  } );
+    });
+  });
 
-  return sortByOrder( results );
+  return sortByOrder(results);
 };
 
-const removeParentData = items => items.reduce( ( acc, item ) => {
-  let sanitizedItem = omit( item, 'attributes.parent' );
-  sanitizedItem.attributes.children.data = removeParentData( item.attributes.children.data );
+const removeParentData = (items) =>
+  items.reduce((acc, item) => {
+    let sanitizedItem = omit(item, 'attributes.parent');
+    sanitizedItem.attributes.children.data = removeParentData(item.attributes.children.data);
 
-  return [
-    ...acc,
-    sanitizedItem,
-  ];
-}, [] );
+    return [...acc, sanitizedItem];
+  }, []);
 
-const serializeEntity = ( data, keepParentData ) => {
-  const items = get( data, 'attributes.items.data', [] );
+const serializeEntity = (data, keepParentData) => {
+  const items = get(data, 'attributes.items.data', []);
 
   // Do nothing if there are no items to serialize.
-  if ( ! items.length ) {
+  if (!items.length) {
     return data;
   }
 
-  const rootItems = items.filter( item => ! has( item, 'attributes.parent.data.id' ) );
+  const rootItems = items.filter((item) => !has(item, 'attributes.parent.data.id'));
 
   // Assign ordered and nested items to root items.
-  const nestedItems = rootItems.reduce( ( acc, item ) => {
+  const nestedItems = rootItems.reduce((acc, item) => {
     const rootItem = {
       ...item,
       attributes: {
         ...item.attributes,
         children: {
-          data: getDescendants( items, item.id ),
+          data: getDescendants(items, item.id),
         },
       },
     };
 
-    return [ ...acc, rootItem ];
-  }, [] );
+    return [...acc, rootItem];
+  }, []);
 
-  const sanitizedItems = ! keepParentData ? removeParentData( nestedItems ) : nestedItems;
+  const sanitizedItems = !keepParentData ? removeParentData(nestedItems) : nestedItems;
 
   return {
     ...data,
     attributes: {
       ...data.attributes,
       items: {
-        data: sortByOrder( sanitizedItems ),
+        data: sortByOrder(sanitizedItems),
       },
     },
   };
 };
 
-const serializeNestedMenu = ( res, keepParentData ) => {
-  const data = get( res, 'data' );
+const serializeNestedMenu = (res, keepParentData) => {
+  const data = get(res, 'data');
   let sanitizedData;
 
-  if ( Array.isArray( data ) ) {
-    sanitizedData = data.map( _data => serializeEntity( _data, keepParentData ) );
+  if (Array.isArray(data)) {
+    sanitizedData = data.map((_data) => serializeEntity(_data, keepParentData));
   } else {
-    sanitizedData = serializeEntity( data, keepParentData );
+    sanitizedData = serializeEntity(data, keepParentData);
   }
 
   return {

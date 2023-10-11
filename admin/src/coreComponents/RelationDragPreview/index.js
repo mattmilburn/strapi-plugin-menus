@@ -6,10 +6,7 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
 import { DisconnectButton, LinkEllipsis } from '../RelationInput'; // CUSTOM MOD [3].
-import {
-  ChildrenWrapper,
-  FlexWrapper,
-} from '../RelationInput/components/RelationItem'; // CUSTOM MOD [3].
+import { ChildrenWrapper, FlexWrapper } from '../RelationInput/components/RelationItem'; // CUSTOM MOD [3].
 import { PUBLICATION_STATES } from '../RelationInputDataManager/constants'; // CUSTOM MOD [3].
 // import { getTrad } from '../../../utils'; // CUSTOM MOD [4].
 

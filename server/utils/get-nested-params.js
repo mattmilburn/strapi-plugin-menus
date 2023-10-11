@@ -1,12 +1,12 @@
 'use strict';
 
-const get = require( 'lodash/get' );
-const has = require( 'lodash/has' );
-const uniq = require( 'lodash/uniq' );
+const get = require('lodash/get');
+const has = require('lodash/has');
+const uniq = require('lodash/uniq');
 
-const getNestedParams = params => {
-  const populateParent = [ 'items', 'items.parent' ];
-  const populate = get( params, 'populate' );
+const getNestedParams = (params) => {
+  const populateParent = ['items', 'items.parent'];
+  const populate = get(params, 'populate');
 
   /**
    * @TODO - One day this will need to be refactored when relation fields are
@@ -14,7 +14,7 @@ const getNestedParams = params => {
    */
 
   // Top-level population.
-  if ( populate === '*' ) {
+  if (populate === '*') {
     return {
       ...params,
       populate: populateParent,
@@ -22,23 +22,20 @@ const getNestedParams = params => {
   }
 
   // Array population.
-  if ( Array.isArray( populate ) ) {
+  if (Array.isArray(populate)) {
     return {
       ...params,
-      populate: uniq( [
-        ...populate,
-        ...populateParent,
-      ] ),
+      populate: uniq([...populate, ...populateParent]),
     };
   }
 
-  const items = get( populate, 'items' );
-  const itemsPopulate = get( items, 'populate' );
+  const items = get(populate, 'items');
+  const itemsPopulate = get(items, 'populate');
 
   // Object population.
-  if ( itemsPopulate ) {
+  if (itemsPopulate) {
     // Top-level population.
-    if ( itemsPopulate === '*' ) {
+    if (itemsPopulate === '*') {
       return {
         ...params,
         populate: {
@@ -54,17 +51,14 @@ const getNestedParams = params => {
     }
 
     // Array population.
-    if ( Array.isArray( itemsPopulate ) ) {
+    if (Array.isArray(itemsPopulate)) {
       return {
         ...params,
         populate: {
           ...populate,
           items: {
             ...items,
-            populate: uniq( [
-              ...itemsPopulate,
-              ...populateParent,
-            ] ),
+            populate: uniq([...itemsPopulate, ...populateParent]),
           },
         },
       };
@@ -84,7 +78,7 @@ const getNestedParams = params => {
         },
       },
     };
-  } else if ( items ) {
+  } else if (items) {
     return {
       ...params,
       populate: items,

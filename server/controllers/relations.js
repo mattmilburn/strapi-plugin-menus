@@ -9,7 +9,7 @@ const { PUBLISHED_AT_ATTRIBUTE } = require('@strapi/utils').contentTypes.constan
 const { validateFindAvailable, validateFindExisting } = require('./validation/relations');
 const { isListable } = require('../utils'); // CUSTOM MOD [3].
 
-const getService = name => strapi.plugin( 'content-manager' ).service( name ); // CUSTOM MOD [4].
+const getService = (name) => strapi.plugin('content-manager').service(name); // CUSTOM MOD [4].
 
 const addFiltersClause = (params, filtersClause) => {
   params.filters = params.filters || {};
@@ -97,7 +97,8 @@ module.exports = {
 
     const mainField = prop(`metadatas.${targetField}.edit.mainField`, modelConfig) || 'id';
 
-    if (!isListable(targetedModel, mainField)) { // CUSTOM MOD [5].
+    // CUSTOM MOD [5].
+    if (!isListable(targetedModel, mainField)) {
       mainField = 'id';
     }
 
@@ -213,7 +214,8 @@ module.exports = {
     // });
 
     const mainField = prop(`metadatas.${targetField}.edit.mainField`, modelConfig) || 'id';
-    if (!isListable(targetedModel, mainField)) { // CUSTOM MOD [5].
+    // CUSTOM MOD [5].
+    if (!isListable(targetedModel, mainField)) {
       mainField = 'id';
     }
 

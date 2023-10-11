@@ -2,8 +2,8 @@ const defaultGrid = {
   col: 12,
 };
 
-const serializeFields = ( prefix, index, fields ) => {
-  return fields.map( field => {
+const serializeFields = (prefix, index, fields) => {
+  return fields.map((field) => {
     const grid = field?.grid ?? defaultGrid;
 
     return {
@@ -14,7 +14,7 @@ const serializeFields = ( prefix, index, fields ) => {
         name: `${prefix}[${index}].${field.input.name}`,
       },
     };
-  } );
+  });
 };
 
 export default serializeFields;

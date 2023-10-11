@@ -1,4 +1,4 @@
-const getBoxProps = ( props = {} ) => {
+const getBoxProps = (props = {}) => {
   return {
     background: 'neutral0',
     hasRadius: true,

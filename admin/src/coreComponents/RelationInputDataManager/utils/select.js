@@ -72,11 +72,12 @@ function useSelect({
     componentId = get(modifiedData, fieldNameKeys.slice(0, -1))?.id;
   }
 
-  const isItemType = name.indexOf( 'items' ) === 0; // CUSTOM MOD [7].
+  const isItemType = name.indexOf('items') === 0; // CUSTOM MOD [7].
   let itemId; // CUSTOM MOD [7].
 
-  if (isItemType) { // CUSTOM MOD [7].
-    itemId = get( modifiedData, `${fieldNameKeys.at( 0 )}.id` );
+  if (isItemType) {
+    // CUSTOM MOD [7].
+    itemId = get(modifiedData, `${fieldNameKeys.at(0)}.id`);
   }
 
   const entityId = origin || modifiedData.id;
