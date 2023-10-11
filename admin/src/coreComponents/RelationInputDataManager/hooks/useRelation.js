@@ -5,7 +5,8 @@ import { useInfiniteQuery } from 'react-query';
 
 import { normalizeRelations } from '../utils'; // CUSTOM MOD [3].
 
-export const useRelation = (cacheKey, { relation, search, hasLoaded }) => { // CUSTOM MOD [11].
+// CUSTOM MOD [11].
+export const useRelation = (cacheKey, { relation, search, hasLoaded }) => {
   const [searchParams, setSearchParams] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
   const { get } = useFetchClient();
@@ -50,7 +51,7 @@ export const useRelation = (cacheKey, { relation, search, hasLoaded }) => { // C
 
   const relationsRes = useInfiniteQuery(['relation', cacheKey], fetchRelations, {
     cacheTime: 0,
-    enabled: relation.enabled && ! hasLoaded, // CUSTOM MOD [11].
+    enabled: relation.enabled && !hasLoaded, // CUSTOM MOD [11].
     /**
      * @type {(lastPage:
      * | { data: null }

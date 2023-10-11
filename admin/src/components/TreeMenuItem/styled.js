@@ -11,7 +11,7 @@ export const Label = styled.div`
   overflow: hidden;
 `;
 
-export const Wrapper = styled( Box )`
+export const Wrapper = styled(Box)`
   color: ${({ theme }) => theme.colors.neutral800};
   outline: none;
   cursor: pointer;
@@ -19,9 +19,9 @@ export const Wrapper = styled( Box )`
   z-index: 2;
 
   ${({ theme, hasErrors, isActive }) => {
-    if ( isActive ) {
+    if (isActive) {
       return `
-        box-shadow: ${theme.colors[ hasErrors ? 'danger600' : 'primary600' ]} 0 0 0 2px;
+        box-shadow: ${theme.colors[hasErrors ? 'danger600' : 'primary600']} 0 0 0 2px;
       `;
     }
   }}

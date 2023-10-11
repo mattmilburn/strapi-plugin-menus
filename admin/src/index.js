@@ -5,18 +5,18 @@ import reducers from './reducers';
 import { getTrad, pluginId, pluginName } from './utils';
 
 export default {
-  register( app ) {
-    app.addReducers( reducers );
+  register(app) {
+    app.addReducers(reducers);
 
-    app.addMenuLink( {
+    app.addMenuLink({
       to: `/plugins/${pluginId}`,
       icon: PluginIcon,
       intlLabel: {
-        id: getTrad( 'plugin.name' ),
+        id: getTrad('plugin.name'),
         defaultMessage: pluginName,
       },
       Component: async () => {
-        const component = await import( /* webpackChunkName: "[request]" */ './pages/App' );
+        const component = await import(/* webpackChunkName: "[request]" */ './pages/App');
 
         return component;
       },
@@ -27,33 +27,33 @@ export default {
         //   subject: null,
         // },
       ],
-    } );
+    });
 
-    app.registerPlugin( {
+    app.registerPlugin({
       id: pluginId,
       name: pluginName,
-    } );
+    });
   },
 
-  async registerTrads( { locales } ) {
+  async registerTrads({ locales }) {
     const importedTrads = await Promise.all(
-      locales.map( locale => {
-        return import( `./translations/${locale}.json` )
-          .then( ( { default: data } ) => {
+      locales.map((locale) => {
+        return import(`./translations/${locale}.json`)
+          .then(({ default: data }) => {
             return {
-              data: prefixPluginTranslations( data, pluginId ),
+              data: prefixPluginTranslations(data, pluginId),
               locale,
             };
-          } )
-          .catch( () => {
+          })
+          .catch(() => {
             return {
               data: {},
               locale,
             };
-          } );
-      } )
+          });
+      })
     );
 
-    return Promise.resolve( importedTrads );
+    return Promise.resolve(importedTrads);
   },
 };

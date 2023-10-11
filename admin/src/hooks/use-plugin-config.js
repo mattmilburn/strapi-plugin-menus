@@ -9,35 +9,36 @@ const usePluginConfig = () => {
   const dispatch = useDispatch();
   const fetchClient = useFetchClient();
   const toggleNotification = useNotification();
-  const { config, isLoading, schema } = useSelector( state => state[ `${pluginId}_config` ] );
+  const { config, isLoading, schema } = useSelector((state) => state[`${pluginId}_config`]);
 
-  useEffect( () => {
+  useEffect(() => {
     // Do nothing if we have already loaded the data.
-    if ( ! isLoading && !! config ) {
+    if (!isLoading && !!config) {
       return;
     }
 
-    fetchClient.get( `/${pluginId}/config` )
-      .then( res => {
-        dispatch( {
+    fetchClient
+      .get(`/${pluginId}/config`)
+      .then((res) => {
+        dispatch({
           type: ACTION_RESOLVE_CONFIG,
           data: {
             config: res?.data?.config ?? {},
             schema: res?.data?.schema ?? {},
           },
-        } );
-      } )
-      .catch( err => {
-        if ( 'code' in err && err?.code === 'ERR_CANCELED' ) {
+        });
+      })
+      .catch((err) => {
+        if ('code' in err && err?.code === 'ERR_CANCELED') {
           return;
         }
 
-        toggleNotification( {
+        toggleNotification({
           type: 'warning',
           message: { id: 'notification.error' },
-        } );
-      } );
-  }, [] );
+        });
+      });
+  }, []);
 
   return {
     data: {
