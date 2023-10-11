@@ -1,0 +1,9 @@
+.husky
+**/node_modules/**
+build
+coverage
+public
+LICENSE.md
+MAINTAINING.md
+MIGRATION.md
+README.md
