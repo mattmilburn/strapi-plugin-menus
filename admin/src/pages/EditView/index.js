@@ -1,4 +1,5 @@
 import React, { memo, useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import get from 'lodash/get';
@@ -85,7 +86,7 @@ const EditView = ({ history, location, match }) => {
   // Merge default fields layout with custom field layouts.
   const menuItemLayout = useMemo(() => {
     return getFieldsLayout(formLayout.menuItem, customLayouts, schema);
-  }, [customLayouts]);
+  }, [customLayouts, schema]);
   const menuItemFields = Object.values(menuItemLayout).flat();
 
   const mediaFields = useMemo(() => {
@@ -94,7 +95,7 @@ const EditView = ({ history, location, match }) => {
     }
 
     return getFieldsByType(schema.menuItem, ['media']);
-  }, [isLoading]);
+  }, [isLoading, schema.menuItem]);
 
   const isCreating = !id;
   const isCloning = location.pathname.split('/').includes('clone');
@@ -326,6 +327,20 @@ const EditView = ({ history, location, match }) => {
       </Formik>
     </Layout>
   );
+};
+
+EditView.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+  location: PropTypes.shape({
+    pathname: PropTypes.string,
+  }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string,
+    }),
+  }).isRequired,
 };
 
 export default memo(EditView);

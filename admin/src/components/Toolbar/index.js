@@ -11,8 +11,8 @@ const Toolbar = ({ actions }) => {
 
   return (
     <StyledIconButtonGroup {...stopPropagation}>
-      {visibleActions.map(({ icon, label, onClick }, i) => (
-        <IconButton key={i} onClick={onClick} label={label} icon={icon} noBorder />
+      {visibleActions.map(({ icon, key, label, onClick }) => (
+        <IconButton key={key} onClick={onClick} label={label} icon={icon} noBorder />
       ))}
     </StyledIconButtonGroup>
   );

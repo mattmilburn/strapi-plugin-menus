@@ -20,6 +20,8 @@ const TreeMenu = ({ action, activeLevel, children, level }) => {
 };
 
 TreeMenu.defaultProps = {
+  action: null,
+  activeLevel: null,
   level: 0,
 };
 

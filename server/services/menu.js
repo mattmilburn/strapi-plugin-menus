@@ -61,7 +61,7 @@ module.exports = createCoreService(UID_MENU, ({ strapi }) => ({
      */
 
     // Finally, update the menu.
-    return await super.update(id, {
+    return super.update(id, {
       ...params,
       data: menuData,
     });
@@ -76,6 +76,6 @@ module.exports = createCoreService(UID_MENU, ({ strapi }) => ({
     }
 
     // Finally, delete the menu.
-    return await super.delete(id);
+    return super.delete(id);
   },
 }));

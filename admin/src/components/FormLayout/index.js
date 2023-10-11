@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
 import get from 'lodash/get';
 
 import { GenericInput, useLibrary } from '@strapi/helper-plugin';
@@ -8,10 +7,9 @@ import { Grid, GridItem } from '@strapi/design-system/Grid';
 
 import { InputUID, RelationInputDataManager } from '../../coreComponents';
 import { useLazyComponents, useMenuData } from '../../hooks';
-import { getFieldError, getFieldName, getRelationValue } from '../../utils';
+import { getFieldError, getFieldName } from '../../utils';
 
 const FormLayout = ({ fields, gap, schema }) => {
-  const { formatMessage } = useIntl();
   const { fields: strapiFields } = useLibrary();
   const { errors, handleChange, modifiedData } = useMenuData();
 
@@ -32,12 +30,12 @@ const FormLayout = ({ fields, gap, schema }) => {
 
   return (
     <Grid gap={gap}>
-      {fields.map((config, i) => {
+      {fields.map((config) => {
         const { input, grid } = config;
 
         // If no input to render, we still try to render the grid cell.
         if (!input) {
-          return <GridItem key={i} {...grid} />;
+          return <GridItem key="empty" {...grid} />;
         }
 
         // Determine default value based on input type.

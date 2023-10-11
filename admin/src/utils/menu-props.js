@@ -9,4 +9,4 @@ const menuProps = PropTypes.shape({
   items: PropTypes.arrayOf(menuItemProps),
 });
 
-export default menuItemProps;
+export default menuProps;

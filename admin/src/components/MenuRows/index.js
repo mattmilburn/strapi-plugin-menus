@@ -93,6 +93,7 @@ const MenuRows = ({ data, onClickClone, onClickDelete, onClickEdit }) => {
 };
 
 MenuRows.defaultProps = {
+  data: null,
   onClickClone: () => {},
   onClickDelete: () => {},
   onClickEdit: () => {},

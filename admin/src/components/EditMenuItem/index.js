@@ -6,7 +6,7 @@ import { Stack } from '@strapi/design-system/Stack';
 import { Typography } from '@strapi/design-system/Typography';
 import { Tab, Tabs, TabPanel, TabPanels } from '@strapi/design-system/Tabs';
 
-import { FormLayout, Section } from '../';
+import FormLayout from '../FormLayout';
 import { useMenuData } from '../../hooks';
 import { camelToTitle, getTrad, menuItemProps, serializeFields } from '../../utils';
 
@@ -52,8 +52,8 @@ const EditMenuItem = ({ data, fields }) => {
         })}
       >
         <Tabs variant="simple">
-          {Object.keys(fields).map((key, i) => (
-            <Tab variant="simple" key={i} hasError={hasTabError(key)}>
+          {Object.keys(fields).map((key) => (
+            <Tab variant="simple" key={`tab-${key}`} hasError={hasTabError(key)}>
               {formatMessage({
                 id: getTrad(`edit.tabs.title.${key}`),
                 defaultMessage: camelToTitle(key),
@@ -62,11 +62,11 @@ const EditMenuItem = ({ data, fields }) => {
           ))}
         </Tabs>
         <TabPanels style={{ position: 'relative' }}>
-          {Object.keys(fields).map((key, i) => {
+          {Object.keys(fields).map((key) => {
             const itemFields = serializeFields('items', itemIndex, fields[key]);
 
             return (
-              <TabPanel key={i}>
+              <TabPanel key={`tabpanel-${key}`}>
                 <Box paddingTop={6}>
                   <Stack spacing={6}>
                     <FormLayout fields={itemFields} schema={schema.menuItem} />

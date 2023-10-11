@@ -1,6 +1,6 @@
 import { prefixPluginTranslations } from '@strapi/helper-plugin';
 
-import { Initializer, PluginIcon } from './components';
+import { PluginIcon } from './components';
 import reducers from './reducers';
 import { getTrad, pluginId, pluginName } from './utils';
 

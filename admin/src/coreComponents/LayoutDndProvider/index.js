@@ -20,6 +20,7 @@ function LayoutDndProvider({
 }) {
   return (
     <LayoutDndContext.Provider
+      /* eslint-disable-next-line react/jsx-no-constructed-context-values */
       value={{
         attributes,
         buttonData,

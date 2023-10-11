@@ -6,7 +6,7 @@ const omit = require('lodash/omit');
 const { createCoreService } = require('@strapi/strapi').factories;
 
 const { UID_MENU_ITEM } = require('../constants');
-const { sanitizeEntity } = require('../utils');
+const { getService, sanitizeEntity } = require('../utils');
 
 module.exports = createCoreService(UID_MENU_ITEM, ({ strapi }) => ({
   async bulkCreateOrUpdate(items, menuId) {
@@ -76,7 +76,7 @@ module.exports = createCoreService(UID_MENU_ITEM, ({ strapi }) => ({
       itemsToUpdate.map(async (item) => {
         const sanitizedItem = sanitizeEntity(item);
 
-        return await strapi.entityService.update(UID_MENU_ITEM, item.id, {
+        return strapi.entityService.update(UID_MENU_ITEM, item.id, {
           data: sanitizedItem,
         });
       })
@@ -118,7 +118,7 @@ module.exports = createCoreService(UID_MENU_ITEM, ({ strapi }) => ({
 
     const itemsToDelete = flattenDeep(deleteLoop(lastItemsToDelete)).reverse();
 
-    return await strapi.entityService.deleteMany(UID_MENU_ITEM, {
+    return strapi.entityService.deleteMany(UID_MENU_ITEM, {
       filters: {
         id: itemsToDelete,
       },

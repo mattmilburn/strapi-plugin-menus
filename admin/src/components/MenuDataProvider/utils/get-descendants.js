@@ -2,7 +2,8 @@
  * Recursively loop to return a nested list of child items.
  */
 
-import { getChildren, sortByOrder } from './';
+import getChildren from './get-children';
+import sortByOrder from './sort-by-order';
 
 const getDescendants = (parentId, items, nested = false) => {
   const results = [];

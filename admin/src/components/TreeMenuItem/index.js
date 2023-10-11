@@ -2,19 +2,15 @@ import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
-import { stopPropagation } from '@strapi/helper-plugin';
-import { Button } from '@strapi/design-system/Button';
 import { Flex } from '@strapi/design-system/Flex';
-import { IconButton } from '@strapi/design-system/IconButton';
 import { Typography } from '@strapi/design-system/Typography';
 import ChevronDown from '@strapi/icons/ChevronDown';
 import ChevronUp from '@strapi/icons/ChevronUp';
 import Plus from '@strapi/icons/Plus';
-import PlusCircle from '@strapi/icons/PlusCircle';
 import Trash from '@strapi/icons/Trash';
 
+import Toolbar from '../Toolbar';
 import { getBoxProps, getTrad, menuItemProps } from '../../utils';
-import { Toolbar } from '../';
 import { Label, Wrapper } from './styled';
 
 const TreeMenuItem = forwardRef(
@@ -59,6 +55,7 @@ const TreeMenuItem = forwardRef(
 
     const actions = [
       {
+        key: 'add',
         hidden: isMaxDepth,
         icon: <Plus />,
         label: formatMessage({
@@ -68,6 +65,7 @@ const TreeMenuItem = forwardRef(
         onClick: onAddSubmenu,
       },
       {
+        key: 'move-down',
         hidden: isLast,
         icon: <ChevronDown />,
         label: formatMessage({
@@ -77,6 +75,7 @@ const TreeMenuItem = forwardRef(
         onClick: onMoveDown,
       },
       {
+        key: 'move-up',
         hidden: isFirst,
         icon: <ChevronUp />,
         label: formatMessage({
@@ -86,6 +85,7 @@ const TreeMenuItem = forwardRef(
         onClick: onMoveUp,
       },
       {
+        key: 'delete',
         hidden: false,
         icon: <Trash />,
         label: formatMessage({
@@ -122,6 +122,7 @@ const TreeMenuItem = forwardRef(
 );
 
 TreeMenuItem.defaultProps = {
+  children: null,
   hasErrors: false,
   isActive: false,
   isFirst: false,

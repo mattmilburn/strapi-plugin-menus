@@ -2,15 +2,15 @@ import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
-import FlipMove from 'react-flip-move';
 import { EmptyStateLayout } from '@strapi/helper-plugin';
 import { Button } from '@strapi/design-system/Button';
-import { Flex } from '@strapi/design-system/Flex';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 import Plus from '@strapi/icons/Plus';
 import PlusCircle from '@strapi/icons/PlusCircle';
 
-import { EditMenuItem, TreeMenu, TreeMenuItem } from '../';
+import EditMenuItem from '../EditMenuItem';
+import TreeMenu from '../TreeMenu';
+import TreeMenuItem from '../TreeMenuItem';
 import { STRAPI_HEADER_HEIGHT } from '../../constants';
 import { useMenuData, useStickyPosition } from '../../hooks';
 import { getTrad } from '../../utils';
@@ -56,7 +56,7 @@ const MenuItemsManager = ({ fields }) => {
 
     return (
       <TreeMenu action={action} level={level} activeLevel={activeLevel}>
-        {_items.map((item, i) => {
+        {_items.map((item) => {
           const siblings = modifiedData.items.filter(
             (_item) => _item?.parent?.id === item?.parent?.id
           );

@@ -24,11 +24,12 @@ const Section = ({ boxProps, children, stackSize, title }) => {
 Section.defaultProps = {
   boxProps: {},
   stackSize: 4,
+  title: null,
 };
 
 Section.propTypes = {
   boxProps: PropTypes.object,
-  children: PropTypes.node,
+  children: PropTypes.node.isRequired,
   stackSize: PropTypes.number,
   title: PropTypes.string,
 };

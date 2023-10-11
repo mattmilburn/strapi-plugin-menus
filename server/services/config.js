@@ -17,7 +17,6 @@ module.exports = ({ strapi }) => ({
     const contentTypes = strapi.plugin('content-manager').service('content-types');
     const menuModel = strapi.getModel(UID_MENU);
     const menuItemModel = strapi.getModel(UID_MENU_ITEM);
-    const menuItemConfig = await contentTypes.findConfiguration(menuItemModel);
 
     // Determine custom relation fields, if any.
     const omitRelations = ['parent', 'root_menu', 'createdBy', 'updatedBy'];
