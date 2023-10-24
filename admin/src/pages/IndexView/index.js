@@ -33,14 +33,13 @@ const PrimaryAction = ({ children, onClick, size, variant }) => (
 );
 
 PrimaryAction.defaultProps = {
-  onClick: null,
   size: 'L',
   variant: 'default',
 };
 
 PrimaryAction.propTypes = {
   children: PropTypes.node.isRequired,
-  onClick: PropTypes.func,
+  onClick: PropTypes.func.isRequired,
   size: PropTypes.string,
   variant: PropTypes.string,
 };
@@ -214,7 +213,14 @@ const IndexView = ({ history }) => {
                 isLoading={isLoading}
                 headers={tableHeaders}
                 rows={data.data}
-                action={<PrimaryAction size="S" variant="secondary" />}
+                action={
+                  <PrimaryAction onClick={onClickCreate} size="S" variant="secondary">
+                    {formatMessage({
+                      id: getTrad('ui.create.menu'),
+                      defaultMessage: 'Create new menu',
+                    })}
+                  </PrimaryAction>
+                }
                 onConfirmDelete={onConfirmDelete}
               >
                 <MenuRows
