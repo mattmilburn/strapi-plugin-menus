@@ -12,6 +12,7 @@ export const Label = styled.div`
 `;
 
 export const Wrapper = styled(Box)`
+  /* prettier-ignore */
   box-shadow: ${({ theme, hasErrors, isActive }) =>
     !isActive ? 'none' : theme.colors[hasErrors ? 'danger600' : 'primary600']} 0 0 0 2px;
   color: ${({ theme }) => theme.colors.neutral800};

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.div`
-  margin-left: ${({ level }) => level ? '2.5rem' : 0};
+  margin-left: ${({ level }) => (level ? '2.5rem' : 0)};
   padding-top: 1rem;
   position: relative;
   z-index: 1;

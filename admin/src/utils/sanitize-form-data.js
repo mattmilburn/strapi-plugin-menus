@@ -87,7 +87,7 @@ const sanitizeFormData = (data, prevData, layout, isCloning) => {
         break;
 
       case 'time':
-      // eslint-disable-next-line no-case-declarations
+        // eslint-disable-next-line no-case-declarations
         const timeParts = value?.split(':') ?? [];
 
         if (timeParts.length > 2) {
