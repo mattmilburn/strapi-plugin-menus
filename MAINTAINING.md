@@ -16,7 +16,6 @@ As Strapi updates, these components and files may also need to be updated in thi
 | ID | Description |
 |-|-|
 | 1 | The `useMenuData` hook will be used in place of `useCMEditViewDataManager`. |
-| 2 | The `createdAtName` var will be explicitly defined as `createdAt` instead of deriving from `layout` data. |
 | 3 | Extra components, hooks, and utils were cloned and their import paths updated in components. |
 | 4 | The `getTrad` util will not be used. Instead, we use explicit paths for `content-manager` translation keys. |
 | 5 | Remove RBAC features as this plugin does not support RBAC yet. |

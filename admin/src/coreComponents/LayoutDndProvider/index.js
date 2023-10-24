@@ -1,8 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { LayoutDndContext } from '../../contexts'; // CUSTOM MOD [3].
 
-function LayoutDndProvider({
+import PropTypes from 'prop-types';
+
+export const LayoutDndContext = React.createContext();
+
+export function LayoutDndProvider({
   attributes,
   buttonData,
   children,
@@ -72,5 +74,3 @@ LayoutDndProvider.propTypes = {
   selectedItemName: PropTypes.string,
   setEditFieldToSelect: PropTypes.func,
 };
-
-export default LayoutDndProvider;

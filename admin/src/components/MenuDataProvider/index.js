@@ -154,7 +154,8 @@ const MenuDataProvider = ({ children, isCloningEntry, isCreatingEntry, menu }) =
     setFieldValue(name, newRelations);
   };
 
-  const relationLoad = ({ target: { name, value } }) => {
+  const relationLoad = ({ target: { modifiedDataPath, value } }) => {
+    const name = modifiedDataPath.slice(1).join('.');
     const initialDataRelations = getRelationValue(initialData, name);
     const modifiedDataRelations = getRelationValue(values, name);
     const newInitialRelations = uniqBy([...value, ...initialDataRelations], 'id');

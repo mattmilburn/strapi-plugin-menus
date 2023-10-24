@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { useDragLayer } from 'react-dnd';
 
 function getStyle(initialOffset, currentOffset, mouseOffset) {
-  if (!initialOffset || !currentOffset) {
+  if (!initialOffset || !currentOffset || !mouseOffset) {
     return { display: 'none' };
   }
 
