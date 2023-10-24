@@ -109,7 +109,18 @@ function useSelect({
 
     return `/menus/relations/${slug}/${entityId}/${name.split('.').at(-1)}`;
     // CUSTOM MOD [7].
-  }, [isCreatingEntry, isItemType, itemId, origin, componentUid, slug, entityId, name, componentId, fieldNameKeys]);
+  }, [
+    isCreatingEntry,
+    isItemType,
+    itemId,
+    origin,
+    componentUid,
+    slug,
+    entityId,
+    name,
+    componentId,
+    fieldNameKeys,
+  ]);
 
   // /content-manager/relations/[model]/[field-name]
   const relationSearchEndpoint = useMemo(() => {

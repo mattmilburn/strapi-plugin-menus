@@ -24,6 +24,7 @@ export const URL_ABSOLUTE_REGEX = new RegExp(
 
 // eslint-disable-next-line prefer-regex-literals
 export const URL_RELATIVE_REGEX = new RegExp(
+  // prettier-ignore
   '^(\\/[-a-z\\d%_.~+@]*)*' +
     '(\\?[-a-z\\d%_.~+@;&=]*)?' +
     '(\\#[-a-z\\d_]*)?$',

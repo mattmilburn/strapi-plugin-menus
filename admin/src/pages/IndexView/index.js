@@ -27,12 +27,7 @@ const QUERY_KEY = 'menus-index';
  * passes the `action` prop through to `EmptyStateLayout`. No idea why.
  */
 const PrimaryAction = ({ children, onClick, size, variant }) => (
-  <Button
-    onClick={onClick}
-    startIcon={<Plus />}
-    variant={variant}
-    size={size}
-  >
+  <Button onClick={onClick} startIcon={<Plus />} variant={variant} size={size}>
     {children}
   </Button>
 );
@@ -201,14 +196,14 @@ const IndexView = ({ history }) => {
           id: getTrad('index.header.subtitle'),
           defaultMessage: 'Customize the structure of menus and menu items',
         })}
-        primaryAction={(
+        primaryAction={
           <PrimaryAction onClick={onClickCreate}>
             {formatMessage({
               id: getTrad('ui.create.menu'),
               defaultMessage: 'Create new menu',
             })}
           </PrimaryAction>
-        )}
+        }
       />
       <ContentLayout>
         <Box paddingBottom={10}>
@@ -236,14 +231,14 @@ const IndexView = ({ history }) => {
                 id: getTrad('index.state.empty'),
                 defaultMessage: 'No menus found',
               }}
-              action={(
+              action={
                 <PrimaryAction onClick={onClickCreate} size="S" variant="secondary">
                   {formatMessage({
                     id: getTrad('ui.create.menu'),
                     defaultMessage: 'Create new menu',
                   })}
                 </PrimaryAction>
-              )}
+              }
             />
           )}
         </Box>
