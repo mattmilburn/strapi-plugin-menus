@@ -1,5 +1,6 @@
 export { default as EditMenuItem } from './EditMenuItem';
 export { default as FormLayout } from './FormLayout';
+export { default as Initializer } from './Initializer';
 export { default as Layout } from './Layout';
 export { default as MenuDataProvider } from './MenuDataProvider';
 export { default as MenuItemsManager } from './MenuItemsManager';
