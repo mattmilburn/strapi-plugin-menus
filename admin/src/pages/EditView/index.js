@@ -79,7 +79,7 @@ const EditView = ({ history, location, match }) => {
 
   // Get config and custom layouts.
   const {
-    data: { config, isLoading, schema },
+    data: { config, schema },
   } = usePluginConfig();
   const customLayouts = get(config, 'layouts.menuItem', {});
 
@@ -90,12 +90,8 @@ const EditView = ({ history, location, match }) => {
   const menuItemFields = Object.values(menuItemLayout).flat();
 
   const mediaFields = useMemo(() => {
-    if (isLoading) {
-      return [];
-    }
-
     return getFieldsByType(schema.menuItem, ['media']);
-  }, [isLoading, schema.menuItem]);
+  }, [schema.menuItem]);
 
   const isCreating = !id;
   const isCloning = location.pathname.split('/').includes('clone');
