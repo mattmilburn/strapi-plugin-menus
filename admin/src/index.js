@@ -3,6 +3,7 @@ import { prefixPluginTranslations } from '@strapi/helper-plugin';
 import { Initializer, PluginIcon } from './components';
 import reducers from './reducers';
 import { getTrad, pluginId, pluginName } from './utils';
+import pluginPermissions from './permissions';
 
 export default {
   register( app ) {
@@ -20,13 +21,7 @@ export default {
 
         return component;
       },
-      permissions: [
-        // Uncomment to set the permissions of the plugin here
-        // {
-        //   action: '', // the action name should be plugin::plugin-name.actionType
-        //   subject: null,
-        // },
-      ],
+      permissions: pluginPermissions.main
     } );
 
     app.registerPlugin( {
