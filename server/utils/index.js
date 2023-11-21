@@ -1,5 +1,6 @@
 'use strict';
 
+const getDescendants = require('./get-descendants');
 const getNestedParams = require('./get-nested-params');
 const getService = require('./get-service');
 const hasParentPopulation = require('./has-parent-population');
@@ -11,6 +12,7 @@ const serializeNestedMenu = require('./serialize-nested-menu');
 const sortByOrder = require('./sort-by-order');
 
 module.exports = {
+  getDescendants,
   getNestedParams,
   getService,
   hasParentPopulation,
