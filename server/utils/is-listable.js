@@ -6,26 +6,14 @@ const has = require('lodash/has');
 const NON_LISTABLES = ['json', 'password', 'richtext', 'dynamiczone'];
 const LISTABLE_RELATIONS = ['oneToOne', 'oneToMany', 'manyToOne', 'manyToMany'];
 
-const isHidden = (schema, name) => {
+const isListable = (schema, name) => {
   if (!has(schema.attributes, name)) {
     return false;
   }
 
   const isHidden = get(schema, ['config', 'attributes', name, 'hidden'], false);
 
-  if (isHidden === true) {
-    return true;
-  }
-
-  return false;
-};
-
-const isListable = (schema, name) => {
-  if (!has(schema.attributes, name)) {
-    return false;
-  }
-
-  if (isHidden(schema, name)) {
+  if (isHidden) {
     return false;
   }
 

@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 
-const getRelationValue = (data, path) => {
-  const value = get(data, path);
+const getRelationValue = (data, namePath) => {
+  const value = get(data, namePath);
 
   if (!value) {
     return [];

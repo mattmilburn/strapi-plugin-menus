@@ -5,25 +5,7 @@ const has = require('lodash/has');
 const omit = require('lodash/omit');
 
 const sortByOrder = require('./sort-by-order');
-
-const getDescendants = (items, parentId) => {
-  const results = [];
-  const children = items.filter((item) => get(item, 'attributes.parent.data.id') === parentId);
-
-  children.forEach((child) => {
-    results.push({
-      ...child,
-      attributes: {
-        ...child.attributes,
-        children: {
-          data: getDescendants(items, child.id),
-        },
-      },
-    });
-  });
-
-  return sortByOrder(results);
-};
+const getDescendants = require('./get-descendants');
 
 const removeParentData = (items) =>
   items.reduce((acc, item) => {
