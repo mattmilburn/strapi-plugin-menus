@@ -90,11 +90,11 @@ const sanitizeFormData = (data, prevData, layout, isCloning) => {
         // eslint-disable-next-line no-case-declarations
         const timeParts = value?.split(':') ?? [];
 
-        if (timeParts.length > 2) {
+        if (timeParts.length === 2) {
           // eslint-disable-next-line no-case-declarations
           const [hour, minute] = timeParts;
 
-          sanitizedValue = `${hour}:${minute}`;
+          sanitizedValue = `${hour}:${minute}:00`;
         }
         break;
 
