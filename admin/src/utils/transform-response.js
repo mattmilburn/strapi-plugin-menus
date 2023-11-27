@@ -1,36 +1,36 @@
 import has from 'lodash/has';
 import head from 'lodash/head';
 
-const transformResponse = data => {
-  if ( has( data, 'data' ) ) {
-    return transformResponse( data.data );
+const transformResponse = (data) => {
+  if (has(data, 'data')) {
+    return transformResponse(data.data);
   }
 
   // Single entry.
-  if ( has( data, 'attributes' ) ) {
-    return transformResponse( {
+  if (has(data, 'attributes')) {
+    return transformResponse({
       id: data.id,
       ...data.attributes,
-    } );
+    });
   }
 
   // Array of entries.
-  if ( Array.isArray( data ) && data.length && has( head( data ), 'attributes' ) ) {
-    return data.map( item => transformResponse( item ) );
+  if (Array.isArray(data) && data.length && has(head(data), 'attributes')) {
+    return data.map((item) => transformResponse(item));
   }
 
   // Loop through properties.
-  if ( has( data, 'id' ) ) {
-    Object.entries( data ).forEach( ( [ key, value ] ) => {
+  if (has(data, 'id')) {
+    Object.entries(data).forEach(([key, value]) => {
       // Do nothing for null fields.
-      if ( ! value ) {
+      if (!value) {
         return;
       }
 
-      if ( has( value, 'data' ) ) {
-        data[ key ] = transformResponse( value.data );
+      if (has(value, 'data')) {
+        data[key] = transformResponse(value.data);
       }
-    } );
+    });
   }
 
   return data;

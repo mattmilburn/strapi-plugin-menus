@@ -4,12 +4,12 @@ import { Box } from '@strapi/design-system/Box';
 import { Flex } from '@strapi/design-system/Flex';
 import { PaginationURLQuery, PageSizeURLQuery } from '@strapi/helper-plugin';
 
-const PaginationFooter = ( { pagination } ) => {
+const PaginationFooter = ({ pagination }) => {
   return (
-    <Box paddingTop={ 4 }>
+    <Box paddingTop={4}>
       <Flex alignItems="flex-end" justifyContent="space-between">
         <PageSizeURLQuery />
-        <PaginationURLQuery pagination={ pagination } />
+        <PaginationURLQuery pagination={pagination} />
       </Flex>
     </Box>
   );
@@ -24,12 +24,12 @@ PaginationFooter.defaultProps = {
 };
 
 PaginationFooter.propTypes = {
-  pagination: PropTypes.shape( {
+  pagination: PropTypes.shape({
     page: PropTypes.number,
     pageCount: PropTypes.number,
     pageSize: PropTypes.number,
     total: PropTypes.number,
-  } ),
+  }),
 };
 
 export default PaginationFooter;

@@ -11,20 +11,15 @@ export const Label = styled.div`
   overflow: hidden;
 `;
 
-export const Wrapper = styled( Box )`
+export const Wrapper = styled(Box)`
+  /* prettier-ignore */
+  box-shadow: ${({ theme, hasErrors, isActive }) =>
+    !isActive ? 'none' : theme.colors[hasErrors ? 'danger600' : 'primary600']} 0 0 0 2px;
   color: ${({ theme }) => theme.colors.neutral800};
   outline: none;
   cursor: pointer;
   position: relative;
   z-index: 2;
-
-  ${({ theme, hasErrors, isActive }) => {
-    if ( isActive ) {
-      return `
-        box-shadow: ${theme.colors[ hasErrors ? 'danger600' : 'primary600' ]} 0 0 0 2px;
-      `;
-    }
-  }}
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.primary100};

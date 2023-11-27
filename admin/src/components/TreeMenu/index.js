@@ -6,17 +6,13 @@ import { Stack } from '@strapi/design-system/Stack';
 
 import { Wrapper } from './styled';
 
-const TreeMenu = ( { action, activeLevel, children, level } ) => {
+const TreeMenu = ({ action, activeLevel, children, level }) => {
   return (
-    <Wrapper level={ level } activeLevel={ activeLevel }>
-      <Stack spacing={ 4 }>
-        <FlipMove typeName={ null }>
-          { children }
-          { action && (
-            <Flex>
-              { action }
-            </Flex>
-          ) }
+    <Wrapper level={level} activeLevel={activeLevel}>
+      <Stack spacing={4}>
+        <FlipMove typeName={null}>
+          {children}
+          {action && <Flex>{action}</Flex>}
         </FlipMove>
       </Stack>
     </Wrapper>
@@ -24,6 +20,8 @@ const TreeMenu = ( { action, activeLevel, children, level } ) => {
 };
 
 TreeMenu.defaultProps = {
+  action: null,
+  activeLevel: null,
   level: 0,
 };
 

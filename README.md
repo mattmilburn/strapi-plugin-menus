@@ -31,6 +31,8 @@
 yarn add strapi-plugin-menus@latest
 ```
 
+Don't forget to **restart or rebuild** your Strapi app when installing a new plugin.
+
 ## <a id="configuration"></a>🔧 Configuration
 | property | type (default) | description |
 | - | - | - |
@@ -922,9 +924,9 @@ Follow the [migration guides](MIGRATION.md) to keep your menus plugin up-to-date
 If you are enjoying this plugin and feel extra appreciative, you can [buy me a beer or 3 🍺🍺🍺](https://www.buymeacoffee.com/mattmilburn).
 
 ## <a id="roadmap"></a>🚧 Roadmap
-* Localization support
-* RBAC support
-* Drag and drop items
-* Populate `url` via relation
-* Restore deleted items (before saving)
-* More translations
+* Localization support.
+* RBAC support.
+* Drag and drop items.
+* Populate `url` via relation.
+* Restore deleted items (before saving).
+* More translations.

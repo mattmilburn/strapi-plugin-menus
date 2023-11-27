@@ -1,36 +1,71 @@
 import get from 'lodash/get';
 
-import { TIME_HHMM_REGEX } from '../constants';
-
-const sanitizeFormData = ( data, prevData, layout, isCloning ) => {
-  const fieldTypes = layout.reduce( ( acc, field ) => {
-    if ( ! field?.input ) {
+const sanitizeFormData = (data, prevData, layout, isCloning) => {
+  const fieldTypes = layout.reduce((acc, field) => {
+    if (!field?.input) {
       return acc;
     }
 
     return {
       ...acc,
-      [ field.input.name ]: field.input.type,
+      [field.input.name]: field.input.type,
     };
-  }, {} );
+  }, {});
 
-  const sanitizedData = Object.entries( data ).reduce( ( acc, [ key, value ] ) => {
-    const type = fieldTypes[ key ];
+  const sanitizeRelationConnection = (key, value) => {
+    const prevValue = get(prevData, key) ?? [];
+    let connect = [];
+    let disconnect = [];
 
-    if ( ! type ) {
+    // Always connect relations when cloning.
+    if (isCloning && value?.length) {
+      connect = value.map(({ id }) => ({ id }));
+    }
+
+    // Maybe connect relations.
+    if (!isCloning && value?.length) {
+      connect = value
+        .filter((relation) => {
+          const match = prevValue.find((_relation) => _relation.id === relation.id);
+
+          // Add if not found in previous data.
+          return !match;
+        })
+        .map(({ id }) => ({ id }));
+    }
+
+    // Maybe disconnect relations.
+    if (!isCloning && prevValue?.length) {
+      disconnect = prevValue
+        .filter((relation) => {
+          const match = value.find((_relation) => _relation.id === relation.id);
+
+          // Add if found in previous data, but not in next data.
+          return !match;
+        })
+        .map(({ id }) => ({ id }));
+    }
+
+    return { connect, disconnect };
+  };
+
+  const sanitizedData = Object.entries(data).reduce((acc, [key, value]) => {
+    const type = fieldTypes[key];
+
+    if (!type) {
       return acc;
     }
 
     let sanitizedValue;
 
-    switch ( type ) {
+    switch (type) {
       case 'bool':
-        sanitizedValue = value === null ? null : !! value;
+        sanitizedValue = value === null ? null : !!value;
         break;
 
       case 'date':
       case 'datetime':
-        sanitizedValue = value ? new Date( value ) : null;
+        sanitizedValue = value ? new Date(value).toISOString() : null;
         break;
 
       case 'media':
@@ -38,44 +73,11 @@ const sanitizeFormData = ( data, prevData, layout, isCloning ) => {
         break;
 
       case 'number':
-        sanitizedValue = value !== null ? Number( value ) : null;
+        sanitizedValue = value !== null ? Number(value) : null;
         break;
 
       case 'relation':
-        const prevValue = get( prevData, key ) ?? [];
-        let connect = [];
-        let disconnect = [];
-
-        // Always connect relations when cloning.
-        if ( isCloning && value?.length ) {
-          connect = value.map( ( { id } ) => ( { id } ) );
-        }
-
-        // Maybe connect relations.
-        if ( ! isCloning && value?.length ) {
-          connect = value
-            .filter( relation => {
-              const match = prevValue.find( _relation => _relation.id === relation.id );
-
-              // Add if not found in previous data.
-              return ! match;
-            } )
-            .map( ( { id } ) => ( { id } ) );
-        }
-
-        // Maybe disconnect relations.
-        if ( ! isCloning && prevValue?.length ) {
-          disconnect = prevValue
-            .filter( relation => {
-              const match = value.find( _relation => _relation.id === relation.id );
-
-              // Add if found in previous data, but not in next data.
-              return ! match;
-            } )
-            .map( ( { id } ) => ( { id } ) );
-        }
-
-        sanitizedValue = { connect, disconnect };
+        sanitizedValue = sanitizeRelationConnection(key, value);
         break;
 
       case 'string':
@@ -85,7 +87,15 @@ const sanitizeFormData = ( data, prevData, layout, isCloning ) => {
         break;
 
       case 'time':
-        sanitizedValue = value?.match( TIME_HHMM_REGEX ) ? `${value}:00.000` : value;
+        // eslint-disable-next-line no-case-declarations
+        const timeParts = value?.split(':') ?? [];
+
+        if (timeParts.length === 2) {
+          // eslint-disable-next-line no-case-declarations
+          const [hour, minute] = timeParts;
+
+          sanitizedValue = `${hour}:${minute}:00`;
+        }
         break;
 
       default:
@@ -95,9 +105,9 @@ const sanitizeFormData = ( data, prevData, layout, isCloning ) => {
 
     return {
       ...acc,
-      [ key ]: sanitizedValue,
+      [key]: sanitizedValue,
     };
-  }, data );
+  }, data);
 
   return sanitizedData;
 };

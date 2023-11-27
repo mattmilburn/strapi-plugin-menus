@@ -1,9 +1,9 @@
-const getFieldName = name => {
-  if ( name.indexOf( '.' ) !== -1 ) {
-    return name.split( '.' ).slice( 1 ).join( '' );
+const getFieldName = (namePath) => {
+  if (namePath.indexOf('.') !== -1) {
+    return namePath.split('.').slice(1).join('');
   }
 
-  return name;
+  return namePath;
 };
 
 export default getFieldName;

@@ -35,6 +35,6 @@ module.exports = {
       relation: 'oneToMany',
       target: 'plugin::menus.menu-item',
       mappedBy: 'root_menu',
-    }
+    },
   },
 };

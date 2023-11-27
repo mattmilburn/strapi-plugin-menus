@@ -1,25 +1,26 @@
 import * as React from 'react';
-import { useIntl } from 'react-intl';
-import PropTypes from 'prop-types';
-import { Box, Flex, IconButton, Typography, Status, Icon } from '@strapi/design-system';
-import { Drag, Cross } from '@strapi/icons';
 
-// import { getTrad } from '../../utils'; // CUSTOM MOD [6].
-import { PUBLICATION_STATES } from '../RelationInputDataManager/constants';
-import { ChildrenWrapper, StackWrapper } from '../RelationInput/components/RelationItem';
-import { LinkEllipsis, DisconnectButton } from '../RelationInput';
+import { Box, Flex, Icon, IconButton, Status, Typography } from '@strapi/design-system';
+import { Cross, Drag } from '@strapi/icons';
+import PropTypes from 'prop-types';
+import { useIntl } from 'react-intl';
+
+import { DisconnectButton, LinkEllipsis } from '../RelationInput'; // CUSTOM MOD [3].
+import { ChildrenWrapper, FlexWrapper } from '../RelationInput/components/RelationItem'; // CUSTOM MOD [3].
+import { PUBLICATION_STATES } from '../RelationInputDataManager/constants'; // CUSTOM MOD [3].
+// import { getTrad } from '../../../utils'; // CUSTOM MOD [4].
 
 export const RelationDragPreview = ({ status, displayedValue, width }) => {
   const { formatMessage } = useIntl();
 
   const stateMessage = {
     [PUBLICATION_STATES.DRAFT]: formatMessage({
-      id: 'content-manager.relation.publicationState.draft', // CUSTOM MOD [6].
+      id: 'content-manager.relation.publicationState.draft', // CUSTOM MOD [4].
       defaultMessage: 'Draft',
     }),
 
     [PUBLICATION_STATES.PUBLISHED]: formatMessage({
-      id: 'content-manager.relation.publicationState.published', // CUSTOM MOD [6].
+      id: 'content-manager.relation.publicationState.published', // CUSTOM MOD [4].
       defaultMessage: 'Published',
     }),
   };
@@ -39,7 +40,7 @@ export const RelationDragPreview = ({ status, displayedValue, width }) => {
         borderColor="neutral200"
         justifyContent="space-between"
       >
-        <StackWrapper spacing={1} horizontal>
+        <FlexWrapper gap={1}>
           <IconButton noBorder>
             <Drag />
           </IconButton>
@@ -59,7 +60,7 @@ export const RelationDragPreview = ({ status, displayedValue, width }) => {
               </Status>
             )}
           </ChildrenWrapper>
-        </StackWrapper>
+        </FlexWrapper>
         <Box paddingLeft={4}>
           <DisconnectButton type="button">
             <Icon width="12px" as={Cross} />

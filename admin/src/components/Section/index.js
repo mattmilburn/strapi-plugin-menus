@@ -6,16 +6,16 @@ import { Typography } from '@strapi/design-system/Typography';
 
 import { getBoxProps } from '../../utils';
 
-const Section = ( { boxProps, children, stackSize, title } ) => {
+const Section = ({ boxProps, children, stackSize, title }) => {
   return (
-    <Box { ...getBoxProps( boxProps ) }>
-      <Stack spacing={ stackSize }>
-        { !! title && (
+    <Box {...getBoxProps(boxProps)}>
+      <Stack spacing={stackSize}>
+        {!!title && (
           <Typography variant="delta" as="h2">
-            { title }
+            {title}
           </Typography>
-        ) }
-        { children }
+        )}
+        {children}
       </Stack>
     </Box>
   );
@@ -24,11 +24,12 @@ const Section = ( { boxProps, children, stackSize, title } ) => {
 Section.defaultProps = {
   boxProps: {},
   stackSize: 4,
+  title: null,
 };
 
 Section.propTypes = {
   boxProps: PropTypes.object,
-  children: PropTypes.node,
+  children: PropTypes.node.isRequired,
   stackSize: PropTypes.number,
   title: PropTypes.string,
 };

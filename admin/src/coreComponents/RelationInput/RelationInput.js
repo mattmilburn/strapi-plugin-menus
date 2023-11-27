@@ -1,29 +1,29 @@
 import React, { useRef, useState, useMemo, useEffect } from 'react';
+
+import {
+  Status,
+  Box,
+  Link,
+  Icon,
+  Flex,
+  TextButton,
+  Typography,
+  Tooltip,
+  VisuallyHidden,
+  Combobox,
+} from '@strapi/design-system';
+import { useFocusInputField } from '@strapi/helper-plugin';
+import { Cross, Refresh } from '@strapi/icons';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { FixedSizeList as List } from 'react-window';
+import styled from 'styled-components';
 
-import { ReactSelect } from '@strapi/helper-plugin';
-import { Status } from '@strapi/design-system/Status';
-import { Box } from '@strapi/design-system/Box';
-import { Link } from '@strapi/design-system/Link';
-import { Icon } from '@strapi/design-system/Icon';
-import { FieldLabel, FieldError, FieldHint, Field } from '@strapi/design-system/Field';
-import { TextButton } from '@strapi/design-system/TextButton';
-import { Typography } from '@strapi/design-system/Typography';
-import { Tooltip } from '@strapi/design-system/Tooltip';
-import { VisuallyHidden } from '@strapi/design-system/VisuallyHidden';
+import { usePrev } from './hooks/usePrev'; // CUSTOM MOD [3].
 
-import Cross from '@strapi/icons/Cross';
-import Refresh from '@strapi/icons/Refresh';
-
-import { Relation } from './components/Relation';
+import { Option } from './components/Option';
 import { RelationItem } from './components/RelationItem';
 import { RelationList } from './components/RelationList';
-import { Option } from './components/Option';
 import { RELATION_GUTTER, RELATION_ITEM_HEIGHT } from './constants';
-
-import { usePrev } from './hooks/usePrev'; // CUSTOM MOD [5].
 
 export const LinkEllipsis = styled(Link)`
   display: block;
@@ -46,6 +46,10 @@ export const DisconnectButton = styled.button`
   &:focus svg path {
     fill: ${({ theme, disabled }) => !disabled && theme.colors.neutral600};
   }
+`;
+
+const ComboboxWrapper = styled(Box)`
+  align-self: flex-start;
 `;
 
 const RelationInput = ({
@@ -79,13 +83,15 @@ const RelationInput = ({
   required,
   relations: paginatedRelations,
   searchResults,
-  size,
+  // size, // CUSTOM MOD [9].
 }) => {
-  const [value, setValue] = useState(null);
+  const [textValue, setTextValue] = useState('');
   const [overflow, setOverflow] = useState('');
 
   const listRef = useRef();
   const outerListRef = useRef();
+
+  const fieldRef = useFocusInputField(name);
 
   const { data } = searchResults;
 
@@ -103,8 +109,7 @@ const RelationInput = ({
     [totalNumberOfRelations, numberOfRelationsToDisplay]
   );
 
-  const shouldDisplayLoadMoreButton =
-    (!!labelLoadMore && paginatedRelations.hasNextPage) || paginatedRelations.isLoading;
+  const shouldDisplayLoadMoreButton = !!labelLoadMore && paginatedRelations.hasNextPage;
 
   const options = useMemo(
     () =>
@@ -152,71 +157,10 @@ const RelationInput = ({
     };
   }, [paginatedRelations, relations, numberOfRelationsToDisplay, totalNumberOfRelations]);
 
-  /**
-   * --- ReactSelect Workaround START ---
-   */
-  /**
-   * This code is being isolated because it's a hack to fix a placement bug in
-   * `react-select` where when the options prop is updated the position of the
-   * menu is not recalculated.
-   */
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const timeoutRef = useRef();
-  const previousOptions = useRef([]);
-
-  useEffect(() => {
-    /**
-     * We only really want this effect to fire once when the options
-     * change from an empty array to an array with values.
-     * Otherwise, it'll fire when the infinite scrolling happens causing
-     * the menu to jump to the top all the time when loading more.
-     */
-    if (options.length > 0 && previousOptions.current.length === 0) {
-      setIsMenuOpen((isCurrentlyOpened) => {
-        /**
-         * If we're currently open and the options changed
-         * we want to close and open to ensure the menu's
-         * position is correctly calculated
-         */
-        if (isCurrentlyOpened) {
-          timeoutRef.current = setTimeout(() => {
-            setIsMenuOpen(true);
-          }, 10);
-
-          return false;
-        }
-
-        return false;
-      });
+  const handleMenuOpen = (isOpen) => {
+    if (isOpen) {
+      onSearch();
     }
-
-    return () => {
-      previousOptions.current = options || [];
-    };
-  }, [options]);
-
-  useEffect(() => {
-    return () => {
-      /**
-       * If the component unmounts and a timer is set we should clear that timer
-       */
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
-
-  const handleMenuClose = () => {
-    setIsMenuOpen(false);
-  };
-  /**
-   * --- ReactSelect Workaround END ---
-   */
-
-  const handleMenuOpen = () => {
-    setIsMenuOpen(true);
-    onSearch();
   };
 
   /**
@@ -244,122 +188,125 @@ const RelationInput = ({
   };
 
   useEffect(() => {
+    if (updatedRelationsWith.current === 'onChange') {
+      setTextValue('');
+    }
+
     if (
       updatedRelationsWith.current === 'onChange' &&
       relations.length !== previewRelationsLength
     ) {
       listRef.current.scrollToItem(relations.length, 'end');
+      updatedRelationsWith.current = undefined;
     } else if (
       updatedRelationsWith.current === 'loadMore' &&
       relations.length !== previewRelationsLength
     ) {
       listRef.current.scrollToItem(0, 'start');
+      updatedRelationsWith.current = undefined;
     }
-
-    updatedRelationsWith.current = undefined;
   }, [previewRelationsLength, relations]);
 
   const ariaDescriptionId = `${name}-item-instructions`;
 
   return (
-    <Field error={error} name={name} hint={description} id={id} required={required}>
-      <Relation
-        totalNumberOfRelations={totalNumberOfRelations}
-        size={size}
-        search={
-          <>
-            <FieldLabel action={labelAction}>{label}</FieldLabel>
-            <ReactSelect
-              // position fixed doesn't update position on scroll
-              // react select doesn't update menu position on options change
-              menuPosition="absolute"
-              menuPlacement="auto"
-              components={{ Option }}
-              options={options}
-              isDisabled={disabled}
-              isLoading={searchResults.isLoading}
-              error={error}
-              inputId={id}
-              isSearchable
-              isClear
-              loadingMessage={() => loadingMessage}
-              onChange={(relation) => {
-                setValue(null);
-                onRelationConnect(relation);
-                updatedRelationsWith.current = 'onChange';
-              }}
-              onInputChange={(value) => {
-                setValue(value);
-                onSearch(value);
-              }}
-              onMenuClose={handleMenuClose}
-              onMenuOpen={handleMenuOpen}
-              menuIsOpen={isMenuOpen}
-              noOptionsMessage={() => noRelationsMessage}
-              onMenuScrollToBottom={() => {
-                if (searchResults.hasNextPage) {
-                  onSearchNextPage();
-                }
-              }}
-              placeholder={placeholder}
-              name={name}
-              value={value}
-            />
-          </>
-        }
-        loadMore={
-          shouldDisplayLoadMoreButton && (
-            <TextButton
-              disabled={paginatedRelations.isLoading || paginatedRelations.isFetchingNextPage}
-              onClick={handleLoadMore}
-              loading={paginatedRelations.isLoading || paginatedRelations.isFetchingNextPage}
-              startIcon={<Refresh />}
-            >
-              {labelLoadMore}
-            </TextButton>
-          )
-        }
-      >
-        {relations.length > 0 && (
-          <RelationList overflow={overflow}>
-            <VisuallyHidden id={ariaDescriptionId}>{listAriaDescription}</VisuallyHidden>
-            <VisuallyHidden aria-live="assertive">{liveText}</VisuallyHidden>
-            <List
-              height={dynamicListHeight}
-              ref={listRef}
-              outerRef={outerListRef}
-              itemCount={totalNumberOfRelations}
-              itemSize={RELATION_ITEM_HEIGHT + RELATION_GUTTER}
-              itemData={{
-                name,
-                ariaDescribedBy: ariaDescriptionId,
-                canDrag: canReorder,
-                disabled,
-                handleCancel: onCancel,
-                handleDropItem: onDropItem,
-                handleGrabItem: onGrabItem,
-                iconButtonAriaLabel,
-                labelDisconnectRelation,
-                onRelationDisconnect,
-                publicationStateTranslations,
-                relations,
-                updatePositionOfRelation: handleUpdatePositionOfRelation,
-              }}
-              itemKey={(index) => `${relations[index].mainField}_${relations[index].id}`}
-              innerElementType="ol"
-            >
-              {ListItem}
-            </List>
-          </RelationList>
+    <Flex
+      direction="column"
+      gap={3}
+      justifyContent="space-between"
+      alignItems="stretch"
+      wrap="wrap"
+    >
+      <Flex direction="row" alignItems="end" justifyContent="end" gap={2} width="100%">
+        {/* CUSTOM MOD [13]. */}
+        <ComboboxWrapper marginRight="auto" maxWidth="100%" width="100%">
+          <Combobox
+            ref={fieldRef}
+            autocomplete="list"
+            error={error}
+            name={name}
+            hint={description}
+            id={id}
+            required={required}
+            label={label}
+            labelAction={labelAction}
+            disabled={disabled}
+            placeholder={placeholder}
+            hasMoreItems={searchResults.hasNextPage}
+            loading={searchResults.isLoading}
+            onOpenChange={handleMenuOpen}
+            noOptionsMessage={() => noRelationsMessage}
+            loadingMessage={loadingMessage}
+            onLoadMore={() => {
+              onSearchNextPage();
+            }}
+            textValue={textValue}
+            onChange={(relationId) => {
+              if (!relationId) {
+                return;
+              }
+              onRelationConnect(options.find((opt) => opt.id === relationId));
+              updatedRelationsWith.current = 'onChange';
+            }}
+            onTextValueChange={(text) => {
+              setTextValue(text);
+            }}
+            onInputChange={(event) => {
+              onSearch(event.currentTarget.value);
+            }}
+          >
+            {options.map((opt) => {
+              return <Option key={opt.id} {...opt} />;
+            })}
+          </Combobox>
+        </ComboboxWrapper>
+        {shouldDisplayLoadMoreButton && (
+          <TextButton
+            disabled={paginatedRelations.isLoading || paginatedRelations.isFetchingNextPage}
+            onClick={handleLoadMore}
+            loading={paginatedRelations.isLoading || paginatedRelations.isFetchingNextPage}
+            startIcon={<Refresh />}
+            // prevent the label from line-wrapping
+            shrink={0}
+          >
+            {labelLoadMore}
+          </TextButton>
         )}
-        {(description || error) && (
-          <Box paddingTop={2}>
-            <FieldHint />
-            <FieldError />
-          </Box>
-        )}
-      </Relation>
-    </Field>
+      </Flex>
+
+      {relations.length > 0 && (
+        <RelationList overflow={overflow}>
+          <VisuallyHidden id={ariaDescriptionId}>{listAriaDescription}</VisuallyHidden>
+          <VisuallyHidden aria-live="assertive">{liveText}</VisuallyHidden>
+          <List
+            height={dynamicListHeight}
+            ref={listRef}
+            outerRef={outerListRef}
+            itemCount={totalNumberOfRelations}
+            itemSize={RELATION_ITEM_HEIGHT + RELATION_GUTTER}
+            itemData={{
+              name,
+              ariaDescribedBy: ariaDescriptionId,
+              canDrag: canReorder,
+              disabled,
+              handleCancel: onCancel,
+              handleDropItem: onDropItem,
+              handleGrabItem: onGrabItem,
+              iconButtonAriaLabel,
+              labelDisconnectRelation,
+              onRelationDisconnect,
+              publicationStateTranslations,
+              relations,
+              updatePositionOfRelation: handleUpdatePositionOfRelation,
+            }}
+            itemKey={(index) => `${relations[index].mainField}_${relations[index].id}`}
+            innerElementType="ol"
+          >
+            {ListItem}
+          </List>
+        </RelationList>
+      )}
+    </Flex>
   );
 };
 
@@ -441,12 +388,12 @@ RelationInput.propTypes = {
   }).isRequired,
   required: PropTypes.bool,
   searchResults: SearchResults,
-  size: PropTypes.number.isRequired,
+  // size: PropTypes.number.isRequired, // CUSTOM MOD [9].
   relations: RelationsResult,
 };
 
 /**
- * This is in a seperate component to enforce passing all the props the component requires to react-window
+ * This is in a separate component to enforce passing all the props the component requires to react-window
  * to ensure drag & drop correctly works.
  */
 const ListItem = ({ data, index, style }) => {

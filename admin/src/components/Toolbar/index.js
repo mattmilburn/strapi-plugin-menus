@@ -6,32 +6,26 @@ import { IconButton } from '@strapi/design-system/IconButton';
 
 import { StyledIconButtonGroup } from './styled';
 
-const Toolbar = ( { actions } ) => {
-  const visibleActions = actions.filter( ( { hidden } ) => ! hidden );
+const Toolbar = ({ actions }) => {
+  const visibleActions = actions.filter(({ hidden }) => !hidden);
 
   return (
-    <StyledIconButtonGroup { ...stopPropagation }>
-      { visibleActions.map( ( { icon, label, onClick }, i ) => (
-        <IconButton
-          key={ i }
-          onClick={ onClick }
-          label={ label }
-          icon={ icon }
-          noBorder
-        />
-      ) ) }
+    <StyledIconButtonGroup {...stopPropagation}>
+      {visibleActions.map(({ icon, key, label, onClick }) => (
+        <IconButton key={key} onClick={onClick} label={label} icon={icon} noBorder />
+      ))}
     </StyledIconButtonGroup>
   );
 };
 
 Toolbar.propTypes = {
   actions: PropTypes.arrayOf(
-    PropTypes.shape( {
+    PropTypes.shape({
       hidden: PropTypes.bool,
       icon: PropTypes.node.isRequired,
       label: PropTypes.string.isRequired,
       onClick: PropTypes.func.isRequired,
-    } ),
+    })
   ).isRequired,
 };
 

@@ -6,7 +6,7 @@ module.exports = [
     path: '/config',
     handler: 'plugin::menus.menu.config',
     config: {
-      policies: [ 'admin::isAuthenticatedAdmin' ],
+      policies: ['admin::isAuthenticatedAdmin'],
     },
   },
   {
@@ -14,7 +14,7 @@ module.exports = [
     path: '/',
     handler: 'plugin::menus.menu.find',
     config: {
-      policies: [ 'admin::isAuthenticatedAdmin' ],
+      policies: ['admin::isAuthenticatedAdmin'],
     },
   },
   {
@@ -22,7 +22,7 @@ module.exports = [
     path: '/:id',
     handler: 'plugin::menus.menu.findOne',
     config: {
-      policies: [ 'admin::isAuthenticatedAdmin' ],
+      policies: ['admin::isAuthenticatedAdmin'],
     },
   },
   {
@@ -30,7 +30,7 @@ module.exports = [
     path: '/',
     handler: 'plugin::menus.menu.create',
     config: {
-      policies: [ 'admin::isAuthenticatedAdmin' ],
+      policies: ['admin::isAuthenticatedAdmin'],
     },
   },
   {
@@ -38,7 +38,7 @@ module.exports = [
     path: '/:id',
     handler: 'plugin::menus.menu.update',
     config: {
-      policies: [ 'admin::isAuthenticatedAdmin' ],
+      policies: ['admin::isAuthenticatedAdmin'],
     },
   },
   {
@@ -46,7 +46,7 @@ module.exports = [
     path: '/:id',
     handler: 'plugin::menus.menu.delete',
     config: {
-      policies: [ 'admin::isAuthenticatedAdmin' ],
+      policies: ['admin::isAuthenticatedAdmin'],
     },
   },
 ];

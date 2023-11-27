@@ -1,110 +1,93 @@
 import { useState, useEffect } from 'react';
+
+import { useCallbackRef, useFetchClient } from '@strapi/helper-plugin';
 import { useInfiniteQuery } from 'react-query';
 
-import { axiosInstance } from '../../../utils'; // CUSTOM MOD [2].
+import { normalizeRelations } from '../utils'; // CUSTOM MOD [3].
 
-import { normalizeRelations } from '../utils'; // CUSTOM MOD [5].
-
-import { useCallbackRef } from './useCallbackRef'; // CUSTOM MOD [5].
-
-export const useRelation = (cacheKey, { relation, search, hasLoaded }) => { // CUSTOM MOD [18].
+// CUSTOM MOD [11].
+export const useRelation = (cacheKey, { relation, search, hasLoaded }) => {
   const [searchParams, setSearchParams] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
-
-  /**
-   * This runs in `useInfiniteQuery` to actually fetch the data
-   */
-  const fetchRelations = async ({ pageParam = 1 }) => {
-    try {
-      const { data } = await axiosInstance.get(relation?.endpoint, {
-        params: {
-          ...(relation.pageParams ?? {}),
-          page: pageParam,
-        },
-      });
-
-      setCurrentPage(pageParam);
-
-      return data;
-    } catch (err) {
-      return null;
-    }
-  };
-
-  const fetchSearch = async ({ pageParam = 1 }) => {
-    try {
-      const { data } = await axiosInstance.get(search.endpoint, {
-        params: {
-          ...(search.pageParams ?? {}),
-          ...searchParams,
-          page: pageParam,
-        },
-      });
-
-      return data;
-    } catch (err) {
-      return null;
-    }
-  };
+  const { get } = useFetchClient();
 
   const { onLoad: onLoadRelations, normalizeArguments = {} } = relation;
 
-  const relationsRes = useInfiniteQuery(['relation', cacheKey], fetchRelations, {
-    cacheTime: 0,
-    enabled: relation.enabled && ! hasLoaded, // CUSTOM MOD [18].
-    /**
-     * @type {(lastPage:
-     * | { data: null }
-     * | { results: any[],
-     *     pagination: {
-     *      page: number,
-     *      pageCount: number,
-     *      pageSize: number,
-     *      total: number
-     *     }
-     *   }
-     * ) => number}
-     */
-    getNextPageParam(lastPage) {
-      const isXToOneRelation = !lastPage?.pagination;
+  const relationsRes = useInfiniteQuery(
+    ['relation', ...cacheKey],
+    async ({ pageParam = 1 }) => {
+      try {
+        const { data } = await get(relation?.endpoint, {
+          params: {
+            ...(relation.pageParams ?? {}),
+            page: pageParam,
+          },
+        });
 
-      if (
-        !lastPage || // the API may send an empty 204 response
-        isXToOneRelation || // xToOne relations do not have a pagination
-        lastPage?.pagination.page >= lastPage?.pagination.pageCount
-      ) {
-        return undefined;
+        setCurrentPage(pageParam);
+
+        return data;
+      } catch (err) {
+        return null;
       }
-
-      // eslint-disable-next-line consistent-return
-      return lastPage.pagination.page + 1;
     },
-    select: (data) => ({
-      ...data,
-      pages: data.pages.map((page) => {
-        if (!page) {
-          return page;
+    {
+      cacheTime: 0,
+      enabled: relation.enabled && !hasLoaded, // CUSTOM MOD [11].
+      /**
+       * @type {(lastPage:
+       * | { data: null }
+       * | { results: any[],
+       *     pagination: {
+       *      page: number,
+       *      pageCount: number,
+       *      pageSize: number,
+       *      total: number
+       *     }
+       *   }
+       * ) => number}
+       */
+      getNextPageParam(lastPage) {
+        const isXToOneRelation = !lastPage?.pagination;
+
+        if (
+          !lastPage || // the API may send an empty 204 response
+          isXToOneRelation || // xToOne relations do not have a pagination
+          lastPage?.pagination.page >= lastPage?.pagination.pageCount
+        ) {
+          return undefined;
         }
 
-        const { data, results, pagination } = page;
-        const isXToOneRelation = !!data;
-        let normalizedResults = [];
+        // eslint-disable-next-line consistent-return
+        return lastPage.pagination.page + 1;
+      },
+      select: (data) => ({
+        ...data,
+        pages: data.pages.map((page) => {
+          if (!page) {
+            return page;
+          }
 
-        // xToOne relations return an object, which we normalize so that relations
-        // always have the same shape
-        if (isXToOneRelation) {
-          normalizedResults = [data];
-        } else if (results) {
-          normalizedResults = [...results].reverse();
-        }
+          const { data, results, pagination } = page;
+          const isXToOneRelation = !!data;
+          let normalizedResults = [];
 
-        return {
-          pagination,
-          results: normalizedResults,
-        };
+          // xToOne relations return an object, which we normalize so that relations
+          // always have the same shape
+          if (isXToOneRelation) {
+            normalizedResults = [data];
+          } else if (results) {
+            normalizedResults = [...results].reverse();
+          }
+
+          return {
+            pagination,
+            results: normalizedResults,
+          };
+        }),
       }),
-    }),
-  });
+    }
+  );
 
   const { pageGoal } = relation;
 
@@ -135,11 +118,25 @@ export const useRelation = (cacheKey, { relation, search, hasLoaded }) => { // C
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, data]); // CUSTOM MOD [13].
+  }, [status, data]); // CUSTOM MOD [8].
 
   const searchRes = useInfiniteQuery(
     ['relation', cacheKey, 'search', JSON.stringify(searchParams)],
-    fetchSearch,
+    async ({ pageParam = 1 }) => {
+      try {
+        const { data } = await get(search.endpoint, {
+          params: {
+            ...(search.pageParams ?? {}),
+            ...searchParams,
+            page: pageParam,
+          },
+        });
+
+        return data;
+      } catch (err) {
+        return null;
+      }
+    },
     {
       enabled: Object.keys(searchParams).length > 0,
       /**
@@ -170,6 +167,7 @@ export const useRelation = (cacheKey, { relation, search, hasLoaded }) => { // C
     setSearchParams({
       ...options,
       _q: term,
+      _filter: '$startsWithi',
     });
   };
 

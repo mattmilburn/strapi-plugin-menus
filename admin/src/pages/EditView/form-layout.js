@@ -1,12 +1,12 @@
 import { getTrad } from '../../utils';
 
-const targetOptions = [ '_blank', '_parent', '_self', '_top' ];
+const targetOptions = ['_blank', '_parent', '_self', '_top'];
 
 const menu = [
   {
     input: {
       intlLabel: {
-        id: getTrad( 'form.label.title' ),
+        id: getTrad('form.label.title'),
         defaultMessage: 'Title',
       },
       name: 'title',
@@ -21,7 +21,7 @@ const menu = [
   {
     input: {
       intlLabel: {
-        id: getTrad( 'form.label.slug' ),
+        id: getTrad('form.label.slug'),
         defaultMessage: 'Slug',
       },
       name: 'slug',
@@ -43,13 +43,13 @@ const menuItem = [
   {
     input: {
       intlLabel: {
-        id: getTrad( 'form.label.title' ),
+        id: getTrad('form.label.title'),
         defaultMessage: 'Title',
       },
       name: 'title',
       type: 'text',
       placeholder: {
-        id: getTrad( 'form.placeholder.untitled' ),
+        id: getTrad('form.placeholder.untitled'),
         defaultMessage: 'Untitled',
       },
       required: true,
@@ -58,7 +58,7 @@ const menuItem = [
   {
     input: {
       intlLabel: {
-        id: getTrad( 'form.label.url' ),
+        id: getTrad('form.label.url'),
         defaultMessage: 'URL',
       },
       name: 'url',
@@ -68,21 +68,21 @@ const menuItem = [
   {
     input: {
       intlLabel: {
-        id: getTrad( 'form.label.target' ),
+        id: getTrad('form.label.target'),
         defaultMessage: 'Target',
       },
       name: 'target',
       type: 'select',
-      options: targetOptions.map( option => ( {
+      options: targetOptions.map((option) => ({
         key: option,
         value: option,
         metadatas: {
           intlLabel: {
-            id: getTrad( `form.label.option.${option}` ),
+            id: getTrad(`form.label.option.${option}`),
             defaultMessage: option,
           },
         },
-      } ) ),
+      })),
     },
     grid: {
       col: 6,

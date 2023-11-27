@@ -11,8 +11,10 @@ const initialState = {
   schema: {},
 };
 
-const configReducer = produce( ( state = initialState, action ) => {
-  switch ( action.type ) {
+const configReducer = produce((previousState, action) => {
+  let state = previousState ?? initialState;
+
+  switch (action.type) {
     case ACTION_RESOLVE_CONFIG:
       state.isLoading = false;
       state.config = action.data.config;
@@ -24,6 +26,6 @@ const configReducer = produce( ( state = initialState, action ) => {
   }
 
   return state;
-} );
+});
 
 export default configReducer;
