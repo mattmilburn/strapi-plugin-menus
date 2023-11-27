@@ -4,6 +4,7 @@ module.exports = {
   kind: 'collectionType',
   collectionName: 'menu_items',
   info: {
+    name: 'MenuItem',
     displayName: 'Menu Item',
     singularName: 'menu-item',
     pluralName: 'menu-items',

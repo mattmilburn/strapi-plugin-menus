@@ -1,0 +1,123 @@
+{
+  "components": {
+    "schemas": {
+      "Menu": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array"
+          }
+        }
+      },
+      "MenuItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "order": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "root_menu": {
+            "type": "object"
+          },
+          "parent": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/menus": {
+      "get": {
+        "tags": ["Menu"],
+        "summary": "Get list of menus",
+        "description": "Common parameters such as `populate`, `filters`, `pagination`, etc. are also available to use.",
+        "parameters": [
+          {
+            "name": "nested",
+            "in": "path",
+            "description": "Serialize menu items into a nested format, otherwise they are returned as a flat list.",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return an array of menus",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Menu"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/menus/{id}": {
+      "get": {
+        "tags": ["Menu"],
+        "summary": "Get a menu",
+        "description": "Common parameters such as `populate`, `filters`, `pagination`, etc. are also available to use.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "nested",
+            "in": "path",
+            "description": "Serialize menu items into a nested format, otherwise they are returned as a flat list.",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get a specific menu",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Menu"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
