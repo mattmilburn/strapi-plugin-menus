@@ -66,9 +66,19 @@ module.exports = ({ strapi }) => ({
     return spec;
   },
 
+  getRequiredAttributes(uid) {
+    const model = strapi.getModel(uid);
+    const attrs = model.attributes;
+
+    return Object.keys(attrs).filter((attr) => attrs[attr].required);
+  },
+
   async overrides() {
     const menuSchema = this.getAttributesSpec(UID_MENU);
     const menuItemSchema = this.getAttributesSpec(UID_MENU_ITEM);
+
+    const menuRequiredAttrs = this.getRequiredAttributes(UID_MENU);
+    const menuItemRequiredAttrs = this.getRequiredAttributes(UID_MENU_ITEM);
 
     return {
       components: {
@@ -76,10 +86,12 @@ module.exports = ({ strapi }) => ({
           Menu: {
             type: 'object',
             properties: menuSchema,
+            required: menuRequiredAttrs,
           },
           MenuItem: {
             type: 'object',
             properties: menuItemSchema,
+            required: menuItemRequiredAttrs,
           },
         },
       },
