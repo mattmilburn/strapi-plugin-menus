@@ -2,10 +2,10 @@
 
 const { getService } = require('./utils');
 
-module.exports = async ({ strapi }) => {
+module.exports = ({ strapi }) => {
   // Maybe register API documentation overrides for Strapi's documentation plugin.
   if (strapi.plugin('documentation')) {
-    const overrides = await getService('documentation').overrides();
+    const overrides = getService('documentation').overrides();
 
     strapi
       .plugin('documentation')
