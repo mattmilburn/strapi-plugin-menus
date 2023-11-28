@@ -1,12 +1,16 @@
 'use strict';
 
-const { UID_MENU, UID_MENU_ITEM } = require('../constants');
+const { UID_MENU, UID_MENU_ITEM, UID_UPLOAD_FILE } = require('../constants');
 
 const SPEC_NESTING_LIMIT = 3;
 
 module.exports = ({ strapi }) => ({
   getAttributesSpec(uid, level = 1) {
     const model = strapi.getModel(uid);
+
+    if (!model) {
+      return {};
+    }
 
     const spec = Object.entries(model.attributes).reduce((acc, [key, value]) => {
       let type = 'string';
@@ -20,7 +24,7 @@ module.exports = ({ strapi }) => ({
         extraProps.format = 'date-time';
       }
 
-      if (value.type === 'media' || value.type === 'json') {
+      if (value.type === 'json') {
         type = 'object';
       }
 
@@ -28,30 +32,22 @@ module.exports = ({ strapi }) => ({
         type = 'number';
       }
 
-      if (value.type === 'relation') {
-        const relationSpec = {
-          type: 'object',
-          properties: {
-            id: {
-              type: 'number',
-            },
-            attributes: {
-              type: 'object',
-              properties:
-                level < SPEC_NESTING_LIMIT ? this.getAttributesSpec(value.target, level + 1) : {},
-            },
-          },
-        };
-
+      if (value.type === 'media') {
         type = 'object';
-        extraProps.properties = {
-          data: value.relation.includes('Many')
-            ? {
-                type: 'array',
-                items: relationSpec,
-              }
-            : relationSpec,
-        };
+        extraProps.properties = this.getRelationAttributesSpec(
+          UID_UPLOAD_FILE,
+          level,
+          value.multiple
+        );
+      }
+
+      if (value.type === 'relation') {
+        type = 'object';
+        extraProps.properties = this.getRelationAttributesSpec(
+          value.target,
+          level,
+          value.relation.includes('Many')
+        );
       }
 
       return {
@@ -66,6 +62,30 @@ module.exports = ({ strapi }) => ({
     return spec;
   },
 
+  getRelationAttributesSpec(uid, level = 1, multiple = false) {
+    const relationSpec = {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'number',
+        },
+        attributes: {
+          type: 'object',
+          properties: level < SPEC_NESTING_LIMIT ? this.getAttributesSpec(uid, level + 1) : {},
+        },
+      },
+    };
+
+    return {
+      data: multiple
+        ? {
+            type: 'array',
+            items: relationSpec,
+          }
+        : relationSpec,
+    };
+  },
+
   getRequiredAttributes(uid) {
     const model = strapi.getModel(uid);
     const attrs = model.attributes;
@@ -73,7 +93,7 @@ module.exports = ({ strapi }) => ({
     return Object.keys(attrs).filter((attr) => attrs[attr].required);
   },
 
-  async overrides() {
+  overrides() {
     const menuSchema = this.getAttributesSpec(UID_MENU);
     const menuItemSchema = this.getAttributesSpec(UID_MENU_ITEM);
 
