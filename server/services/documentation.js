@@ -119,7 +119,7 @@ module.exports = ({ strapi }) => ({
         '/menus': {
           get: {
             tags: ['Menu'],
-            summary: 'Get list of menus',
+            summary: 'Get a list of menus',
             description:
               'Common parameters such as `populate`, `filters`, `pagination`, etc. are also available to use.',
             parameters: [
@@ -138,6 +138,37 @@ module.exports = ({ strapi }) => ({
             responses: {
               200: {
                 description: 'Return an array of menus',
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'array',
+                      items: {
+                        $ref: '#/components/schemas/Menu',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          post: {
+            tags: ['Menu'],
+            summary: 'Create a menu',
+            requestBody: {
+              required: true,
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    required: menuRequiredAttrs,
+                    properties: menuSchema,
+                  },
+                },
+              },
+            },
+            responses: {
+              200: {
+                description: 'Return an array of created menus',
                 content: {
                   'application/json': {
                     schema: {
@@ -184,6 +215,62 @@ module.exports = ({ strapi }) => ({
             responses: {
               200: {
                 description: 'Get a specific menu',
+                content: {
+                  'application/json': {
+                    schema: {
+                      $ref: '#/components/schemas/Menu',
+                    },
+                  },
+                },
+              },
+            },
+          },
+          put: {
+            tags: ['Menu'],
+            summary: 'Update a menu',
+            requestBody: {
+              required: true,
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    required: menuRequiredAttrs,
+                    properties: menuSchema,
+                  },
+                },
+              },
+            },
+            responses: {
+              200: {
+                description: 'Return an updated menu',
+                content: {
+                  'application/json': {
+                    schema: {
+                      $ref: '#/components/schemas/Menu',
+                    },
+                  },
+                },
+              },
+            },
+          },
+          delete: {
+            tags: ['Menu'],
+            summary: 'Delete a menu',
+            parameters: [
+              {
+                name: 'id',
+                in: 'path',
+                description: '',
+                deprecated: false,
+                required: true,
+                schema: {
+                  type: 'string',
+                },
+              },
+            ],
+            responses: {
+              200: {
+                description: 'Delete a menu',
                 content: {
                   'application/json': {
                     schema: {
