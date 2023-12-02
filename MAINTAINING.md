@@ -28,5 +28,6 @@ As Strapi updates, these components and files may also need to be updated in thi
 | 12 | Dynamic zones and components are not supported in this plugin so logic pertaining to them is removed. |
 | 13 | Because the edit menu item UI is designed to be smaller than the content manager UI, the `flexBasis` style will always be 100%. |
 | 14 | Replace the `content-manager` path with the equivalent for this plugin. |
+| 15 | Add conditional accessor to avoid accessing props on `null` and `undefined` when `EditMenuItem` is unmounted. |
 
 Look for `CUSTOM MOD [n]` comments to identify exactly what lines were changed. The number in the comment corresponds to the table above.
