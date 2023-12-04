@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-menus",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "A plugin for Strapi CMS to customize the structure of menus and menu items.",
   "license": "MIT",
   "strapi": {
