@@ -123,7 +123,7 @@ First, create the file `./src/extensions/menus/strapi-server.js`. Then copy/past
 
 module.exports = plugin => {
   // Get current `MenuItem` attributes.
-  const defaultAttrs = plugin.contentTypes[ 'menu-item' ].schema.attributes;
+  const defaultAttrs = plugin.contentTypes['menu-item'].schema.attributes;
 
   // Define custom attributes for `MenuItem` the same way they would be defined
   // on any other schema.
@@ -134,7 +134,7 @@ module.exports = plugin => {
   };
 
   // Extend the `MenuItem` content type with custom attributes.
-  plugin.contentTypes[ 'menu-item' ].schema.attributes = {
+  plugin.contentTypes['menu-item'].schema.attributes = {
     ...defaultAttrs,
     ...customAttrs,
   };
@@ -269,7 +269,7 @@ You must also include the custom field translations in your `./src/admin/app.js`
 
 export default {
   config: {
-    locales: [ 'en' ],
+    locales: ['en'],
     translations: {
       en: {
         'menus.customFields.field_name.label': 'Translated Label',
@@ -318,7 +318,7 @@ First, create the file `./src/extensions/menus/strapi-server.js` and add the cod
 
 module.exports = plugin => {
   // Get current `MenuItem` attributes.
-  const defaultAttrs = plugin.contentTypes[ 'menu-item' ].schema.attributes;
+  const defaultAttrs = plugin.contentTypes['menu-item'].schema.attributes;
 
   // Define custom attributes for `MenuItem` the same way they would be defined
   // on any other schema.
@@ -369,7 +369,7 @@ module.exports = plugin => {
     },
     example_media: {
       type: 'media',
-      allowedTypes: [ 'images' ],
+      allowedTypes: ['images'],
       multiple: false,
     },
     example_relation_one: {
@@ -385,7 +385,7 @@ module.exports = plugin => {
   };
 
   // Extend the `MenuItem` content type with custom attributes.
-  plugin.contentTypes[ 'menu-item' ].schema.attributes = {
+  plugin.contentTypes['menu-item'].schema.attributes = {
     ...defaultAttrs,
     ...customAttrs,
   };
@@ -630,7 +630,7 @@ Fetching menus data is the same as fetching any other data using Strapi's REST A
 Fetch a menu with the ID 3. Nothing is populated by default.
 
 ```js
-await fetch( '/api/menus/3' );
+await fetch('/api/menus/3');
 ```
 
 ##### Response
@@ -654,7 +654,7 @@ await fetch( '/api/menus/3' );
 Fetch a menu with the ID 3 with `populate` params included.
 
 ```js
-await fetch( '/api/menus/3?populate=*' );
+await fetch('/api/menus/3?populate=*');
 ```
 
 ##### Response
@@ -727,7 +727,7 @@ await fetch( '/api/menus/3?populate=*' );
 Fetch a menu with the ID 3 with the `nested` param included.
 
 ```js
-await fetch( '/api/menus/3?nested&populate=*' );
+await fetch('/api/menus/3?nested&populate=*');
 ```
 
 ##### Response
@@ -821,7 +821,7 @@ const params = {
   },
 };
 
-const query = qs.stringify( params, { addQueryPrefix: true } );
+const query = qs.stringify(params, { addQueryPrefix: true });
 
 // The params above will parse into this query string.
 // ?nested&populate[items][populate][0]=example_relation&populate[items][populate][1]=another_relation
