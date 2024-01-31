@@ -7,7 +7,13 @@ import pick from 'lodash/pick';
 import uniq from 'lodash/uniq';
 import uniqueId from 'lodash/uniqueId';
 import { Formik } from 'formik';
-import { Form, useFetchClient, useNotification, useOverlayBlocker } from '@strapi/helper-plugin';
+import {
+  Form,
+  useAPIErrorHandler,
+  useFetchClient,
+  useNotification,
+  useOverlayBlocker,
+} from '@strapi/helper-plugin';
 import { useNotifyAT } from '@strapi/design-system';
 import { Box } from '@strapi/design-system/Box';
 import { Button } from '@strapi/design-system/Button';
@@ -70,6 +76,7 @@ function renderDragLayerItem({ type, item }) {
 
 const EditView = ({ history, location, match }) => {
   const { id } = match.params;
+  const { formatAPIError } = useAPIErrorHandler();
   const fetchClient = useFetchClient();
   const { formatMessage } = useIntl();
   const { notifyStatus } = useNotifyAT();
@@ -143,13 +150,10 @@ const EditView = ({ history, location, match }) => {
         })
       );
     },
-    onError: () => {
+    onError: (err) => {
       toggleNotification({
         type: 'warning',
-        message: {
-          id: getTrad('ui.error'),
-          defaultMessage: 'An error occured',
-        },
+        message: formatAPIError(err),
       });
     },
   });
@@ -208,13 +212,10 @@ const EditView = ({ history, location, match }) => {
           },
         });
       },
-      onError: () => {
+      onError: (err) => {
         toggleNotification({
           type: 'warning',
-          message: {
-            id: getTrad('ui.error'),
-            defaultMessage: 'An error occured',
-          },
+          message: formatAPIError(err),
         });
       },
       onSettled: () => {

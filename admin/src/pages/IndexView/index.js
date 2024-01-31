@@ -6,6 +6,7 @@ import get from 'lodash/get';
 import {
   DynamicTable,
   EmptyStateLayout,
+  useAPIErrorHandler,
   useFetchClient,
   useNotification,
   useOverlayBlocker,
@@ -45,6 +46,7 @@ PrimaryAction.propTypes = {
 };
 
 const IndexView = ({ history }) => {
+  const { formatAPIError } = useAPIErrorHandler();
   const fetchClient = useFetchClient();
   const { formatMessage } = useIntl();
   const { notifyStatus } = useNotifyAT();
@@ -79,13 +81,10 @@ const IndexView = ({ history }) => {
         })
       );
     },
-    onError: () => {
+    onError: (err) => {
       toggleNotification({
         type: 'warning',
-        message: {
-          id: getTrad('ui.error'),
-          defaultMessage: 'An error occured',
-        },
+        message: formatAPIError(err),
       });
     },
   });
@@ -115,10 +114,7 @@ const IndexView = ({ history }) => {
       } else {
         toggleNotification({
           type: 'warning',
-          message: {
-            id: getTrad('ui.error'),
-            defaultMessage: 'An error occured',
-          },
+          message: formatAPIError(err),
         });
       }
     },
