@@ -142,7 +142,7 @@ const EditView = ({ history, location, match }) => {
   const { status, data } = useQuery(queryKey, () => getMenu(id), {
     enabled: !isCreating,
     select: (data) => transformResponse(data),
-    onSuccess: () => {
+    onSuccess() {
       notifyStatus(
         formatMessage({
           id: getTrad('ui.loaded'),
@@ -150,7 +150,7 @@ const EditView = ({ history, location, match }) => {
         })
       );
     },
-    onError: (err) => {
+    onError(err) {
       toggleNotification({
         type: 'warning',
         message: formatAPIError(err),
@@ -201,7 +201,7 @@ const EditView = ({ history, location, match }) => {
     },
     {
       refetchActive: true,
-      onSuccess: async () => {
+      async onSuccess() {
         await queryClient.invalidateQueries(queryKey);
 
         toggleNotification({
@@ -212,13 +212,13 @@ const EditView = ({ history, location, match }) => {
           },
         });
       },
-      onError: (err) => {
+      onError(err) {
         toggleNotification({
           type: 'warning',
           message: formatAPIError(err),
         });
       },
-      onSettled: () => {
+      onSettled() {
         unlockApp();
       },
     }
