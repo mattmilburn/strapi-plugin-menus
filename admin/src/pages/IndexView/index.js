@@ -93,7 +93,7 @@ const IndexView = ({ history }) => {
     refetch();
   }, [page, pageSize, refetch]);
 
-  const deleteMutation = useMutation((id) => fetchClient.delete(getRequestUrl(id)), {
+  const deleteMutation = useMutation((id) => fetchClient.del(getRequestUrl(id)), {
     async onSuccess() {
       await queryClient.invalidateQueries(QUERY_KEY);
 
