@@ -73,7 +73,7 @@ const IndexView = ({ history }) => {
   };
 
   const { data, refetch, status } = useQuery(QUERY_KEY, () => getAllMenus(), {
-    onSuccess: () => {
+    onSuccess() {
       notifyStatus(
         formatMessage({
           id: getTrad('ui.loaded'),
@@ -81,7 +81,7 @@ const IndexView = ({ history }) => {
         })
       );
     },
-    onError: (err) => {
+    onError(err) {
       toggleNotification({
         type: 'warning',
         message: formatAPIError(err),
@@ -94,7 +94,7 @@ const IndexView = ({ history }) => {
   }, [page, pageSize, refetch]);
 
   const deleteMutation = useMutation((id) => fetchClient.delete(getRequestUrl(id)), {
-    onSuccess: async () => {
+    async onSuccess() {
       await queryClient.invalidateQueries(QUERY_KEY);
 
       toggleNotification({
@@ -105,7 +105,7 @@ const IndexView = ({ history }) => {
         },
       });
     },
-    onError: (err) => {
+    onError(err) {
       if (err?.response?.data?.data) {
         toggleNotification({
           type: 'warning',
@@ -118,7 +118,7 @@ const IndexView = ({ history }) => {
         });
       }
     },
-    onSettled: () => {
+    onSettled() {
       unlockApp();
     },
   });
@@ -202,7 +202,7 @@ const IndexView = ({ history }) => {
       />
       <ContentLayout>
         <Box paddingBottom={10}>
-          {!!data?.data?.length ? (
+          {data?.data?.length ? (
             <>
               <DynamicTable
                 contentType="menus"
