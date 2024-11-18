@@ -305,7 +305,10 @@ export const RelationInputDataManager = ({
     <RelationInput
       error={error}
       canReorder={!toOneRelation}
-      description={description}
+      description={formatMessage({
+        defaultMessage: description.defaultMessage,
+        id: description.id,
+      })}
       disabled={isDisabled}
       iconButtonAriaLabel={formatMessage({
         id: 'content-manager.components.RelationInput.icon-button-aria-label', // CUSTOM MOD [4].
@@ -406,7 +409,11 @@ RelationInputDataManager.propTypes = {
   // entityId: PropTypes.number, // CUSTOM MOD [9].
   editable: PropTypes.bool,
   error: PropTypes.string,
-  description: PropTypes.string,
+  description: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    defaultMessage: PropTypes.string.isRequired,
+    values: PropTypes.object,
+  }).isRequired,
   intlLabel: PropTypes.shape({
     id: PropTypes.string.isRequired,
     defaultMessage: PropTypes.string.isRequired,
