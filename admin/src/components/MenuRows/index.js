@@ -25,7 +25,13 @@ const MenuRows = ({ data, onClickClone, onClickDelete, onClickEdit }) => {
     const [sortKey, sortOrder] = query.sort.split(':');
 
     rows = data.sort((a, b) => {
-      const compare = a.attributes[sortKey].localeCompare(b.attributes[sortKey]);
+      let compare;
+      if (sortKey === 'id') {
+        // Directly compare IDs
+        compare = a.id - b.id;
+      } else {
+        compare = a.attributes[sortKey].localeCompare(b.attributes[sortKey]);
+      }
 
       return sortOrder === 'ASC' ? compare : -compare;
     });
@@ -40,6 +46,9 @@ const MenuRows = ({ data, onClickClone, onClickDelete, onClickEdit }) => {
             fn: () => onClickEdit(row.id),
           })}
         >
+          <Td>
+            <Typography textColor="neutral800">{row.id}</Typography>
+          </Td>
           <Td>
             <Typography textColor="neutral800">{row.attributes.title}</Typography>
           </Td>
@@ -104,6 +113,7 @@ MenuRows.propTypes = {
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       attributes: PropTypes.shape({
+        id: PropTypes.number.isRequired,
         title: PropTypes.string.isRequired,
         slug: PropTypes.string.isRequired,
         items: PropTypes.shape({
