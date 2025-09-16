@@ -140,6 +140,17 @@ const IndexView = ({ history }) => {
 
   const tableHeaders = [
     {
+      name: 'id',
+      key: 'id',
+      metadatas: {
+        label: formatMessage({
+          id: getTrad('form.label.id'),
+          defaultMessage: 'Id',
+        }),
+        sortable: true,
+      },
+    },
+    {
       name: 'title',
       key: 'title',
       metadatas: {
